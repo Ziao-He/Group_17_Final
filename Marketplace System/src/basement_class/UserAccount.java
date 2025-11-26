@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  *
  * @author yujie-liang
  */
-public class UserAccount {
+public abstract class UserAccount {
     // Basic account information
     private String userId;
     private String username;
