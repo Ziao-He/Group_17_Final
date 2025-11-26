@@ -11,56 +11,67 @@ import java.time.LocalDateTime;
  * @author yujie-liang
  */
 public abstract class WorkRequest{
-    protected UserAccount sender;
-    protected UserAccount receiver;
-    protected String status;
-    protected LocalDateTime resolveDate;
-    protected String message; // Message field for additional notes (e.g., buyer instructions)
-
+    private String message;
+    private UserAccount sender;
+    private UserAccount receiver;
+    private String status;
+    private LocalDateTime requestDate;
+    private LocalDateTime resolveDate;
+    
     public WorkRequest() {
-        super(); // Call super to generate ID
-        this.status = "PENDING"; // Default status
+        requestDate = LocalDateTime.now();
     }
 
-    // Getters and Setters
-    public UserAccount getSender() { 
-        return sender; 
-    }
-    
-    public void setSender(UserAccount sender) { 
-        this.sender = sender; 
+    public String getMessage() {
+        return message;
     }
 
-    public UserAccount getReceiver() { 
-        return receiver; 
-    }
-    
-    public void setReceiver(UserAccount receiver) { 
-        this.receiver = receiver; 
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getStatus() { 
-        return status; 
-    }
-    
-    public void setStatus(String status) { 
-        this.status = status; 
+    public UserAccount getSender() {
+        return sender;
     }
 
-    public LocalDateTime getResolveDate() { 
-        return resolveDate; 
+    public void setSender(UserAccount sender) {
+        this.sender = sender;
+    }
+
+    public UserAccount getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(UserAccount receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(LocalDateTime requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public LocalDateTime getResolveDate() {
+        return resolveDate;
+    }
+
+    public void setResolveDate(LocalDateTime resolveDate) {
+        this.resolveDate = resolveDate;
     }
     
-    public void setResolveDate(LocalDateTime resolveDate) { 
-        this.resolveDate = resolveDate; 
-    }
-    
-    public String getMessage() { 
-        return message; 
-    }
-    
-    public void setMessage(String message) { 
-        this.message = message; 
+    @Override
+    public String toString() {
+        return message;
     }
 }
-

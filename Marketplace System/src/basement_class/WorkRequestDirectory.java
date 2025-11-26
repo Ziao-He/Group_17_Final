@@ -11,17 +11,17 @@ import java.util.ArrayList;
  * @author yujie-liang
  */
 public class WorkRequestDirectory {
-    private ArrayList<WorkRequest> requestList;
+    private ArrayList<WorkRequest> workRequestList;
 
     public WorkRequestDirectory() {
-        this.requestList = new ArrayList<>(); // Must initialize to avoid NullPointerException
+        workRequestList = new ArrayList<>();
     }
 
-    public ArrayList<WorkRequest> getRequestList() {
-        return requestList;
+    public ArrayList<WorkRequest> getWorkRequestList() {
+        return workRequestList;
     }
-
-    public void addRequest(WorkRequest request) {
-        this.requestList.add(request);
+    
+    public void addWorkRequest(WorkRequest request) {
+        workRequestList.add(request);
     }
 }

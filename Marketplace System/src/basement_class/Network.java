@@ -12,6 +12,23 @@ import java.util.ArrayList;
  */
 public class Network {
     private String name;
-    private ArrayList<Enterprise> enterprises;
+    private EnterpriseDirectory enterpriseDirectory; // Updated to use Directory class
+
+    public Network(String name) {
+        this.name = name;
+        this.enterpriseDirectory = new EnterpriseDirectory();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public EnterpriseDirectory getEnterpriseDirectory() {
+        return enterpriseDirectory;
+    }
 }
 

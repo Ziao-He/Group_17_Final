@@ -45,10 +45,6 @@ public class EcoSystem extends Organization {
         return network;
     }
 
-    /**
-     * Supports System Admin roles.
-     * @return List of roles supported by the EcoSystem (e.g., SystemAdmin)
-     */
     @Override
     public ArrayList<Role> getSupportedRole() {
         ArrayList<Role> roles = new ArrayList<>();
@@ -57,10 +53,6 @@ public class EcoSystem extends Organization {
         return roles;
     }
 
-    /**
-     * Check if a username is unique across the ENTIRE system (Networks -> Enterprises -> Organizations)
-     * This is a critical function for the "Biggest Organization".
-     */
     public boolean checkIfUserIsUnique(String userName) {
         // 1. Check EcoSystem's own user directory (System Admins)
         if (!this.getUserAccountDirectory().checkIfUsernameIsUnique(userName)) {
