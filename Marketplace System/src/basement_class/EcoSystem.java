@@ -9,72 +9,66 @@ import java.util.ArrayList;
 /**
  *
  * @author yujie-liang
- * EcoSystem: The "Root" Organization of the entire system.
- * Corresponds to the "Campus Trading Ecosystem" in the proposal.
- * It manages Networks and System-level UserAccounts.
  */
-public class EcoSystem extends Organization {
+public class EcoSystem {
+    private ArrayList<Network> networks;
+    private UserAccountDirectory userAccountDirectory;
+    private WorkRequestDirectory workRequestDirectory;
     
-    private static EcoSystem business;
-    private ArrayList<Network> networkList;
-
-    // Singleton Pattern: Ensure only one EcoSystem exists
-    public static EcoSystem getInstance() {
-        if (business == null) {
-            business = new EcoSystem();
-        }
-        return business;
-    }
-
+    // Singleton instance
+    private static EcoSystem instance;
+    
+    // Private constructor for Singleton
     private EcoSystem() {
-        super("Campus Marketplace Ecosystem"); // Name from Proposal
-        networkList = new ArrayList<>();
+        this.networks = new ArrayList<>();
+        this.userAccountDirectory = new UserAccountDirectory();
+        this.workRequestDirectory = new WorkRequestDirectory();
     }
-
-    public ArrayList<Network> getNetworkList() {
-        return networkList;
+    
+    /**
+     * Get the singleton instance of EcoSystem
+     * @return The single EcoSystem instance
+     */
+    public static EcoSystem getInstance() {
+        if (instance == null) {
+            instance = new EcoSystem();
+        }
+        return instance;
     }
-
-    public void setNetworkList(ArrayList<Network> networkList) {
-        this.networkList = networkList;
-    }
-
-    public Network createAndAddNetwork(String name) {
+    
+    /**
+     * Create and add a new network to the ecosystem
+     * @param name Network name
+     * @return The created Network
+     */
+    public Network createNetwork(String name) {
         Network network = new Network(name);
-        networkList.add(network);
+        networks.add(network);
         return network;
     }
-
-    @Override
-    public ArrayList<Role> getSupportedRole() {
-        ArrayList<Role> roles = new ArrayList<>();
-        // In the future, add new SystemAdminRole() here
-        // roles.add(new SystemAdminRole());
-        return roles;
+    
+    // Getters and Setters
+    public ArrayList<Network> getNetworks() {
+        return networks;
     }
-
-    public boolean checkIfUserIsUnique(String userName) {
-        // 1. Check EcoSystem's own user directory (System Admins)
-        if (!this.getUserAccountDirectory().checkIfUsernameIsUnique(userName)) {
-            return false;
-        }
-
-        // 2. Iterate through all Networks
-        for (Network network : networkList) {
-            // 3. Iterate through all Enterprises in the Network
-            for (Enterprise enterprise : network.getEnterpriseDirectory()) {
-                if (!enterprise.getUserAccountDirectory().checkIfUsernameIsUnique(userName)) {
-                    return false;
-                }
-                
-                // 4. Iterate through all Organizations in the Enterprise
-                for (Organization organization : enterprise.getOrganizationDirectory().getOrganizationList()) {
-                    if (!organization.getUserAccountDirectory().checkIfUsernameIsUnique(userName)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
+    
+    public void setNetworks(ArrayList<Network> networks) {
+        this.networks = networks;
+    }
+    
+    public UserAccountDirectory getUserAccountDirectory() {
+        return userAccountDirectory;
+    }
+    
+    public void setUserAccountDirectory(UserAccountDirectory userAccountDirectory) {
+        this.userAccountDirectory = userAccountDirectory;
+    }
+    
+    public WorkRequestDirectory getWorkRequestDirectory() {
+        return workRequestDirectory;
+    }
+    
+    public void setWorkRequestDirectory(WorkRequestDirectory workRequestDirectory) {
+        this.workRequestDirectory = workRequestDirectory;
     }
 }

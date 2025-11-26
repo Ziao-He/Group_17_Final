@@ -12,39 +12,73 @@ import java.util.ArrayList;
  */
 public abstract class Organization {
     private String name;
-    private WorkRequestDirectory workQueue; // Organization-level work queue
-    private UserAccountDirectory userAccountDirectory; // Employees/Users belonging to this org
-    private String organizationID;
-    private static int counter = 0;
-
+    private ArrayList<Role> roles;
+    private UserAccountDirectory userAccountDirectory;  // Users in this organization
+    private WorkRequestDirectory workRequestDirectory;  // Work queue for this organization
+    
     public Organization(String name) {
         this.name = name;
-        this.workQueue = new WorkRequestDirectory();
+        this.roles = new ArrayList<>();
         this.userAccountDirectory = new UserAccountDirectory();
-        this.organizationID = String.valueOf(++counter);
+        this.workRequestDirectory = new WorkRequestDirectory();
     }
-
-    public abstract ArrayList<Role> getSupportedRole(); // Subclasses must implement this
-
-    public UserAccountDirectory getUserAccountDirectory() {
-        return userAccountDirectory;
+    
+    /**
+     * Add a role to this organization
+     * @param role The role to add
+     */
+    public void addRole(Role role) {
+        if (!roles.contains(role)) {
+            roles.add(role);
+        }
     }
-
+    
+    /**
+     * Check if this organization has a specific role
+     * @param roleClass The role class to check
+     * @return true if role exists, false otherwise
+     */
+    public boolean hasRole(Class<? extends Role> roleClass) {
+        for (Role role : roles) {
+            if (role.getClass().equals(roleClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Getters and Setters
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
-    public WorkRequestDirectory getWorkQueue() {
-        return workQueue;
+    
+    public ArrayList<Role> getRoles() {
+        return roles;
     }
-
-    @Override
-    public String toString() {
-        return name;
+    
+    public void setRoles(ArrayList<Role> roles) {
+        this.roles = roles;
+    }
+    
+    public UserAccountDirectory getUserAccountDirectory() {
+        return userAccountDirectory;
+    }
+    
+    public void setUserAccountDirectory(UserAccountDirectory userAccountDirectory) {
+        this.userAccountDirectory = userAccountDirectory;
+    }
+    
+    public WorkRequestDirectory getWorkRequestDirectory() {
+        return workRequestDirectory;
+    }
+    
+    public void setWorkRequestDirectory(WorkRequestDirectory workRequestDirectory) {
+        this.workRequestDirectory = workRequestDirectory;
     }
 }
+
 

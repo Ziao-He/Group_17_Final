@@ -12,23 +12,51 @@ import java.util.ArrayList;
  */
 public class Network {
     private String name;
-    private EnterpriseDirectory enterpriseDirectory; // Updated to use Directory class
-
+    private ArrayList<Enterprise> enterprises;
+    
     public Network(String name) {
         this.name = name;
-        this.enterpriseDirectory = new EnterpriseDirectory();
+        this.enterprises = new ArrayList<>();
     }
-
+    
+    /**
+     * Add an enterprise to this network
+     * @param enterprise The enterprise to add
+     */
+    public void addEnterprise(Enterprise enterprise) {
+        if (!enterprises.contains(enterprise)) {
+            enterprises.add(enterprise);
+        }
+    }
+    
+    /**
+     * Find an enterprise by name
+     * @param name Enterprise name
+     * @return The enterprise, or null if not found
+     */
+    public Enterprise getEnterpriseByName(String name) {
+        for (Enterprise enterprise : enterprises) {
+            if (enterprise.getName().equals(name)) {
+                return enterprise;
+            }
+        }
+        return null;
+    }
+    
+    // Getters and Setters
     public String getName() {
         return name;
     }
-
+    
     public void setName(String name) {
         this.name = name;
     }
-
-    public EnterpriseDirectory getEnterpriseDirectory() {
-        return enterpriseDirectory;
+    
+    public ArrayList<Enterprise> getEnterprises() {
+        return enterprises;
+    }
+    
+    public void setEnterprises(ArrayList<Enterprise> enterprises) {
+        this.enterprises = enterprises;
     }
 }
-

@@ -11,37 +11,90 @@ import java.util.ArrayList;
  * @author yujie-liang
  */
 public class UserAccountDirectory {
-    private ArrayList<UserAccount> userAccountList;
-
+    private ArrayList<UserAccount> userAccounts;
+    
     public UserAccountDirectory() {
-        userAccountList = new ArrayList<>();
+        this.userAccounts = new ArrayList<>();
     }
-
-    public ArrayList<UserAccount> getUserAccountList() {
-        return userAccountList;
+    
+    /**
+     * Add a new user account
+     * @param account The account to add
+     */
+    public void addUserAccount(UserAccount account) {
+        if (!userAccounts.contains(account)) {
+            userAccounts.add(account);
+        }
     }
-
-    public UserAccount authenticateUser(String username, String password) {
-        for (UserAccount ua : userAccountList) {
-            if (ua.getUsername().equals(username) && ua.getPassword().equals(password)) {
-                return ua;
+    
+    /**
+     * Remove a user account
+     * @param account The account to remove
+     * @return true if removed, false otherwise
+     */
+    public boolean removeUserAccount(UserAccount account) {
+        return userAccounts.remove(account);
+    }
+    
+    /**
+     * Find user by username
+     * @param username Username to search for
+     * @return UserAccount if found, null otherwise
+     */
+    public UserAccount findByUsername(String username) {
+        for (UserAccount account : userAccounts) {
+            if (account.getUsername().equals(username)) {
+                return account;
             }
         }
         return null;
     }
-
-    public UserAccount createUserAccount(String username, String password, Role role) {
-        UserAccount userAccount = new UserAccount(username, password, role);
-        userAccountList.add(userAccount);
-        return userAccount;
-    }
-
-    public boolean checkIfUsernameIsUnique(String username) {
-        for (UserAccount ua : userAccountList) {
-            if (ua.getUsername().equals(username)) {
-                return false;
+    
+    /**
+     * Find user by user ID
+     * @param userId User ID to search for
+     * @return UserAccount if found, null otherwise
+     */
+    public UserAccount findByUserId(String userId) {
+        for (UserAccount account : userAccounts) {
+            if (account.getUserId().equals(userId)) {
+                return account;
             }
         }
-        return true;
+        return null;
+    }
+    
+    /**
+     * Find user by email
+     * @param email Email to search for
+     * @return UserAccount if found, null otherwise
+     */
+    public UserAccount findByEmail(String email) {
+        for (UserAccount account : userAccounts) {
+            if (account.getEmail().equals(email)) {
+                return account;
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Get all user accounts
+     * @return List of all accounts
+     */
+    public ArrayList<UserAccount> getUserAccounts() {
+        return userAccounts;
+    }
+    
+    public void setUserAccounts(ArrayList<UserAccount> userAccounts) {
+        this.userAccounts = userAccounts;
+    }
+    
+    /**
+     * Get count of users
+     * @return Number of user accounts
+     */
+    public int size() {
+        return userAccounts.size();
     }
 }

@@ -10,6 +10,32 @@ package basement_class;
  */
 import javax.swing.JPanel;
 public abstract class Role {
-    public abstract JPanel createWorkArea(UserAccount useraccount, Organization org, Enterprise ent, EcoSystem system);
+    /**
+     * Create the work area (UI panel) for this role
+     * This method must be implemented by each concrete role class
+     * 
+     * @param userAccount The user account accessing the work area
+     * @param organization The organization this role belongs to
+     * @param enterprise The enterprise this organization belongs to
+     * @param system The entire ecosystem
+     * @return JPanel containing the role-specific UI
+     */
+    public abstract JPanel createWorkArea(
+        UserAccount userAccount, 
+        Organization organization, 
+        Enterprise enterprise, 
+        EcoSystem system
+    );
+    
+    /**
+     * Get the role name (for display purposes)
+     * @return Role name as string
+     */
+    public abstract String getRoleName();
+    
+    @Override
+    public String toString() {
+        return getRoleName();
+    }
 }
 
