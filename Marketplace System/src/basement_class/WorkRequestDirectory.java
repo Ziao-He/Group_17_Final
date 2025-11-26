@@ -12,4 +12,16 @@ import java.util.ArrayList;
  */
 public class WorkRequestDirectory {
     private ArrayList<WorkRequest> requestList;
+
+    public WorkRequestDirectory() {
+        this.requestList = new ArrayList<>(); // Must initialize to avoid NullPointerException
+    }
+
+    public ArrayList<WorkRequest> getRequestList() {
+        return requestList;
+    }
+
+    public void addRequest(WorkRequest request) {
+        this.requestList.add(request);
+    }
 }

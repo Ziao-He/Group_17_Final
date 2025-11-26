@@ -10,7 +10,18 @@ import java.util.ArrayList;
  *
  * @author yujie-liang
  */
-public abstract class Enterprise {
-    private String name;
-    private ArrayList<Organization> organizations;
+public abstract class Enterprise extends Organization {
+    
+    private String enterpriseType;
+    private OrganizationDirectory organizationDirectory; // Use a Directory class instead of raw ArrayList
+
+    public Enterprise(String name, String type) {
+        super(name);
+        this.enterpriseType = type;
+        this.organizationDirectory = new OrganizationDirectory(); // Init
+    }
+
+    public OrganizationDirectory getOrganizationDirectory() {
+        return organizationDirectory;
+    }
 }
