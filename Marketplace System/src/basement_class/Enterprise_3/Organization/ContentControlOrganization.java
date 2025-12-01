@@ -12,7 +12,7 @@ import basement_class.Organization;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class ContentControlOrganization extends Organization {
         
