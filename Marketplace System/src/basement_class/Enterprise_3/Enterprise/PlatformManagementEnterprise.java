@@ -11,7 +11,7 @@ import basement_class.Enterprise_3.Organization.UserControlOrganization;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class PlatformManagementEnterprise extends Enterprise {
     

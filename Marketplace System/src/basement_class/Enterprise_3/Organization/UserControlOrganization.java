@@ -10,7 +10,7 @@ import basement_class.Organization;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class UserControlOrganization extends Organization {
     

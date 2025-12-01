@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class RegistrationReviewerRole extends Role  {
 
