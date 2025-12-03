@@ -329,4 +329,18 @@ public class OrderDao {
         orders.clear();
         saveToCSV();
     }
+    
+    /**
+     * Get all pending orders for a seller (orders waiting for seller's response)
+     */
+    public List<Order> getPendingOrdersForSeller(String sellerId) {
+    List<Order> result = new ArrayList<>();
+    for (Order order : orders) {
+        if (order.getSellerId().equals(sellerId) && 
+            Order.STATUS_PENDING.equals(order.getStatus())) {
+            result.add(order);
+        }
+    }
+    return result;
+}
 }
