@@ -26,8 +26,6 @@ public class Order extends BaseEntity {
     private String status;             // PENDING, ACCEPTED, REJECTED, COMPLETED, CANCELLED
     
     // Additional information
-    private String buyerMessage;       // Message from buyer to seller
-    private String sellerResponse;     // Response from seller
     private String deliveryMethod;     // How buyer will get the item
     private String meetingLocation;    // Where to meet for exchange
     
@@ -89,18 +87,16 @@ public class Order extends BaseEntity {
     /**
      * Accept this order (seller action)
      */
-    public void accept(String sellerResponse) {
+    public void accept() {
         this.status = STATUS_ACCEPTED;
-        this.sellerResponse = sellerResponse;
         this.touch(); // Update timestamp
     }
     
     /**
      * Reject this order (seller action)
      */
-    public void reject(String reason) {
+    public void reject() {
         this.status = STATUS_REJECTED;
-        this.sellerResponse = reason;
         this.touch();
     }
     
@@ -130,6 +126,8 @@ public class Order extends BaseEntity {
             this.touch();
         }
     }
+    
+    // Getters and Setters
     
     public String getOrderId() {
         return orderId;
@@ -185,22 +183,6 @@ public class Order extends BaseEntity {
     
     public void setStatus(String status) {
         this.status = status;
-    }
-    
-    public String getBuyerMessage() {
-        return buyerMessage;
-    }
-    
-    public void setBuyerMessage(String buyerMessage) {
-        this.buyerMessage = buyerMessage;
-    }
-    
-    public String getSellerResponse() {
-        return sellerResponse;
-    }
-    
-    public void setSellerResponse(String sellerResponse) {
-        this.sellerResponse = sellerResponse;
     }
     
     public String getDeliveryMethod() {
