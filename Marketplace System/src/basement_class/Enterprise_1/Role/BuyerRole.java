@@ -22,7 +22,7 @@ public class BuyerRole extends Role {
                                  EcoSystem system) {
         JPanel panel = new JPanel();
         panel.add(new JLabel("Buyer Dashboard"));
-        return panel;
+        return null;
     }
     
     /**
