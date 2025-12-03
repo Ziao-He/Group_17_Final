@@ -5,8 +5,10 @@
 package service.E2;
 
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.WorkRequest.ListingSubmissionRequest;
+import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import java.util.ArrayList;
@@ -16,43 +18,65 @@ import java.util.ArrayList;
  */
 public class ListingManagementService {
 
-    private final EcoSystem system;
+    private EcoSystem system;
+    private ArrayList<Listing> allListings;   // local storage for listings
 
     public ListingManagementService(EcoSystem system) {
         this.system = system;
+        this.allListings = new ArrayList<>();
     }
 
     /**
-     * Create a listing and attach it to seller's account.
+     * Create a new listing (using existing 3-field constructor).
+     * @param listingId
+     * @param seller
+     * @param title
+     * @return 
      */
-    public Listing createListing(UserAccount seller,
-                                 String title,
-                                 String description,
-                                 double price,
-                                 ArrayList<String> imageUrls) {
+    public Listing createListing(String listingId, UserAccount seller, String title) {
 
-        Listing listing = new Listing(seller.getUsername(), title, description, price, imageUrls);
+        Listing listing = new Listing(listingId, seller.getUserId(), title);
 
-        seller.getUserListingDirectory().addListing(listing);
+        allListings.add(listing);  // We store listing internally
         return listing;
     }
 
     /**
-     * Submit listing for internal review → sends WorkRequest to Enterprise2 ListingManagementOrg.
+     * Submit listing → send to ListingManagementOrganization
+     * @param seller
+     * @param listing
+     * @return 
      */
-    public ListingSubmissionRequest submitListingForReview(UserAccount seller, Listing listing) {
+    public ListingSubmissionRequest submitListing(UserAccount seller, Listing listing) {
 
-        ListingSubmissionRequest request = new ListingSubmissionRequest(listing, seller);
+        ListingSubmissionRequest req = new ListingSubmissionRequest(listing, seller);
+        req.setSender(seller);
 
-        // Add to seller outbox
-        seller.getWorkQueue().addWorkRequest(request);
-
-        // Send to ListingManagementOrganization work queue
-        Organization listingOrg = system.getOrganizationByName("Listing Management Organization");
+        // Find Enterprise2 ListingManagementOrganization
+        Organization listingOrg = findListingManagementOrg();
         if (listingOrg != null) {
-            listingOrg.getWorkQueue().addWorkRequest(request);
+            listingOrg.getWorkRequestDirectory().addWorkRequest(req);
         }
 
-        return request;
+        return req;
+    }
+
+    /**
+     * Searches through the ecosystem to find Enterprise2's "Listing Management" organization.
+     */
+    private Organization findListingManagementOrg() {
+
+        for (Network n : system.getNetworks()) {
+            for (Enterprise e : n.getEnterprises()) {
+                // You will later replace this with: e instanceof MarketplaceEnterprise
+                Organization o = e.getOrganizationByName("Listing Management");
+                if (o != null) return o;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Listing> getAllListings() {
+        return allListings;
     }
 }
