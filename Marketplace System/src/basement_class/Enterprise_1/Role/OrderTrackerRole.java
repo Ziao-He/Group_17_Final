@@ -5,7 +5,6 @@
 package basement_class.Enterprise_1.Role;
 
 import basement_class.*;
-import basement_class.Enterprise_1.Account.BuyerAccount;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
@@ -13,24 +12,19 @@ import javax.swing.JLabel;
  *
  * @author bob-h
  */
-public class BuyerRole extends Role {
-    
+public class OrderTrackerRole extends Role {
     @Override
     public JPanel createWorkArea(UserAccount userAccount, 
                                  Organization organization, 
                                  Enterprise enterprise, 
                                  EcoSystem system) {
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Buyer Dashboard"));
+        panel.add(new JLabel("Order Tracker Dashboard"));
         return panel;
     }
     
-    /**
-     * Get the role name for display purposes
-     * @return "Buyer"
-     */
     @Override
     public String getRoleName() {
-        return "Buyer";
+        return "Order Tracker";
     }
 }
