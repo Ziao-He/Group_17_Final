@@ -17,8 +17,8 @@ public class PolicyEnforcementService {
     public void handleViolation(ViolationInvestigationRequest req, boolean banUser) {
 
         if (banUser) {
-            req.getTargetUser().setStatus("Banned");
-            req.setStatus("User Banned");
+            req.getTargetUser().setStatus("BANNED");
+            req.setStatus("BANNED");
         } else {
             req.setStatus("Warning Issued");
         }
