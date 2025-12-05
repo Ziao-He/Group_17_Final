@@ -63,4 +63,13 @@ public class UserManagementService {
         // 3. 完成工单
         req.resolve();
     }
+    
+    public void rejectUser(AccountStatusReviewRequest req) {
+        UserAccount user = req.getTargetUser();
+
+        user.setStatus("REJECTED");
+        req.setStatus("REJECTED");
+        req.resolve();
+}
+
 }

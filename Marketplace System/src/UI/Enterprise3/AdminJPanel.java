@@ -4,17 +4,29 @@
  */
 package UI.Enterprise3;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise;
+import basement_class.Organization;
+import basement_class.UserAccount;
+
 /**
  *
  * @author Administrator
  */
 public class AdminJPanel extends javax.swing.JPanel {
-
+    private EcoSystem system;
+    private UserAccount adminUser;
+    private Enterprise enterprise;
+    private Organization userOrg;
     /**
      * Creates new form AccountAdminWorkAreaPanel
      */
-    public AdminJPanel() {
+    public AdminJPanel(EcoSystem system,UserAccount adminUser,Enterprise enterprise,Organization userOrg) {
         initComponents();
+        this.system=system;
+        this.adminUser=adminUser;
+        this.enterprise=enterprise;
+        this.userOrg=userOrg;
     }
 
     /**
@@ -29,10 +41,10 @@ public class AdminJPanel extends javax.swing.JPanel {
         jSplitPane1 = new javax.swing.JSplitPane();
         controlJPanel = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnAccountManagement = new javax.swing.JButton();
+        btnRegistrationReview = new javax.swing.JButton();
+        btnContentModeration = new javax.swing.JButton();
+        btnPolicyEnforcement = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -42,13 +54,33 @@ public class AdminJPanel extends javax.swing.JPanel {
 
         btnLogout.setText("Log out");
 
-        jButton1.setText("Acoount Management");
+        btnAccountManagement.setText("Acoount Management");
+        btnAccountManagement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccountManagementActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Registration Review");
+        btnRegistrationReview.setText("Registration Review");
+        btnRegistrationReview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrationReviewActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("Content Moderation");
+        btnContentModeration.setText("Content Moderation");
+        btnContentModeration.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnContentModerationActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Policy Enforcement");
+        btnPolicyEnforcement.setText("Policy Enforcement");
+        btnPolicyEnforcement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPolicyEnforcementActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
         controlJPanel.setLayout(controlJPanelLayout);
@@ -57,10 +89,10 @@ public class AdminJPanel extends javax.swing.JPanel {
             .addGroup(controlJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAccountManagement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRegistrationReview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnContentModeration, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnPolicyEnforcement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout)))
@@ -70,13 +102,13 @@ public class AdminJPanel extends javax.swing.JPanel {
             controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlJPanelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jButton1)
+                .addComponent(btnAccountManagement)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(btnRegistrationReview)
                 .addGap(18, 18, 18)
-                .addComponent(jButton3)
+                .addComponent(btnContentModeration)
                 .addGap(18, 18, 18)
-                .addComponent(jButton4)
+                .addComponent(btnPolicyEnforcement)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 446, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
@@ -100,14 +132,30 @@ public class AdminJPanel extends javax.swing.JPanel {
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAccountManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountManagementActionPerformed
+        
+    }//GEN-LAST:event_btnAccountManagementActionPerformed
+
+    private void btnRegistrationReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrationReviewActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRegistrationReviewActionPerformed
+
+    private void btnContentModerationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContentModerationActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnContentModerationActionPerformed
+
+    private void btnPolicyEnforcementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPolicyEnforcementActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPolicyEnforcementActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccountManagement;
+    private javax.swing.JButton btnContentModeration;
     private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnPolicyEnforcement;
+    private javax.swing.JButton btnRegistrationReview;
     private javax.swing.JPanel controlJPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel workProcessJPanel;
     // End of variables declaration//GEN-END:variables

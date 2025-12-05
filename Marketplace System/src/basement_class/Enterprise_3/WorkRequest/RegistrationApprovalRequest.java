@@ -13,6 +13,7 @@ import basement_class.WorkRequest;
  */
 public class RegistrationApprovalRequest extends WorkRequest{
     private UserAccount newUser;
+    private String reason;
 
     public RegistrationApprovalRequest(UserAccount newUser) {
         super();
@@ -22,5 +23,15 @@ public class RegistrationApprovalRequest extends WorkRequest{
 
     public UserAccount getNewUser() {
         return newUser;
-    }    
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    
 }

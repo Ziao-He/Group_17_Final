@@ -8,9 +8,11 @@ package basement_class.Enterprise_3.Role;
  *
  * @author Linyiyang
  */
+import UI.Enterprise3.AccountAdminWorkAreaPanel;
 import basement_class.*;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Organization;
 import basement_class.Role;
 import basement_class.UserAccount;
@@ -24,15 +26,15 @@ public class AccountAdminRole extends Role {
                                  Organization organization,
                                  Enterprise enterprise,
                                  EcoSystem system) {
-//        return new AccountAdminWorkAreaPanel(
-//                userAccount, organization, enterprise, system
-//        );
-          return null;
+        
+    UserControlOrganization userOrg =(UserControlOrganization) organization; 
+            return new AccountAdminWorkAreaPanel(
+                system, userAccount, userOrg
+        );
     }
-
     @Override
     public String getRoleName() {
-        return "Account Admin";
+        return "Account";
     }
 }
 

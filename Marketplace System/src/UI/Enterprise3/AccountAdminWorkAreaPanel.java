@@ -4,17 +4,32 @@
  */
 package UI.Enterprise3;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise_3.Organization.UserControlOrganization;
+import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
+import basement_class.UserAccount;
+import basement_class.WorkRequest;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import service.E3.UserManagementService;
+
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
-
+    private EcoSystem system;
+    private UserAccount admin;
+    private UserControlOrganization userOrg;
     /**
      * Creates new form AccountAdminWorkAreaPanel
      */
-    public AccountAdminWorkAreaPanel() {
+    public AccountAdminWorkAreaPanel(EcoSystem system,UserAccount admin,UserControlOrganization org) {
         initComponents();
+        this.system=system;
+        this.admin=admin;
+        this.userOrg = org;
+        loadTable();
     }
 
     /**
@@ -26,19 +41,232 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblUser = new javax.swing.JTable();
+        btnDescpriton = new javax.swing.JButton();
+        btnReject = new javax.swing.JButton();
+        btnAccept = new javax.swing.JButton();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        tblUser.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Request ID", "User", "Ation", "Status", "null"
+            }
+        ));
+        jScrollPane1.setViewportView(tblUser);
+        if (tblUser.getColumnModel().getColumnCount() > 0) {
+            tblUser.getColumnModel().getColumn(4).setMinWidth(0);
+            tblUser.getColumnModel().getColumn(4).setPreferredWidth(0);
+            tblUser.getColumnModel().getColumn(4).setMaxWidth(0);
+        }
+
+        btnDescpriton.setText("Descpriton");
+        btnDescpriton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescpritonActionPerformed(evt);
+            }
+        });
+
+        btnReject.setText("Reject");
+        btnReject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRejectActionPerformed(evt);
+            }
+        });
+
+        btnAccept.setText("Accepet");
+        btnAccept.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAcceptActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(78, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 963, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(64, 64, 64))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(283, 283, 283)
+                        .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDescpriton, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(83, 83, 83))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDescpriton)
+                    .addComponent(btnReject)
+                    .addComponent(btnAccept))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+        int row = tblUser.getSelectedRow();
+            if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a request first.");
+            return;
+        }
+
+         AccountStatusReviewRequest req =
+            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
+
+        UserManagementService service = new UserManagementService();
+
+        String action = req.getAction().toUpperCase();
+
+        switch (action) {
+            case "SUSPEND":
+                service.suspendUser(req);
+                break;
+
+            case "REACTIVATE":
+                service.reactivateUser(req);
+                break;
+
+            case "BAN":
+                service.banUser(req);
+                break;
+
+            default:
+                JOptionPane.showMessageDialog(this, "Unknown action: " + req.getAction());
+                return;
+        }
+
+        JOptionPane.showMessageDialog(this, "Request processed successfully.");
+        loadTable();
+
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
+    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+             int row = tblUser.getSelectedRow();
+    if (row < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a request first.");
+        return;
+    }
+
+    AccountStatusReviewRequest req =
+            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
+
+    if (!req.getStatus().equalsIgnoreCase("PENDING")) {
+        JOptionPane.showMessageDialog(this, "This request is already processed.");
+        return;
+    }
+
+    // Step 1: 输入理由
+    String reason = JOptionPane.showInputDialog(
+            this,
+            "Please enter the reason for rejection:",
+            "Rejection Reason",
+            JOptionPane.PLAIN_MESSAGE
+    );
+
+    if (reason == null) {  // 用户取消
+        return;
+    }
+
+    if (reason.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Rejection reason cannot be empty.");
+        return;
+    }
+
+    // Step 2: 再次确认
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Confirm rejection with reason:\n\n" + reason,
+            "Confirm Rejection",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // Step 3: 调用 Service（推荐做法）
+    UserManagementService service = new UserManagementService();
+    req.setReviewerDecisionReason(reason);
+    service.rejectUser(req);  // 你需要在 service 里写 rejectUser(req)
+
+    // Step 4: UI 提示 + 刷新
+    JOptionPane.showMessageDialog(this, "Request rejected.");
+    loadTable();
+    }//GEN-LAST:event_btnRejectActionPerformed
+
+    private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
+    int row = tblUser.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a request.");
+            return;
+        }
+
+        AccountStatusReviewRequest req =
+            (AccountStatusReviewRequest) tblUser.getValueAt(row, 6);
+
+        StringBuilder msg = new StringBuilder();
+        msg.append("User: ").append(req.getTargetUser().getUsername()).append("\n");
+        msg.append("Action: ").append(req.getAction()).append("\n\n");
+
+        msg.append("=== Request Description (申请理由) ===\n");
+        msg.append(req.getRequestDescription() == null ? 
+               "No request description." : req.getRequestDescription());
+        msg.append("\n\n");
+
+        msg.append("=== Reviewer Decision Reason (审核拒绝理由) ===\n");
+        msg.append(req.getReviewerDecisionReason() == null ? 
+               "Not reviewed yet or approved." : req.getReviewerDecisionReason());
+
+        JOptionPane.showMessageDialog(this, msg.toString(), "Request Details", JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnDescpritonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccept;
+    private javax.swing.JButton btnDescpriton;
+    private javax.swing.JButton btnReject;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblUser;
     // End of variables declaration//GEN-END:variables
+
+    private void loadTable() {
+        DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+        model.setRowCount(0);
+
+        for (WorkRequest wr : userOrg.getWorkRequestDirectory().getRequestList()) {
+            if (wr instanceof AccountStatusReviewRequest) {
+                AccountStatusReviewRequest req = (AccountStatusReviewRequest) wr;
+            
+                if(!req.getStatus().equalsIgnoreCase("PENDING")) {
+                continue;
+            }
+                
+                Object[] row = new Object[]{
+                       req.getId(),
+                       req.getTargetUser().getUsername(),
+                       req.getAction(),
+                       req.getStatus(),
+                       req   // 隐藏列，用来存对象
+             };
+             model.addRow(row);
+            }
+         }        
+    }
 }
