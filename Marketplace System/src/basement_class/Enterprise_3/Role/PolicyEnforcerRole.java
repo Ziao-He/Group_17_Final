@@ -4,6 +4,7 @@
  */
 package basement_class.Enterprise_3.Role;
 
+import UI.Enterprise3.PolicyEnforcementJPanel;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_3.Organization.ContentControlOrganization;
@@ -23,10 +24,9 @@ public class PolicyEnforcerRole extends Role {
                                  Enterprise enterprise,
                                  EcoSystem system) {
         ContentControlOrganization contentOrg =(ContentControlOrganization) organization;
-//        return new olicyEnforcerWorkAreaPanel(
-//                userAccount, organization, enterprise, system
-//        );
-          return null;
+        return new PolicyEnforcementJPanel(
+                system,userAccount, contentOrg
+        );
     }
 
     @Override
