@@ -4,6 +4,7 @@
  */
 package basement_class.Enterprise_3.Role;
 
+import UI.Enterprise3.RegistrationReviewJPanel;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_3.Organization.UserControlOrganization;
@@ -24,10 +25,10 @@ public class RegistrationReviewerRole extends Role  {
                                  Enterprise enterprise,
                                  EcoSystem system) {
         UserControlOrganization userOrg =(UserControlOrganization) organization; 
-//        return new RegistrationReviewerWorkAreaPanel(
-//                userAccount, organization, enterprise, system
-//        );
-          return null;
+        return new RegistrationReviewJPanel(
+                userAccount, userOrg, enterprise, system
+        );
+      
     }
 
     @Override

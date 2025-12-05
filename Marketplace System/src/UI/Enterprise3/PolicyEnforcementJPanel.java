@@ -5,6 +5,7 @@
 package UI.Enterprise3;
 
 import basement_class.EcoSystem;
+import basement_class.Enterprise_3.Organization.ContentControlOrganization;
 import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
 import basement_class.Enterprise_3.WorkRequest.PolicyViolationRequest;
@@ -32,13 +33,13 @@ import service.E3.UserManagementService;
 public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     private EcoSystem system;
     private UserAccount admin;
-    private UserControlOrganization userOrg;
+    private ContentControlOrganization userOrg;
 
     private PolicyEnforcementService service;
     /**
      * Creates new form AccountAdminWorkAreaPanel
      */
-    public PolicyEnforcementJPanel(EcoSystem system,UserAccount admin,UserControlOrganization org) {
+    public PolicyEnforcementJPanel(EcoSystem system,UserAccount admin,ContentControlOrganization org) {
         initComponents();
 
         this.system = system;
