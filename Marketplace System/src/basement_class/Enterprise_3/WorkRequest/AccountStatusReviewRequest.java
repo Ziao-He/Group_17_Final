@@ -12,14 +12,18 @@ import basement_class.WorkRequest;
  * @author Administrator
  */
 public class AccountStatusReviewRequest extends WorkRequest {
-    private UserAccount targetUser;
-    private String action; // suspend, reactivate…
+    
+    private UserAccount targetUser;            
+    private String action;                     // suspend, reactivate, ban
+    private String requestDescription;         // 申请人填写：为什么要申请此操作
+    private String reviewerDecisionReason;     // 审核者拒绝的理由
 
-    public AccountStatusReviewRequest(UserAccount user, String action) {
+    public AccountStatusReviewRequest(UserAccount user, String action, String requestDescription) {
         super();
         this.targetUser = user;
         this.action = action;
-        this.setStatus("Pending");
+        this.requestDescription = requestDescription;
+        this.setStatus("PENDING");
     }
 
     public UserAccount getTargetUser() { 
@@ -28,6 +32,25 @@ public class AccountStatusReviewRequest extends WorkRequest {
     
     public String getAction() { 
         return action; 
-    }    
-    
+    }
+
+    // ========== 申请人填写的理由 ==========
+    public String getRequestDescription() {
+        return requestDescription;
+    }
+
+    public void setRequestDescription(String desc) {
+        this.requestDescription = desc;
+    }
+
+    // ========== 审核者拒绝填写的理由 ==========
+    public String getReviewerDecisionReason() {
+        return reviewerDecisionReason;
+    }
+
+    public void setReviewerDecisionReason(String reason) {
+        this.reviewerDecisionReason = reason;
+    }
+
+
 }

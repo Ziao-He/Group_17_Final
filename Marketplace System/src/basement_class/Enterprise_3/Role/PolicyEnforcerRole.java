@@ -6,6 +6,7 @@ package basement_class.Enterprise_3.Role;
 
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_3.Organization.ContentControlOrganization;
 import basement_class.Organization;
 import basement_class.Role;
 import basement_class.UserAccount;
@@ -21,6 +22,7 @@ public class PolicyEnforcerRole extends Role {
                                  Organization organization,
                                  Enterprise enterprise,
                                  EcoSystem system) {
+        ContentControlOrganization contentOrg =(ContentControlOrganization) organization;
 //        return new olicyEnforcerWorkAreaPanel(
 //                userAccount, organization, enterprise, system
 //        );
@@ -29,6 +31,6 @@ public class PolicyEnforcerRole extends Role {
 
     @Override
     public String getRoleName() {
-        return "Account Admin";
+        return "Policy";
     }        
 }
