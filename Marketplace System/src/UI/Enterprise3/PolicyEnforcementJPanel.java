@@ -7,10 +7,22 @@ package UI.Enterprise3;
 import basement_class.EcoSystem;
 import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
+import basement_class.Enterprise_3.WorkRequest.PolicyViolationRequest;
 import basement_class.UserAccount;
 import basement_class.WorkRequest;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Image;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
+import service.E3.PolicyEnforcementService;
 import service.E3.UserManagementService;
 
 /**
@@ -21,14 +33,18 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     private EcoSystem system;
     private UserAccount admin;
     private UserControlOrganization userOrg;
+
+    private PolicyEnforcementService service;
     /**
      * Creates new form AccountAdminWorkAreaPanel
      */
     public PolicyEnforcementJPanel(EcoSystem system,UserAccount admin,UserControlOrganization org) {
         initComponents();
-        this.system=system;
-        this.admin=admin;
+
+        this.system = system;
+        this.admin = admin;
         this.userOrg = org;
+        this.service = new PolicyEnforcementService();
         loadTable();
     }
 
@@ -57,7 +73,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Request ID", "User", "Ation", "Status", "null"
+                "Request ID", "Target User", "Category", "Status", "Object"
             }
         ));
         jScrollPane1.setViewportView(tblUser);
@@ -119,120 +135,107 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-        int row = tblUser.getSelectedRow();
-            if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a request first.");
-            return;
-        }
+        PolicyViolationRequest req = getSelectedRequest();
+        if (req == null) return;
 
-         AccountStatusReviewRequest req =
-            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
+        int confirm = JOptionPane.showConfirmDialog(
+                this, 
+                "Approve this violation request?", 
+                "Confirm", 
+                JOptionPane.YES_NO_OPTION
+        );
 
-        UserManagementService service = new UserManagementService();
+        if (confirm != JOptionPane.YES_OPTION) return;
 
-        String action = req.getAction().toUpperCase();
+        service.approveViolation(system, req);
 
-        switch (action) {
-            case "SUSPEND":
-                service.suspendUser(req);
-                break;
-
-            case "REACTIVATE":
-                service.reactivateUser(req);
-                break;
-
-            case "BAN":
-                service.banUser(req);
-                break;
-
-            default:
-                JOptionPane.showMessageDialog(this, "Unknown action: " + req.getAction());
-                return;
-        }
-
-        JOptionPane.showMessageDialog(this, "Request processed successfully.");
+        JOptionPane.showMessageDialog(this, "Request approved and processed.");
         loadTable();
-
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
-             int row = tblUser.getSelectedRow();
-    if (row < 0) {
-        JOptionPane.showMessageDialog(this, "Please select a request first.");
-        return;
-    }
 
-    AccountStatusReviewRequest req =
-            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
+        PolicyViolationRequest req = getSelectedRequest();
+        if (req == null) return;
 
-    if (!req.getStatus().equalsIgnoreCase("PENDING")) {
-        JOptionPane.showMessageDialog(this, "This request is already processed.");
-        return;
-    }
+        String reason = JOptionPane.showInputDialog("Enter rejection reason:");
+        if (reason == null || reason.trim().isEmpty()) return;
 
-    // Step 1: 输入理由
-    String reason = JOptionPane.showInputDialog(
-            this,
-            "Please enter the reason for rejection:",
-            "Rejection Reason",
-            JOptionPane.PLAIN_MESSAGE
-    );
+        service.rejectViolation(req, reason);
 
-    if (reason == null) {  // 用户取消
-        return;
-    }
-
-    if (reason.trim().isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Rejection reason cannot be empty.");
-        return;
-    }
-
-    // Step 2: 再次确认
-    int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Confirm rejection with reason:\n\n" + reason,
-            "Confirm Rejection",
-            JOptionPane.YES_NO_OPTION
-    );
-
-    if (confirm != JOptionPane.YES_OPTION) {
-        return;
-    }
-
-    // Step 3: 调用 Service（推荐做法）
-    UserManagementService service = new UserManagementService();
-    req.setReviewerDecisionReason(reason);
-    service.rejectUser(req);  // 你需要在 service 里写 rejectUser(req)
-
-    // Step 4: UI 提示 + 刷新
-    JOptionPane.showMessageDialog(this, "Request rejected.");
-    loadTable();
+        JOptionPane.showMessageDialog(this, "Request rejected.");
+        loadTable();
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
-    int row = tblUser.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a request.");
-            return;
+        PolicyViolationRequest req = getSelectedRequest();
+    if (req == null) return;
+
+    // 创建一个弹窗
+    JDialog dialog = new JDialog((java.awt.Frame) null, "Violation Details", true);
+    dialog.setSize(600, 800);
+    dialog.setLayout(new BorderLayout());
+
+    // ================== 上半部分：文字信息 =====================
+    JTextArea text = new JTextArea();
+    text.setEditable(false);
+    text.setLineWrap(true);
+    text.setWrapStyleWord(true);
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Reporter: ").append(req.getReporter().getUsername()).append("\n");
+    sb.append("Target User: ").append(req.getTargetUser().getUsername()).append("\n\n");
+    sb.append("Category: ").append(req.getDisplayCategory()).append("\n\n");
+    sb.append("Description:\n").append(req.getViolationInfo()).append("\n\n");
+
+    if (req.getListing() != null) {
+        sb.append("Related Listing: ").append(req.getListing().getTitle()).append("\n\n");
+    }
+
+    text.setText(sb.toString());
+
+    JScrollPane textScroll = new JScrollPane(text);
+    textScroll.setPreferredSize(new Dimension(580, 200));
+    dialog.add(textScroll, BorderLayout.NORTH);
+
+    // ================== 下半部分：图片证据 =====================
+    JPanel imagePanel = new JPanel();
+    imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.Y_AXIS));
+
+    if (req.getEvidencePaths().isEmpty()) {
+
+        JLabel noImg = new JLabel("No evidence provided.");
+        imagePanel.add(noImg);
+
+    } else {
+        for (String path : req.getEvidencePaths()) {
+            try {
+                ImageIcon icon = new ImageIcon(path);
+
+                // 自动缩放图片（最大宽度 500）
+                Image scaled = icon.getImage().getScaledInstance(
+                        500,
+                        -1,
+                        Image.SCALE_SMOOTH
+                );
+
+                JLabel imgLabel = new JLabel(new ImageIcon(scaled));
+                imgLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 0, 10, 0));
+
+                imagePanel.add(imgLabel);
+
+            } catch (Exception e) {
+                imagePanel.add(new JLabel("Failed to load image: " + path));
+            }
         }
+    }
 
-        AccountStatusReviewRequest req =
-            (AccountStatusReviewRequest) tblUser.getValueAt(row, 6);
+    JScrollPane imgScroll = new JScrollPane(imagePanel);
+    dialog.add(imgScroll, BorderLayout.CENTER);
 
-        StringBuilder msg = new StringBuilder();
-        msg.append("User: ").append(req.getTargetUser().getUsername()).append("\n");
-        msg.append("Action: ").append(req.getAction()).append("\n\n");
-
-        msg.append("=== Request Description (申请理由) ===\n");
-        msg.append(req.getRequestDescription() == null ? 
-               "No request description." : req.getRequestDescription());
-        msg.append("\n\n");
-
-        msg.append("=== Reviewer Decision Reason (审核拒绝理由) ===\n");
-        msg.append(req.getReviewerDecisionReason() == null ? 
-               "Not reviewed yet or approved." : req.getReviewerDecisionReason());
-
-        JOptionPane.showMessageDialog(this, msg.toString(), "Request Details", JOptionPane.INFORMATION_MESSAGE);
+    // 显示弹窗
+    dialog.setLocationRelativeTo(this);
+    dialog.setVisible(true);
     }//GEN-LAST:event_btnDescpritonActionPerformed
 
 
@@ -249,22 +252,24 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
         for (WorkRequest wr : userOrg.getWorkRequestDirectory().getRequestList()) {
-            if (wr instanceof AccountStatusReviewRequest) {
-                AccountStatusReviewRequest req = (AccountStatusReviewRequest) wr;
-            
-                if(!req.getStatus().equalsIgnoreCase("PENDING")) {
-                continue;
+            if (wr instanceof PolicyViolationRequest req) {
+                model.addRow(new Object[]{
+                        req.getId(),                                     // Request ID
+                        req.getTargetUser().getUsername(),               // Target User
+                        req.getDisplayCategory(),                        // Category（中文名）
+                        req.getStatus(),                                 // Status
+                        req                                               // Object（隐藏列）
+                });
             }
-                
-                Object[] row = new Object[]{
-                       req.getId(),
-                       req.getTargetUser().getUsername(),
-                       req.getAction(),
-                       req.getStatus(),
-                       req   // 隐藏列，用来存对象
-             };
-             model.addRow(row);
-            }
-         }        
+        }
+    }
+
+    private PolicyViolationRequest getSelectedRequest() {
+        int row = tblUser.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a request.");
+            return null;
+        }
+        return (PolicyViolationRequest) tblUser.getValueAt(row, 4);
     }
 }
