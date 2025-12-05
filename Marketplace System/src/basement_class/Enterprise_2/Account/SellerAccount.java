@@ -4,43 +4,49 @@
  */
 package basement_class.Enterprise_2.Account;
 
+import basement_class.Enterprise_2.Listing;
 import basement_class.UserAccount;
 import common_class.Product;
 import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author 心火牧神塞勒斯
  */
 public class SellerAccount extends UserAccount {
 
-    private ArrayList<Product> products;       // Seller's product list
-    private ArrayList<String> listingIds;      // Listings created by this Seller
+    
+    private final List<Listing> listings;  
 
     public SellerAccount() {
         super();
-        this.products = new ArrayList<>();
-        this.listingIds = new ArrayList<>();
+        this.listings = new ArrayList<>();
     }
 
-    // Product management
-    public void addProduct(Product product) {
-        if (!products.contains(product)) {
-            products.add(product);
+    
+    public void addListing(Listing listing) {
+        if (listing != null && !listings.contains(listing)) {
+            listings.add(listing);
         }
     }
 
-    public ArrayList<Product> getProducts() {
-        return products;
+    
+    public boolean removeListing(Listing listing) {
+        return listings.remove(listing);
     }
 
-    // Listing management
-    public void addListingId(String listingId) {
-        if (!listingIds.contains(listingId)) {
-            listingIds.add(listingId);
+    
+    public List<Listing> getListings() {
+        return new ArrayList<>(listings);  
+    }
+
+    
+    public Listing findListingById(String listingId) {
+        for (Listing listing : listings) {
+            if (listing.getId().equals(listingId)) {
+                return listing;
+            }
         }
-    }
-
-    public ArrayList<String> getListingIds() {
-        return listingIds;
+        return null;
     }
 }
