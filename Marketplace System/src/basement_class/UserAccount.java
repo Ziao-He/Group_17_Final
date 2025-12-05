@@ -18,10 +18,11 @@ public abstract class UserAccount {
     private String passwordHash;      // Store hashed password, not plain text
     private String phoneNumber;
     private String organizationId;    // Which organization this user belongs to
-    private String status;            // "ACTIVE", "SUSPENDED", "PENDING"
+    private String status;            // "ACTIVE", "BANNED", "PENDING"
     private Role role;
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
+    private int warningCount =0 ;
     
     public UserAccount() {
         this.createdAt = LocalDateTime.now();
@@ -143,4 +144,13 @@ public abstract class UserAccount {
     public void setLastLoginAt(LocalDateTime lastLoginAt) {
         this.lastLoginAt = lastLoginAt;
     }
+    
+    public int getWarningCount() {
+        return warningCount;
+    }
+
+    public void incrementWarning() {
+        this.warningCount++;
+    }
+    
 }

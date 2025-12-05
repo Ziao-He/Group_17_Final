@@ -14,8 +14,8 @@ import basement_class.UserAccount;
  * @author linyiyang
  */
 public class UserManagementService {
-
-         public void suspendUser(AccountStatusReviewRequest req) {
+       
+        public void suspendUser(AccountStatusReviewRequest req) {
 
         UserAccount user = req.getTargetUser();
 
@@ -72,4 +72,28 @@ public class UserManagementService {
         req.resolve();
 }
 
+
+    /**
+     * 给用户发警告（轻微违规）
+     */
+    public void issueWarning(UserAccount user) {
+
+        // 1. 警告计数 +1
+        user.incrementWarning();
+
+        // 2. 保持账号 ACTIVE，不封号
+        if (!"BANNED".equals(user.getStatus())) {
+            user.setStatus("ACTIVE");
+        }
+
+        // 3. 可选：超过 3 次自动封号（如果你想要这功能）
+        if (user.getWarningCount() >= 3) {
+            user.setStatus("BANNED");
+        }
+
+        // 4. 打印日志（可选）
+        System.out.println("[UserManagementService] Warning issued to user: "
+                + user.getUsername() + " (total warnings = " + user.getWarningCount() + ")");
+    }
 }
+
