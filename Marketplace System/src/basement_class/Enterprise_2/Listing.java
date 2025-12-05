@@ -100,4 +100,5 @@ public class Listing extends BaseEntity {
     public String getSellerId(){
         return this.getSeller().getUserId();
     }
+
 }

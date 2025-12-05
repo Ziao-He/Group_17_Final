@@ -4,6 +4,7 @@
  */
 package basement_class;
 
+import basement_class.Enterprise_2.Listing;
 import java.util.ArrayList;
 
 /**
@@ -71,4 +72,18 @@ public class EcoSystem {
     public void setWorkRequestDirectory(WorkRequestDirectory workRequestDirectory) {
         this.workRequestDirectory = workRequestDirectory;
     }
+
+    public Listing findListingById(String id) {
+    for (Network n : networks) {
+        for (Enterprise e : n.getEnterprises()) {
+            for (Organization o : e.getOrganizations()) {
+                for (Listing l : o.g) {
+                    if (l.getId().equals(id))
+                        return l;
+                }
+            }
+        }
+    }
+    return null;
+}
 }
