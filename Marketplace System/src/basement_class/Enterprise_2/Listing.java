@@ -20,14 +20,7 @@ public class Listing extends BaseEntity {
     private double price;           // 商品价格（可选，但课程里常用）
     private String status;          // Pending / Approved / Rejected
     private LocalDateTime submitTime; // 提交时间戳
-
-    public Listing(String id, String sellerId, String title) { 
-        this.id = id; 
-        this.seller.setUserId(sellerId); 
-        this.title = title; 
-        this.status = "Pending"; 
-        }
-        
+    
     public Listing(String id, UserAccount seller, String title, String description, String imagePath, double price) {
         this.id = id;
         this.seller = seller;
