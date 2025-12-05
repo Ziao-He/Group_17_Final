@@ -4,17 +4,42 @@
  */
 package UI.Enterprise3;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_3.Organization.ContentControlOrganization;
+import basement_class.Enterprise_3.Organization.UserControlOrganization;
+import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
+import basement_class.Enterprise_3.WorkRequest.ListingReviewRequest;
+import basement_class.UserAccount;
+import basement_class.WorkRequest;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import service.E3.ContentModerationService;
+import service.E3.UserManagementService;
+
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class ContentModerationJpanel extends javax.swing.JPanel {
-
+    
+    private EcoSystem system;
+    private UserAccount moderator;
+    private ContentControlOrganization contentOrg;
+    private ContentModerationService service;
+    
     /**
-     * Creates new form ContentModerationJpanel
+     * Creates new form AccountAdminWorkAreaPanel
      */
-    public ContentModerationJpanel() {
+    public ContentModerationJpanel(EcoSystem system, UserAccount moderator, ContentControlOrganization org) {
         initComponents();
+        this.system = system;
+        this.moderator = moderator;
+        this.contentOrg = org;
+        this.service = new ContentModerationService();
+        loadTable();
     }
 
     /**
@@ -26,19 +51,183 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblRequests = new javax.swing.JTable();
+        btnDescpriton = new javax.swing.JButton();
+        btnReject = new javax.swing.JButton();
+        btnAccept = new javax.swing.JButton();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        tblRequests.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Request ID", "Seller ID", "Item", "Status", "Object"
+            }
+        ));
+        jScrollPane1.setViewportView(tblRequests);
+        if (tblRequests.getColumnModel().getColumnCount() > 0) {
+            tblRequests.getColumnModel().getColumn(4).setMinWidth(0);
+            tblRequests.getColumnModel().getColumn(4).setPreferredWidth(0);
+            tblRequests.getColumnModel().getColumn(4).setMaxWidth(0);
+        }
+
+        btnDescpriton.setText("Descpriton");
+        btnDescpriton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescpritonActionPerformed(evt);
+            }
+        });
+
+        btnReject.setText("Reject");
+        btnReject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRejectActionPerformed(evt);
+            }
+        });
+
+        btnAccept.setText("Accepet");
+        btnAccept.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAcceptActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1105, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(91, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(301, 301, 301)
+                        .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDescpriton, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 960, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(54, 54, 54))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(65, 65, 65)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAccept)
+                    .addComponent(btnReject)
+                    .addComponent(btnDescpriton))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+        int row = tblRequests.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a request.");
+            return;
+        }
+
+        ListingReviewRequest req = (ListingReviewRequest) tblRequests.getValueAt(row, 4);
+
+        service.approveListing(req);
+        JOptionPane.showMessageDialog(this, "Listing Approved.");
+
+        loadTable();
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
+    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+        int row = tblRequests.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a request.");
+            return;
+        }
+
+        ListingReviewRequest req = (ListingReviewRequest) tblRequests.getValueAt(row, 4);
+
+        String reason = JOptionPane.showInputDialog(this, "Enter rejection reason:");
+
+        if (reason == null || reason.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Rejection reason required.");
+            return;
+        }
+
+        req.setRejectionReason(reason);
+        service.rejectListing(req, reason);
+
+        JOptionPane.showMessageDialog(this, "Listing Rejected.");
+
+        loadTable();
+    }//GEN-LAST:event_btnRejectActionPerformed
+
+    private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
+        int row = tblRequests.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a request.");
+            return;
+        }
+
+        ListingReviewRequest req = (ListingReviewRequest) tblRequests.getValueAt(row, 4);
+        Listing listing = req.getListing();
+
+        StringBuilder s = new StringBuilder();
+        s.append("Title: ").append(listing.getTitle()).append("\n");
+        s.append("Seller: ").append(listing.getSeller().getUsername()).append("\n");
+        s.append("Description: ").append(listing.getDescription()).append("\n");
+        s.append("Upload Reason: ").append(req.getReason()).append("\n");
+        s.append("Review Status: ").append(req.getStatus()).append("\n");
+        if (req.getRejectionReason() != null) {
+            s.append("Rejection Reason: ").append(req.getRejectionReason()).append("\n");
+        }
+
+        // 图片（如果有）
+        ImageIcon icon = null;
+        if (listing.getImagePath() != null) {
+            ImageIcon raw = new ImageIcon(listing.getImagePath());
+            Image scaled = raw.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(scaled);
+        }
+
+        JOptionPane.showMessageDialog(this, s.toString(), "Listing Detail", JOptionPane.INFORMATION_MESSAGE, icon);
+    
+    }//GEN-LAST:event_btnDescpritonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccept;
+    private javax.swing.JButton btnDescpriton;
+    private javax.swing.JButton btnReject;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblRequests;
     // End of variables declaration//GEN-END:variables
+
+    private void loadTable() {
+        DefaultTableModel model = (DefaultTableModel) tblRequests.getModel();
+        model.setRowCount(0);
+
+        for (WorkRequest wr : contentOrg.getWorkRequestDirectory().getRequestList()) {
+            if (wr instanceof ListingReviewRequest) {
+                ListingReviewRequest req = (ListingReviewRequest) wr;
+
+                Object row[] = new Object[5];
+                row[0] = req.getId();
+                row[1] = req.getListing().getSeller().getUsername();
+                row[2] = req.getListing().getTitle();
+                row[3] = req.getStatus();
+                row[4] = req;
+
+                model.addRow(row);
+            }
+        }
+    }
+
+
+    
 }

@@ -41,8 +41,13 @@ public class ListingReviewRequest extends WorkRequest{
     public List<String> getEvidence(){
         return evidence;
     }
-
-    public void setRejectionReason(String r){ this.rejectionReason = r; }
-    public String getRejectionReason(){ return rejectionReason; }
+    
+    public void setRejectionReason(String r){ 
+        this.rejectionReason = r;
+    }
+    
+    public String getRejectionReason(){ 
+        return rejectionReason; 
+    }
 }
 
