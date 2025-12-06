@@ -7,6 +7,7 @@ package UI.main;
 import basement_class.*;
 import basement_class.Enterprise_1.Enterprise.BuyerOperationsEnterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_1.Account.BuyerProfile;
 import basement_class.Enterprise_1.Organization.*;
 import basement_class.Enterprise_1.Role.*;
 
@@ -62,6 +63,13 @@ public class Enterprise1Initializer {
             "BUYER-001", "buyer1", "buyer1@university.edu", 
             "123-456-7890", "ORG-SHOPPING-001", new BuyerRole()
         );
+        
+        // Set profile details
+        BuyerProfile profile1 = buyer1.getProfile();
+        profile1.setFullName("John Buyer");
+        profile1.addPreferredCategory("Textbooks");
+        profile1.setMaxBudget(200.0);
+        
         addAccount(buyer1, shoppingOrg, system);
         System.out.println("    • buyer1 (BuyerRole) - password: password123");
         
@@ -72,6 +80,14 @@ public class Enterprise1Initializer {
         );
         buyer2.addToFavorites("PROD-001");
         buyer2.addToFavorites("PROD-002");
+        
+        // Set profile preferences
+        BuyerProfile profile2 = buyer2.getProfile();
+        profile2.setFullName("Alice Searcher");
+        profile2.addPreferredCategory("Electronics");
+        profile2.addPreferredCategory("Textbooks");
+        profile2.setMaxBudget(500.0);
+        
         addAccount(buyer2, shoppingOrg, system);
         System.out.println("    • searcher1 (ProductSearcherRole) - password: password123");
         
@@ -84,6 +100,14 @@ public class Enterprise1Initializer {
         buyer3.addOrder("ORDER-002");
         buyer3.setCompletedPurchases(1);
         buyer3.setPoints(150);
+        
+        // Set profile preferences
+        BuyerProfile profile3 = buyer3.getProfile();
+        profile3.setFullName("Bob Tracker");
+        profile3.addPreferredCategory("Furniture");
+        profile3.setMaxBudget(300.0);
+        profile3.setPreferredLocation("Campus Center");
+        
         addAccount(buyer3, orderOrg, system);
         System.out.println("    • tracker1 (OrderTrackerRole) - password: password123");
     }
@@ -97,12 +121,20 @@ public class Enterprise1Initializer {
         BuyerAccount account = new BuyerAccount();
         account.setUserId(userId);
         account.setUsername(username);
-        account.setEmail(email);
         account.setPasswordHash("password123"); // TODO: Implement proper hashing
         account.setPhoneNumber(phone);
         account.setStatus("ACTIVE");
         account.setOrganizationId(orgId);
         account.setRole(role);
+        
+        // Set profile information
+        BuyerProfile profile = account.getProfile();
+        profile.setUserId(userId);
+        profile.setProfileId("PROFILE-" + userId);
+        profile.setEmail(email);
+        profile.setPhoneNumber(phone);
+        // Additional profile setup can be done here
+        
         return account;
     }
     
