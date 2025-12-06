@@ -53,6 +53,11 @@ public class AdminJPanel extends javax.swing.JPanel {
         controlJPanel.setForeground(new java.awt.Color(102, 255, 255));
 
         btnLogout.setText("Log out");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         btnAccountManagement.setText("Acoount Management");
         btnAccountManagement.addActionListener(new java.awt.event.ActionListener() {
@@ -147,6 +152,10 @@ public class AdminJPanel extends javax.swing.JPanel {
     private void btnPolicyEnforcementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPolicyEnforcementActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPolicyEnforcementActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

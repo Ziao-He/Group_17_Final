@@ -24,7 +24,7 @@ public class BuyerAccount extends UserAccount {
     private int points;
     
     // References
-    private List<String> favoriteProductIds;
+    private List<String> favoriteListingIds;
     private List<String> orderIds;
     
     /**
@@ -36,7 +36,7 @@ public class BuyerAccount extends UserAccount {
         this.totalPurchases = 0;
         this.completedPurchases = 0;
         this.points = 0;
-        this.favoriteProductIds = new ArrayList<>();
+        this.favoriteListingIds = new ArrayList<>();
         this.orderIds = new ArrayList<>();
     }
     
@@ -44,8 +44,8 @@ public class BuyerAccount extends UserAccount {
      * Add product to favorites
      */
     public void addToFavorites(String productId) {
-        if (!favoriteProductIds.contains(productId)) {
-            favoriteProductIds.add(productId);
+        if (!favoriteListingIds.contains(productId)) {
+            favoriteListingIds.add(productId);
         }
     }
     
@@ -53,7 +53,7 @@ public class BuyerAccount extends UserAccount {
      * Remove from favorites
      */
     public void removeFromFavorites(String productId) {
-        favoriteProductIds.remove(productId);
+        favoriteListingIds.remove(productId);
     }
     
     /**
@@ -115,11 +115,11 @@ public class BuyerAccount extends UserAccount {
     }
     
     public List<String> getFavoriteProductIds() {
-        return favoriteProductIds;
+        return favoriteListingIds;
     }
     
     public void setFavoriteProductIds(List<String> favoriteProductIds) {
-        this.favoriteProductIds = favoriteProductIds;
+        this.favoriteListingIds = favoriteProductIds;
     }
     
     public List<String> getOrderIds() {

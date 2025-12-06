@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  *
  * @author bob-h
@@ -33,15 +32,12 @@ public class OrderDao {
     
     /**
      * Save a new order
-     * @param order Order to save
-     * @return true if successful
      */
     public boolean save(Order order) {
         if (order == null || order.getOrderId() == null) {
             return false;
         }
         
-        // Check for duplicate
         if (findById(order.getOrderId()) != null) {
             return false;
         }
@@ -53,8 +49,6 @@ public class OrderDao {
     
     /**
      * Update an existing order
-     * @param order Order to update
-     * @return true if successful
      */
     public boolean update(Order order) {
         if (order == null || order.getOrderId() == null) {
@@ -63,7 +57,7 @@ public class OrderDao {
         
         for (int i = 0; i < orders.size(); i++) {
             if (orders.get(i).getOrderId().equals(order.getOrderId())) {
-                order.touch(); // Update timestamp
+                order.touch();
                 orders.set(i, order);
                 saveToCSV();
                 return true;
@@ -73,9 +67,7 @@ public class OrderDao {
     }
     
     /**
-     * Delete an order by ID
-     * @param orderId Order ID
-     * @return true if successful
+     * Delete an order
      */
     public boolean delete(String orderId) {
         Order order = findById(orderId);
@@ -89,8 +81,6 @@ public class OrderDao {
     
     /**
      * Find order by ID
-     * @param orderId Order ID
-     * @return Order if found, null otherwise
      */
     public Order findById(String orderId) {
         for (Order order : orders) {
@@ -103,8 +93,6 @@ public class OrderDao {
     
     /**
      * Find all orders by buyer ID
-     * @param buyerId Buyer ID
-     * @return List of orders
      */
     public List<Order> findByBuyerId(String buyerId) {
         List<Order> result = new ArrayList<>();
@@ -118,8 +106,6 @@ public class OrderDao {
     
     /**
      * Find all orders by seller ID
-     * @param sellerId Seller ID
-     * @return List of orders
      */
     public List<Order> findBySellerId(String sellerId) {
         List<Order> result = new ArrayList<>();
@@ -132,24 +118,7 @@ public class OrderDao {
     }
     
     /**
-     * Find all orders by product ID
-     * @param productId Product ID
-     * @return List of orders
-     */
-    public List<Order> findByProductId(String productId) {
-        List<Order> result = new ArrayList<>();
-        for (Order order : orders) {
-            if (order.getProductId().equals(productId)) {
-                result.add(order);
-            }
-        }
-        return result;
-    }
-    
-    /**
      * Find all orders by status
-     * @param status Order status
-     * @return List of orders
      */
     public List<Order> findByStatus(String status) {
         List<Order> result = new ArrayList<>();
@@ -162,8 +131,21 @@ public class OrderDao {
     }
     
     /**
+     * Get all pending orders for a seller
+     */
+    public List<Order> getPendingOrdersForSeller(String sellerId) {
+        List<Order> result = new ArrayList<>();
+        for (Order order : orders) {
+            if (order.getSellerId().equals(sellerId) && 
+                Order.STATUS_PENDING.equals(order.getStatus())) {
+                result.add(order);
+            }
+        }
+        return result;
+    }
+    
+    /**
      * Get all orders
-     * @return List of all orders
      */
     public List<Order> getAllOrders() {
         return new ArrayList<>(orders);
@@ -171,7 +153,6 @@ public class OrderDao {
     
     /**
      * Get total number of orders
-     * @return Count of orders
      */
     public int count() {
         return orders.size();
@@ -183,12 +164,10 @@ public class OrderDao {
     private void loadFromCSV() {
         File file = new File(FILE_PATH);
         
-        // Create file if it doesn't exist
         if (!file.exists()) {
             try {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
-                // Write header
                 writeHeader();
             } catch (IOException e) {
                 System.err.println("Error creating orders.csv: " + e.getMessage());
@@ -201,7 +180,6 @@ public class OrderDao {
             boolean isFirstLine = true;
             
             while ((line = br.readLine()) != null) {
-                // Skip header
                 if (isFirstLine) {
                     isFirstLine = false;
                     continue;
@@ -225,10 +203,8 @@ public class OrderDao {
      */
     private void saveToCSV() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH))) {
-            // Write header
             pw.println(getCSVHeader());
             
-            // Write data
             for (Order order : orders) {
                 pw.println(toCSV(order));
             }
@@ -255,7 +231,7 @@ public class OrderDao {
      * Get CSV header
      */
     private String getCSVHeader() {
-        return "orderId,productId,buyerId,sellerId,totalPrice,quantity,status," +
+        return "orderId,listingId,buyerId,sellerId,totalPrice,quantity,status," +
                "deliveryMethod,meetingLocation,isReviewed,buyerRating,createdAt,updatedAt";
     }
     
@@ -264,7 +240,7 @@ public class OrderDao {
      */
     private Order parseOrder(String line) {
         try {
-            String[] parts = line.split(DELIMITER, -1); // -1 to keep empty trailing fields
+            String[] parts = line.split(DELIMITER, -1);
             
             if (parts.length < 13) {
                 return null;
@@ -272,7 +248,7 @@ public class OrderDao {
             
             Order order = new Order();
             order.setOrderId(parts[0]);
-            order.setProductId(parts[1]);
+            order.setListingId(parts[1]);  // Changed from productId to listingId
             order.setBuyerId(parts[2]);
             order.setSellerId(parts[3]);
             order.setTotalPrice(Double.parseDouble(parts[4]));
@@ -294,7 +270,6 @@ public class OrderDao {
             
         } catch (Exception e) {
             System.err.println("Error parsing order line: " + line);
-            System.err.println("Error: " + e.getMessage());
             return null;
         }
     }
@@ -306,7 +281,7 @@ public class OrderDao {
         StringBuilder sb = new StringBuilder();
         
         sb.append(order.getOrderId()).append(DELIMITER);
-        sb.append(order.getProductId()).append(DELIMITER);
+        sb.append(order.getListingId()).append(DELIMITER);  // Changed from productId
         sb.append(order.getBuyerId()).append(DELIMITER);
         sb.append(order.getSellerId()).append(DELIMITER);
         sb.append(order.getTotalPrice()).append(DELIMITER);
@@ -329,18 +304,4 @@ public class OrderDao {
         orders.clear();
         saveToCSV();
     }
-    
-    /**
-     * Get all pending orders for a seller (orders waiting for seller's response)
-     */
-    public List<Order> getPendingOrdersForSeller(String sellerId) {
-    List<Order> result = new ArrayList<>();
-    for (Order order : orders) {
-        if (order.getSellerId().equals(sellerId) && 
-            Order.STATUS_PENDING.equals(order.getStatus())) {
-            result.add(order);
-        }
-    }
-    return result;
-}
 }
