@@ -28,6 +28,7 @@ public class Message extends BaseEntity{
     
     public void contentIsInappropriate(){
         isFlagged = true;
+        content = "*****";
         this.touch();
     }
     

@@ -16,8 +16,8 @@ import javax.swing.JOptionPane;
  * @author yujie-liang
  */
 public class BuyerSellerChatPanel extends javax.swing.JPanel {
-    private final UserAccount currentUser;      // 当前登录用户（可能是 buyer 或 seller）
-    private final ArrayList<UserAccount> partners;   // 对方列表（如果当前是 buyer，这个就是所有 seller）
+    private final UserAccount currentUser;      
+    private final ArrayList<UserAccount> partners;   
     private final MessageDirectory messageDirectory;
 
     /**
@@ -31,7 +31,10 @@ public class BuyerSellerChatPanel extends javax.swing.JPanel {
         this.messageDirectory = messageDirectory;
 
         initComponents();
-        reloadConversation();   // 初始选中第一个对话对象时，刷新聊天记录
+        for (UserAccount ua : partners) {
+            cbChatPartner.addItem(ua);
+        }
+        reloadConversation();
         reloadReportCombo();
     }
     private void reloadConversation() {
@@ -84,6 +87,12 @@ public class BuyerSellerChatPanel extends javax.swing.JPanel {
         cbMessageToReport = new javax.swing.JComboBox<>();
         tfReportReason = new javax.swing.JTextField();
         btnReport = new javax.swing.JButton();
+
+        cbChatPartner.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbChatPartnerActionPerformed(evt);
+            }
+        });
 
         taConversation.setColumns(20);
         taConversation.setRows(5);
@@ -194,6 +203,12 @@ public class BuyerSellerChatPanel extends javax.swing.JPanel {
 
         tfReportReason.setText("");
     }//GEN-LAST:event_btnReportActionPerformed
+
+    private void cbChatPartnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbChatPartnerActionPerformed
+        // TODO add your handling code here:
+        reloadConversation();
+        reloadReportCombo();
+    }//GEN-LAST:event_cbChatPartnerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
