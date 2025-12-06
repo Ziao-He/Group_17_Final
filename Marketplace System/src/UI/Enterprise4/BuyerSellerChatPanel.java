@@ -4,6 +4,7 @@
  */
 package UI.Enterprise4;
 
+import basement_class.Enterprise_4.CommunicationServiceOrganization;
 import basement_class.Enterprise_4.Message;
 import basement_class.Enterprise_4.MessageDirectory;
 import basement_class.Enterprise_4.MessageFlagRequest;
@@ -19,16 +20,19 @@ public class BuyerSellerChatPanel extends javax.swing.JPanel {
     private final UserAccount currentUser;      
     private final ArrayList<UserAccount> partners;   
     private final MessageDirectory messageDirectory;
+    private CommunicationServiceOrganization communicationServiceOrg;
 
     /**
      * Creates new form BuyerSellerChatPanel
      */
     public BuyerSellerChatPanel(UserAccount currentUser,
                                 ArrayList<UserAccount> partners,
-                                MessageDirectory messageDirectory) {
+                                MessageDirectory messageDirectory,
+                                CommunicationServiceOrganization communicationServiceOrg) {
         this.currentUser = currentUser;
         this.partners = partners;
         this.messageDirectory = messageDirectory;
+        this.communicationServiceOrg = communicationServiceOrg;
 
         initComponents();
         for (UserAccount ua : partners) {
@@ -197,7 +201,7 @@ public class BuyerSellerChatPanel extends javax.swing.JPanel {
         selectedMessage.flagByUser();
 
         MessageFlagRequest req = new MessageFlagRequest(selectedMessage, currentUser, reason);
-        // someOrganization.getWorkRequestDirectory().addRequest(req);
+        communicationServiceOrg.getWorkRequestDirectory().addWorkRequest(req);
 
         JOptionPane.showMessageDialog(this, "Report submitted. Thank you.");
 
