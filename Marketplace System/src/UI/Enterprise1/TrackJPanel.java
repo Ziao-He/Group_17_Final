@@ -4,17 +4,31 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Organization;
+import basement_class.UserAccount;
+
 /**
  *
  * @author bob-h
  */
 public class TrackJPanel extends javax.swing.JPanel {
 
+    private BuyerAccount buyerAccount;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
     /**
      * Creates new form TrackJPanel
      */
-    public TrackJPanel() {
+    public TrackJPanel(BuyerAccount buyerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.buyerAccount = buyerAccount;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.system = system;
     }
 
     /**

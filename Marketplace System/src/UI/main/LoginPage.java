@@ -219,10 +219,9 @@ public class LoginPage extends javax.swing.JFrame {
             }
 
             // Switch to work area
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.setContentPane(workArea);
-            frame.revalidate();
-            frame.repaint();
+            this.setContentPane(workArea);
+            this.revalidate();
+            this.repaint();
 
             // Optional: Show welcome message
             JOptionPane.showMessageDialog(workArea,

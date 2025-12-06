@@ -168,10 +168,10 @@
                                       <Component id="lblPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="rbnYes" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="rbnNo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblNego" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblNego" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lblDescri" min="-2" max="-2" attributes="0"/>

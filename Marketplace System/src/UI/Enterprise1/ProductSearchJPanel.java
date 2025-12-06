@@ -4,17 +4,32 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Organization;
+import basement_class.UserAccount;
+
 /**
  *
  * @author bob-h
  */
 public class ProductSearchJPanel extends javax.swing.JPanel {
-
+    
+    private BuyerAccount buyerAccount;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
     /**
      * Creates new form ProductSearchJPanel
      */
-    public ProductSearchJPanel() {
+    public ProductSearchJPanel(BuyerAccount buyerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.buyerAccount = buyerAccount;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.system = system;
+    
     }
 
     /**
@@ -90,7 +105,7 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
                         .addComponent(btnLogout))
                     .addComponent(cmbRole, 0, 151, Short.MAX_VALUE)
                     .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         controlJPanelLayout.setVerticalGroup(
             controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,7 +116,7 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
                 .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
         );
@@ -116,7 +131,7 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Title");
+        jLabel1.setText("Advanced Product Search ");
         jPanel2.add(jLabel1, java.awt.BorderLayout.CENTER);
 
         jSplitPane2.setTopComponent(jPanel2);
@@ -179,7 +194,7 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jButton2))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1114, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,7 +227,7 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
                     .addComponent(jButton1)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
