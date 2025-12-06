@@ -58,14 +58,14 @@ public class UserAccountDAO {
 
         switch (role.toUpperCase()) {
 
-            case "BUYER":
-                return new BuyerAccount(username, password);
-
-            case "SELLER":
-                return new SellerAccount(username, password);
-
-            case "ADMIN":
-                return new AdminAccount(username, password);
+//            case "BUYER":
+//                return new BuyerAccount(username, password);
+//
+//            case "SELLER":
+//                return new SellerAccount(username, password);
+//
+//            case "ADMIN":
+//                return new AdminAccount(username, password);
 
             default:
                 System.err.println("Unknown role: " + role);

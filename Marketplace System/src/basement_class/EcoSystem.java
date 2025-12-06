@@ -73,17 +73,17 @@ public class EcoSystem {
         this.workRequestDirectory = workRequestDirectory;
     }
 
-    public Listing findListingById(String id) {
-    for (Network n : networks) {
-        for (Enterprise e : n.getEnterprises()) {
-            for (Organization o : e.getOrganizations()) {
-                for (Listing l : o.g) {
-                    if (l.getId().equals(id))
-                        return l;
-                }
-            }
-        }
-    }
-    return null;
-}
+//    public Listing findListingById(String id) {
+//    for (Network n : networks) {
+//        for (Enterprise e : n.getEnterprises()) {
+//            for (Organization o : e.getOrganizations()) {
+//                for (Listing l : o.g) {
+//                    if (l.getId().equals(id))
+//                        return l;
+//                }
+//            }
+//        }
+//    }
+//    return null;
+//}
 }
