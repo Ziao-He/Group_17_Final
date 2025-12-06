@@ -6,8 +6,11 @@ package UI.Enterprise3;
 
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_3.Organization.ContentControlOrganization;
+import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import javax.swing.JPanel;
 
 /**
  *
@@ -27,6 +30,8 @@ public class AdminJPanel extends javax.swing.JPanel {
         this.adminUser=adminUser;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+        
+        FakeDataGenerator.generate(system, enterprise);
     }
 
     /**
@@ -133,19 +138,41 @@ public class AdminJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAccountManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountManagementActionPerformed
-        
+        AccountAdminWorkAreaPanel panel =
+        new AccountAdminWorkAreaPanel(system, adminUser, (UserControlOrganization) userOrg);
+
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnAccountManagementActionPerformed
 
     private void btnRegistrationReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrationReviewActionPerformed
         // TODO add your handling code here:
+        RegistrationReviewJPanel panel =
+        new RegistrationReviewJPanel(adminUser, 
+                                     (UserControlOrganization) userOrg, 
+                                     enterprise, 
+                                     system);
+
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnRegistrationReviewActionPerformed
 
     private void btnContentModerationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContentModerationActionPerformed
         // TODO add your handling code here:
+        ContentControlOrganization org =
+        (ContentControlOrganization) enterprise.getOrganizationByName("Content Control");
+
+        ContentModerationJpanel panel =
+        new ContentModerationJpanel(system, adminUser, org);
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnContentModerationActionPerformed
 
     private void btnPolicyEnforcementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPolicyEnforcementActionPerformed
         // TODO add your handling code here:
+        ContentControlOrganization org =
+        (ContentControlOrganization) enterprise.getOrganizationByName("Content Control");
+
+        PolicyEnforcementJPanel panel =
+        new PolicyEnforcementJPanel(system, adminUser, org);
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnPolicyEnforcementActionPerformed
 
 
@@ -159,4 +186,11 @@ public class AdminJPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel workProcessJPanel;
     // End of variables declaration//GEN-END:variables
+    private void replaceWorkArea(JPanel panel) {
+        workProcessJPanel.removeAll();
+        workProcessJPanel.setLayout(new java.awt.BorderLayout());
+        workProcessJPanel.add(panel, java.awt.BorderLayout.CENTER);
+        workProcessJPanel.revalidate();
+        workProcessJPanel.repaint();
+    }
 }

@@ -33,7 +33,7 @@ public class SystemInitializer {
         
         initializeEnterprise1(system, campusNetwork);
         initializeEnterprise2(system, campusNetwork);
-        initializeEnterprise3(system, campusNetwork);
+//        initializeEnterprise3(system, campusNetwork);
         initializeEnterprise4(system, campusNetwork);
         
         // Print summary
@@ -71,14 +71,14 @@ public class SystemInitializer {
     /**
      * Initialize Enterprise 3: Platform Management
      */
-    private static void initializeEnterprise3(EcoSystem system, Network network) {
-        try {
-            Enterprise3Initializer.initialize(system, network);
-            System.out.println("✓ Enterprise 3 initialized\n");
-        } catch (Exception e) {
-            System.err.println("✗ Enterprise 3 failed: " + e.getMessage());
-        }
-    }
+//    private static void initializeEnterprise3(EcoSystem system, Network network) {
+//        try {
+//            Enterprise3Initializer.initialize(system, network);
+//            System.out.println("✓ Enterprise 3 initialized\n");
+//        } catch (Exception e) {
+//            System.err.println("✗ Enterprise 3 failed: " + e.getMessage());
+//        }
+//    }
     
     /**
      * Initialize Enterprise 4: Help Center
