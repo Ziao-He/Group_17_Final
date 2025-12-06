@@ -63,6 +63,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
         btnDescpriton = new javax.swing.JButton();
         btnReject = new javax.swing.JButton();
         btnAccept = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -105,6 +106,9 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 18)); // NOI18N
+        jLabel1.setText("PolicyEnforcement");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,18 +124,24 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
                         .addComponent(btnDescpriton, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 960, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(54, 54, 54))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(487, 487, 487)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(65, 65, 65)
+                .addGap(30, 30, 30)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAccept)
                     .addComponent(btnReject)
                     .addComponent(btnDescpriton))
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -244,6 +254,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnAccept;
     private javax.swing.JButton btnDescpriton;
     private javax.swing.JButton btnReject;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblUser;
     // End of variables declaration//GEN-END:variables
@@ -253,13 +264,21 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
         model.setRowCount(0);
 
         for (WorkRequest wr : userOrg.getWorkRequestDirectory().getRequestList()) {
-            if (wr instanceof PolicyViolationRequest req) {
+            if (wr instanceof PolicyViolationRequest) {
+
+                PolicyViolationRequest req = (PolicyViolationRequest) wr;
+
+                // ✅ 核心过滤：只显示待处理
+                if (!"Pending".equalsIgnoreCase(req.getStatus())) {
+                    continue;
+                }
+
                 model.addRow(new Object[]{
-                        req.getId(),                                     // Request ID
-                        req.getTargetUser().getUsername(),               // Target User
-                        req.getDisplayCategory(),                        // Category（中文名）
-                        req.getStatus(),                                 // Status
-                        req                                               // Object（隐藏列）
+                    req.getId(),
+                    req.getTargetUser().getUsername(),
+                    req.getDisplayCategory(),
+                    req.getStatus(),
+                    req
                 });
             }
         }
