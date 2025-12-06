@@ -53,7 +53,7 @@
                           </Group>
                           <Component id="btnOrderProcessing" alignment="0" max="32767" attributes="0"/>
                           <Component id="btnListingMangement" alignment="0" pref="161" max="32767" attributes="0"/>
-                          <Component id="btnSalesManagement" alignment="0" max="32767" attributes="0"/>
+                          <Component id="btnCreateNewListing" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -63,7 +63,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                      <Component id="btnSalesManagement" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnCreateNewListing" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnListingMangement" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
@@ -94,18 +94,18 @@
             </Component>
             <Component class="javax.swing.JButton" name="btnOrderProcessing">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Order Processing"/>
+                <Property name="text" type="java.lang.String" value="View Notices"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOrderProcessingActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnSalesManagement">
+            <Component class="javax.swing.JButton" name="btnCreateNewListing">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Sales Management"/>
+                <Property name="text" type="java.lang.String" value="Create New Listing"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalesManagementActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCreateNewListingActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
@@ -117,18 +117,7 @@
             </Constraint>
           </Constraints>
 
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1104" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="672" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-          </Layout>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
         </Container>
       </SubComponents>
     </Container>
