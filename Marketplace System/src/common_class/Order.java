@@ -12,11 +12,11 @@ import basement_class.BaseEntity;
  */
 public class Order extends BaseEntity {
     
-    // Order identification
+     // Order identification
     private String orderId;
     
-    // Related entities (references to other objects)
-    private String productId;          // Reference to Product (member2's work)
+    // Related entities (references using IDs)
+    private String listingId;          // Reference to Listing (NOT productId)
     private String buyerId;            // Reference to BuyerAccount
     private String sellerId;           // Reference to SellerAccount
     
@@ -54,24 +54,24 @@ public class Order extends BaseEntity {
     /**
      * Constructor with essential fields
      */
-    public Order(String orderId, String productId, String buyerId, String sellerId, double totalPrice) {
+    public Order(String orderId, String listingId, String buyerId, String sellerId, double totalPrice) {
         this();
         this.orderId = orderId;
-        this.productId = productId;
+        this.listingId = listingId;
         this.buyerId = buyerId;
         this.sellerId = sellerId;
         this.totalPrice = totalPrice;
     }
     
     /**
-     * Check if order is pending (waiting for seller response)
+     * Check if order is pending
      */
     public boolean isPending() {
         return STATUS_PENDING.equals(this.status);
     }
     
     /**
-     * Check if order is accepted by seller
+     * Check if order is accepted
      */
     public boolean isAccepted() {
         return STATUS_ACCEPTED.equals(this.status);
@@ -89,7 +89,7 @@ public class Order extends BaseEntity {
      */
     public void accept() {
         this.status = STATUS_ACCEPTED;
-        this.touch(); // Update timestamp
+        this.touch();
     }
     
     /**
@@ -137,12 +137,12 @@ public class Order extends BaseEntity {
         this.orderId = orderId;
     }
     
-    public String getProductId() {
-        return productId;
+    public String getListingId() {
+        return listingId;
     }
     
-    public void setProductId(String productId) {
-        this.productId = productId;
+    public void setListingId(String listingId) {
+        this.listingId = listingId;
     }
     
     public String getBuyerId() {
@@ -219,7 +219,7 @@ public class Order extends BaseEntity {
     
     @Override
     public String toString() {
-        return String.format("Order{id='%s', productId='%s', status='%s', price=%.2f}", 
-            orderId, productId, status, totalPrice);
+        return String.format("Order{id='%s', listingId='%s', status='%s', price=%.2f}", 
+            orderId, listingId, status, totalPrice);
     }
 }

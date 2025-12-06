@@ -121,7 +121,7 @@ public class OrderFulfillmentService {
         }
         
         // Update associated listing status to "Reserved"
-        updateListingStatus(order.getProductId(), "Reserved");
+        updateListingStatus(order.getListingId(), "Reserved");
         
         // Save changes
         boolean success = orderDao.update(order);
@@ -207,7 +207,7 @@ public class OrderFulfillmentService {
         order.complete();
         
         // Update associated listing status to "Sold"
-        updateListingStatus(order.getProductId(), "Sold");
+        updateListingStatus(order.getListingId(), "Sold");
         
         // Save changes
         boolean success = orderDao.update(order);
@@ -251,7 +251,7 @@ public class OrderFulfillmentService {
         order.cancel();
         
         // Update associated listing status back to "Approved" (available again)
-        updateListingStatus(order.getProductId(), "Approved");
+        updateListingStatus(order.getListingId(), "Approved");
         
         // Save changes
         boolean success = orderDao.update(order);

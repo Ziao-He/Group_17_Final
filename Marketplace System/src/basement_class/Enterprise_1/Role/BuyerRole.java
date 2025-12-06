@@ -4,6 +4,7 @@
  */
 package basement_class.Enterprise_1.Role;
 
+import UI.Enterprise1.BuyerJPanel;
 import basement_class.*;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import javax.swing.JPanel;
@@ -17,20 +18,21 @@ public class BuyerRole extends Role {
     
     @Override
     public JPanel createWorkArea(UserAccount userAccount, 
-                                 Organization organization, 
-                                 Enterprise enterprise, 
+                                 Organization organization,
+                                 Enterprise enterprise,
                                  EcoSystem system) {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Buyer Dashboard"));
-        return null;
+        
+        // Cast to BuyerAccount
+        BuyerAccount buyerAccount = (BuyerAccount) userAccount;
+        
+        // Create and return BuyerJPanel
+        BuyerJPanel panel = new BuyerJPanel(buyerAccount, organization, enterprise, system);
+        return panel;
     }
     
-    /**
-     * Get the role name for display purposes
-     * @return "Buyer"
-     */
     @Override
     public String getRoleName() {
         return "Buyer";
     }
 }
+

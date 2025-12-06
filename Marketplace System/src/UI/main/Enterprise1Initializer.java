@@ -23,10 +23,13 @@ public class Enterprise1Initializer {
      * @param system EcoSystem instance
      * @param network Network to add enterprise to
      */
+    /**
+     * Initialize Enterprise 1: Buyer Operations
+     */
     public static void initialize(EcoSystem system, Network network) {
         System.out.println("Initializing Enterprise 1: Buyer Operations...");
         
-        // Create the enterprise (organizations and roles are created in constructor)
+        // Create enterprise
         BuyerOperationsEnterprise enterprise = new BuyerOperationsEnterprise("Buyer Operations");
         network.addEnterprise(enterprise);
         
@@ -36,113 +39,74 @@ public class Enterprise1Initializer {
         OrderManagementOrganization orderOrg = 
             (OrderManagementOrganization) enterprise.getOrganizationByName("Order Management");
         
-        // Log enterprise structure
+        // Log structure
         System.out.println("  Created Enterprise: " + enterprise.getName());
-        System.out.println("  Organizations:");
-        for (Organization org : enterprise.getOrganizations()) {
-            System.out.println("    • " + org.getName() + " (" + org.getRoles().size() + " roles)");
-            for (Role role : org.getRoles()) {
-                System.out.println("      - " + role.getRoleName());
-            }
-        }
+        System.out.println("  Organizations: " + enterprise.getOrganizations().size());
         
-        // Create test data
+        // Create test accounts
         createTestAccounts(system, shoppingOrg, orderOrg);
     }
     
     /**
      * Create test buyer accounts
      */
-    private static void createTestAccounts(EcoSystem system, 
+    private static void createTestAccounts(EcoSystem system,
                                           ShoppingServicesOrganization shoppingOrg,
                                           OrderManagementOrganization orderOrg) {
         System.out.println("  Creating test accounts...");
         
-        // Test Account 1: Standard Buyer
-        BuyerAccount buyer1 = createBuyerAccount(
-            "BUYER-001", "buyer1", "buyer1@university.edu", 
-            "123-456-7890", "ORG-SHOPPING-001", new BuyerRole()
-        );
+        // Account 1: BuyerRole
+        BuyerAccount buyer1 = new BuyerAccount();
+        buyer1.setUserId("BUYER-001");
+        buyer1.setUsername("buyer1");
+        buyer1.setPasswordHash("password123");
+        buyer1.setStatus("ACTIVE");
+        buyer1.setRole(new BuyerRole());
         
-        // Set profile details
         BuyerProfile profile1 = buyer1.getProfile();
+        profile1.setUserId("BUYER-001");
         profile1.setFullName("John Buyer");
-        profile1.addPreferredCategory("Textbooks");
-        profile1.setMaxBudget(200.0);
+        profile1.setEmail("buyer1@university.edu");
+        profile1.setPhoneNumber("123-456-7890");
         
-        addAccount(buyer1, shoppingOrg, system);
-        System.out.println("    • buyer1 (BuyerRole) - password: password123");
+        shoppingOrg.getUserAccountDirectory().addUserAccount(buyer1);
+        system.getUserAccountDirectory().addUserAccount(buyer1);
+        System.out.println("    • buyer1 / password123");
         
-        // Test Account 2: Product Searcher
-        BuyerAccount buyer2 = createBuyerAccount(
-            "BUYER-002", "searcher1", "searcher1@university.edu",
-            "123-456-7891", "ORG-SHOPPING-001", new ProductSearcherRole()
-        );
-        buyer2.addToFavorites("PROD-001");
-        buyer2.addToFavorites("PROD-002");
+        // Account 2: ProductSearcherRole
+        BuyerAccount buyer2 = new BuyerAccount();
+        buyer2.setUserId("BUYER-002");
+        buyer2.setUsername("searcher1");
+        buyer2.setPasswordHash("password123");
+        buyer2.setStatus("ACTIVE");
+        buyer2.setRole(new ProductSearcherRole());
         
-        // Set profile preferences
         BuyerProfile profile2 = buyer2.getProfile();
+        profile2.setUserId("BUYER-002");
         profile2.setFullName("Alice Searcher");
-        profile2.addPreferredCategory("Electronics");
-        profile2.addPreferredCategory("Textbooks");
-        profile2.setMaxBudget(500.0);
+        profile2.setEmail("searcher1@university.edu");
+        profile2.setPhoneNumber("123-456-7891");
         
-        addAccount(buyer2, shoppingOrg, system);
-        System.out.println("    • searcher1 (ProductSearcherRole) - password: password123");
+        shoppingOrg.getUserAccountDirectory().addUserAccount(buyer2);
+        system.getUserAccountDirectory().addUserAccount(buyer2);
+        System.out.println("    • searcher1 / password123");
         
-        // Test Account 3: Order Tracker
-        BuyerAccount buyer3 = createBuyerAccount(
-            "BUYER-003", "tracker1", "tracker1@university.edu",
-            "123-456-7892", "ORG-ORDER-001", new OrderTrackerRole()
-        );
-        buyer3.addOrder("ORDER-001");
-        buyer3.addOrder("ORDER-002");
-        buyer3.setCompletedPurchases(1);
-        buyer3.setPoints(150);
+        // Account 3: OrderTrackerRole
+        BuyerAccount buyer3 = new BuyerAccount();
+        buyer3.setUserId("BUYER-003");
+        buyer3.setUsername("tracker1");
+        buyer3.setPasswordHash("password123");
+        buyer3.setStatus("ACTIVE");
+        buyer3.setRole(new OrderTrackerRole());
         
-        // Set profile preferences
         BuyerProfile profile3 = buyer3.getProfile();
+        profile3.setUserId("BUYER-003");
         profile3.setFullName("Bob Tracker");
-        profile3.addPreferredCategory("Furniture");
-        profile3.setMaxBudget(300.0);
-        profile3.setPreferredLocation("Campus Center");
+        profile3.setEmail("tracker1@university.edu");
+        profile3.setPhoneNumber("123-456-7892");
         
-        addAccount(buyer3, orderOrg, system);
-        System.out.println("    • tracker1 (OrderTrackerRole) - password: password123");
-    }
-    
-    /**
-     * Helper: Create a buyer account with common fields
-     */
-    private static BuyerAccount createBuyerAccount(String userId, String username, 
-                                                   String email, String phone,
-                                                   String orgId, Role role) {
-        BuyerAccount account = new BuyerAccount();
-        account.setUserId(userId);
-        account.setUsername(username);
-        account.setPasswordHash("password123"); // TODO: Implement proper hashing
-        account.setPhoneNumber(phone);
-        account.setStatus("ACTIVE");
-        account.setOrganizationId(orgId);
-        account.setRole(role);
-        
-        // Set profile information
-        BuyerProfile profile = account.getProfile();
-        profile.setUserId(userId);
-        profile.setProfileId("PROFILE-" + userId);
-        profile.setEmail(email);
-        profile.setPhoneNumber(phone);
-        // Additional profile setup can be done here
-        
-        return account;
-    }
-    
-    /**
-     * Helper: Add account to organization and system
-     */
-    private static void addAccount(BuyerAccount account, Organization org, EcoSystem system) {
-        org.getUserAccountDirectory().addUserAccount(account);
-        system.getUserAccountDirectory().addUserAccount(account);
+        orderOrg.getUserAccountDirectory().addUserAccount(buyer3);
+        system.getUserAccountDirectory().addUserAccount(buyer3);
+        System.out.println("    • tracker1 / password123");
     }
 }
