@@ -106,6 +106,11 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         btnTalkWithUser.setText("Talk with Seller");
 
         btnBack.setText("Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout ListingJpanelLayout = new javax.swing.GroupLayout(ListingJpanel);
         ListingJpanel.setLayout(ListingJpanelLayout);
@@ -126,7 +131,7 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                                 .addComponent(rbnNo)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(txtPrice)))
-                    .addComponent(DescriJpanel)
+                    .addComponent(DescriJpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(ListingJpanelLayout.createSequentialGroup()
                         .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblDescri)
@@ -144,7 +149,7 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                         .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnTalkWithUser)
                             .addComponent(btnBack))
-                        .addGap(0, 131, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(ListingJpanelLayout.createSequentialGroup()
                         .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCategory)
@@ -238,6 +243,10 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -102,7 +102,7 @@
                                       <Component id="txtPrice" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="DescriJpanel" max="32767" attributes="0"/>
+                              <Component id="DescriJpanel" pref="0" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="lblDescri" min="-2" max="-2" attributes="0"/>
@@ -124,7 +124,7 @@
                                       <Component id="btnTalkWithUser" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="btnBack" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="131" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -308,6 +308,9 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Back"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
