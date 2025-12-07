@@ -5,8 +5,11 @@
 package basement_class.Enterprise_2.Role;
 
 
+
+import UI.Enterprise2.OrderProcessorJPanel;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Organization;
 import basement_class.Role;
 import basement_class.UserAccount;
@@ -23,8 +26,11 @@ public class OrderProcessorRole extends Role {
                                  Enterprise enterprise,
                                  EcoSystem system) {
         // TODO: Implement Order Processor WorkArea Panel
-        // This panel will show order queue, allow batch processing, etc.
-        return null;
+        SellerAccount sellerAccount = (SellerAccount) userAccount;
+        
+        // Create and return JPanel
+        OrderProcessorJPanel panel = new OrderProcessorJPanel(sellerAccount, organization, enterprise, system);
+        return panel;
     }
 
     @Override

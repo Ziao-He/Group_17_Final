@@ -9,7 +9,7 @@ import basement_class.UserAccount;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class RegistrationService {
     

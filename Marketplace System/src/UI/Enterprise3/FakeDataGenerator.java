@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package UI.Enterprise3;
-
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Listing;
@@ -13,8 +12,10 @@ import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
 import basement_class.Enterprise_3.WorkRequest.ListingReviewRequest;
 import basement_class.Enterprise_3.WorkRequest.PolicyViolationRequest;
 import basement_class.Enterprise_3.WorkRequest.RegistrationApprovalRequest;
+import basement_class.Organization;
+import basement_class.Role;
 import basement_class.UserAccount;
-
+import javax.swing.JPanel;
 /**
  *
  * @author Administrator
@@ -32,12 +33,12 @@ public class FakeDataGenerator {
                 (ContentControlOrganization) enterprise.getOrganizationByName("Content Control");
 
         // 创建一些 fake 用户
-        UserAccount userA = createUser(system, "userA");
-        UserAccount userB = createUser(system, "userB");
-        UserAccount userC = createUser(system, "userC");
+        UserAccount userA = createUser(system, "userA", "AccountAdmin");
+        UserAccount userB = createUser(system, "userB", "ContentModerator");
+        UserAccount userC = createUser(system, "userC", "PlatformAdmin");
 
         // 创建一些 fake Listing
-                Listing l1 = new Listing("L001", userA, 
+        Listing l1 = new Listing("L001", userA, 
                 "Old iPhone 11", 
                 "Used iPhone 11, 64GB", 
                 "iphone.png",
@@ -54,7 +55,7 @@ public class FakeDataGenerator {
                 "Air Force 1 - White",
                 "shoes.png",
                 80.0);
-        
+
         // === 1. RegistrationApprovalRequest ===
         RegistrationApprovalRequest reg1 = new RegistrationApprovalRequest(userA);
         reg1.setReason("New student — needs account");
@@ -93,18 +94,34 @@ public class FakeDataGenerator {
         System.out.println("[FakeData] 测试数据生成完毕！");
     }
 
-    private static UserAccount createUser(EcoSystem system, String username) {
-        FakeUserAccount u = new FakeUserAccount(username);
-        system.getUserAccountDirectory().addUserAccount(u);
-        return u;
+private static UserAccount createUser(EcoSystem system, String username, String roleName) {
+    FakeUserAccount u = new FakeUserAccount(username, roleName);
+    system.getUserAccountDirectory().addUserAccount(u);
+    return u;
+}
+public static class FakeUserAccount extends UserAccount {
+
+    public FakeUserAccount(String username, String roleName) {
+        this.setUserId("FAKE_" + username);
+        this.setUsername(username);
+        this.setPasswordHash("123");
+        this.setStatus("ACTIVE");
+
+this.setRole(new Role() {
+
+    @Override
+    public JPanel createWorkArea(UserAccount userAccount,
+                                 Organization organization,
+                                 Enterprise enterprise,
+                                 EcoSystem system) {
+        return null; // ✅ Fake 测试阶段不需要真的进入界面
     }
 
-    public static class FakeUserAccount extends UserAccount {
-        public FakeUserAccount(String username) {
-            this.setUserId("FAKE_" + username);
-            this.setUsername(username);
-            this.setPasswordHash("123");
-            this.setStatus("ACTIVE");
-        }
+    @Override
+    public String getRoleName() {
+        return roleName;   // ✅ 你测试用的关键字段
     }
+});
+    }
+}
 }
