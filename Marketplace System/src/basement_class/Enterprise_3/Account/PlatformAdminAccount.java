@@ -17,6 +17,10 @@ public class PlatformAdminAccount extends UserAccount {
         this.setStatus("ACTIVE");
         this.setRole(new PlatformAdminRole());
     }
+        
+//        public PlatformAdminAccount(Or){
+//            
+//        }
 
     @Override
     public String toString() {
