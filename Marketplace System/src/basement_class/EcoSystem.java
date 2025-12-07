@@ -6,6 +6,7 @@ package basement_class;
 
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.ListingDirectory;
+import basement_class.Enterprise_4.MessageDirectory;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,8 @@ public class EcoSystem {
     private ArrayList<Network> networks;
     private UserAccountDirectory userAccountDirectory;
     private WorkRequestDirectory workRequestDirectory;
-    private ListingDirectory listingDirectory; 
+    private ListingDirectory listingDirectory;
+    private MessageDirectory messageDirectory;
 
     // Singleton instance
     private static EcoSystem instance;
