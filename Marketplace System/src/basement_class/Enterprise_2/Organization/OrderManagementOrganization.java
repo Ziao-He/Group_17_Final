@@ -6,14 +6,15 @@ package basement_class.Enterprise_2.Organization;
 
 import basement_class.Organization;
 import basement_class.Enterprise_2.Role.ListingManagerRole;
+import basement_class.Enterprise_2.Role.OrderProcessorRole;
 /**
  *
  * @author 心火牧神塞勒斯
  */
-public class ListingManagementOrganization extends Organization {
+public class OrderManagementOrganization extends Organization {
 
-    public ListingManagementOrganization() {
-        super("Listing Management Organization");
-        this.addRole(new ListingManagerRole());
+    public OrderManagementOrganization() {
+        super("Order Management Organization");
+        this.addRole(new OrderProcessorRole());
     }
 }
