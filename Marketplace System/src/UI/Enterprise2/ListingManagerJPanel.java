@@ -6,9 +6,13 @@ package UI.Enterprise2;
 
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
-import basement_class.Enterprise_1.Account.BuyerAccount;
-import basement_class.Enterprise_2.Account.ListingManagerAccount;
+import basement_class.Enterprise_2.Account.OrderProcessorAccount;
+import basement_class.Enterprise_2.Account.SellerAccount;
+import basement_class.Enterprise_2.Organization.OrderManagementOrganization;
+import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Organization;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
 
 /**
  *
@@ -16,16 +20,16 @@ import basement_class.Organization;
  */
 public class ListingManagerJPanel extends javax.swing.JPanel {
 
-    private ListingManagerAccount listingManagerAccount;
+    private SellerAccount sellerAccount;
     private Organization organization;
     private Enterprise enterprise;
     private EcoSystem system;
     /**
      * Creates new form ListingManagerJPanel
      */
-    public ListingManagerJPanel(ListingManagerAccount listingManagerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
+    public ListingManagerJPanel(SellerAccount sellerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
-        this.listingManagerAccount = listingManagerAccount;
+        this.sellerAccount = sellerAccount;
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;
@@ -43,11 +47,10 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         controlJPanel1 = new javax.swing.JPanel();
         btnLogout1 = new javax.swing.JButton();
         btnListingMangement = new javax.swing.JButton();
-        btnViewComplaints = new javax.swing.JButton();
         btnCreateNewListing = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
-        controlJPanel1.setBackground(new java.awt.Color(102, 255, 255));
+        controlJPanel1.setBackground(new java.awt.Color(255, 255, 153));
         controlJPanel1.setForeground(new java.awt.Color(102, 255, 255));
 
         btnLogout1.setText("Log out");
@@ -57,21 +60,14 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnListingMangement.setText("Listing  Management");
+        btnListingMangement.setText("Manage All Listings");
         btnListingMangement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnListingMangementActionPerformed(evt);
             }
         });
 
-        btnViewComplaints.setText("View Complaints");
-        btnViewComplaints.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewComplaintsActionPerformed(evt);
-            }
-        });
-
-        btnCreateNewListing.setText("Create New Listing");
+        btnCreateNewListing.setText("Create Bulk Listings");
         btnCreateNewListing.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateNewListingActionPerformed(evt);
@@ -89,8 +85,7 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout1)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(btnViewComplaints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -101,9 +96,7 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
                 .addComponent(btnCreateNewListing)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnListingMangement)
-                .addGap(18, 18, 18)
-                .addComponent(btnViewComplaints)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 497, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 538, Short.MAX_VALUE)
                 .addComponent(btnLogout1)
                 .addGap(33, 33, 33))
         );
@@ -116,7 +109,7 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         );
         workProcessJPanelLayout.setVerticalGroup(
             workProcessJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 672, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -124,18 +117,18 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(controlJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(workProcessJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(controlJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(workProcessJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(controlJPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(workProcessJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -145,28 +138,40 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLogout1ActionPerformed
 
     private void btnListingMangementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListingMangementActionPerformed
-        
-    }//GEN-LAST:event_btnListingMangementActionPerformed
+        ManageAllListingJPanel panel =
+        new ManageAllListingJPanel(system, sellerAccount, (SellerOrganization) organization);
 
-    private void btnViewComplaintsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewComplaintsActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btnViewComplaintsActionPerformed
+        replaceWorkArea(panel);
+    }//GEN-LAST:event_btnListingMangementActionPerformed
 
     private void btnCreateNewListingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewListingActionPerformed
         // TODO add your handling code here:
-        
+        CreateBulkListingJPanel panel =
+        new CreateBulkListingJPanel(system, sellerAccount, (SellerOrganization) organization);
+
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnCreateNewListingActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateNewListing;
     private javax.swing.JButton btnListingMangement;
-    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnLogout1;
-    private javax.swing.JButton btnViewComplaints;
-    private javax.swing.JPanel controlJPanel;
     private javax.swing.JPanel controlJPanel1;
     private javax.swing.JPanel workProcessJPanel;
     // End of variables declaration//GEN-END:variables
+
+    private void replaceWorkArea(JPanel panel) {
+        workProcessJPanel.removeAll();
+        workProcessJPanel.setLayout(new BorderLayout());
+        workProcessJPanel.add(panel, BorderLayout.CENTER);
+
+        // 强制重新验证和重绘
+        workProcessJPanel.revalidate();
+        workProcessJPanel.repaint();
+
+        // 确保父容器也更新
+        workProcessJPanel.getParent().revalidate();
+        workProcessJPanel.getParent().repaint();
+    }
 }

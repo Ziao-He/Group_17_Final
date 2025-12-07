@@ -4,6 +4,7 @@
  */
 package basement_class.Enterprise_2.Organization;
 
+import basement_class.Enterprise_2.Role.ListingManagerRole;
 import basement_class.Enterprise_2.Role.OrderProcessorRole;
 import basement_class.Organization;
 import basement_class.Enterprise_2.Role.SellerRole;
@@ -22,7 +23,7 @@ public class SellerOrganization extends Organization {
         this.addRole(new SellerRole());
         
         // Add specialized order processor role (Role 2.2.1)
-        this.addRole(new OrderProcessorRole());
+        this.addRole(new ListingManagerRole());
     }
     
     

@@ -17,9 +17,9 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="controlJPanel1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="controlJPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="workProcessJPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
           </Group>
@@ -28,9 +28,9 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="controlJPanel1" min="-2" max="-2" attributes="0"/>
-                  <Component id="workProcessJPanel" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="controlJPanel1" max="32767" attributes="0"/>
+                  <Component id="workProcessJPanel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
@@ -41,7 +41,7 @@
     <Container class="javax.swing.JPanel" name="controlJPanel1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="ff" green="ff" red="66" type="rgb"/>
+          <Color blue="99" green="ff" red="ff" type="rgb"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="66" type="rgb"/>
@@ -59,8 +59,7 @@
                           <Component id="btnLogout1" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="btnViewComplaints" alignment="0" max="32767" attributes="0"/>
-                      <Component id="btnListingMangement" alignment="0" pref="161" max="32767" attributes="0"/>
+                      <Component id="btnListingMangement" alignment="0" max="32767" attributes="0"/>
                       <Component id="btnCreateNewListing" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -74,9 +73,7 @@
                   <Component id="btnCreateNewListing" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="btnListingMangement" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                  <Component id="btnViewComplaints" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="497" max="32767" attributes="0"/>
+                  <EmptySpace pref="538" max="32767" attributes="0"/>
                   <Component id="btnLogout1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               </Group>
@@ -94,23 +91,15 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnListingMangement">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Listing  Management"/>
+            <Property name="text" type="java.lang.String" value="Manage All Listings"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnListingMangementActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnViewComplaints">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="View Complaints"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewComplaintsActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btnCreateNewListing">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Create New Listing"/>
+            <Property name="text" type="java.lang.String" value="Create Bulk Listings"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCreateNewListingActionPerformed"/>
@@ -128,7 +117,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="672" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>

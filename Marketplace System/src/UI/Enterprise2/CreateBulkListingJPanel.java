@@ -7,6 +7,7 @@ package UI.Enterprise2;
 import basement_class.DAO.ListingDao;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_2.Enterprise.MarketplaceEnterprise;
 import basement_class.Enterprise_2.Listing;
@@ -15,6 +16,7 @@ import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Enterprise_2.WorkRequest.ListingSubmissionRequest;
 import basement_class.Network;
 import basement_class.Organization;
+import basement_class.UserAccount;
 import basement_class.UserAccountDirectory;
 import java.awt.Container;
 import java.awt.Graphics2D;
@@ -46,21 +48,23 @@ import service.E2.ListingManagementService;
  *
  * @author 心火牧神塞勒斯
  */
-public class CreateNewListingJPanel extends javax.swing.JPanel {
+public class CreateBulkListingJPanel extends javax.swing.JPanel {
 
+    private SellerAccount sellerAccount;
+    private Organization organization;
+    private Enterprise enterprise;
     private EcoSystem system;
-    private SellerAccount seller;
-    private SellerOrganization sellerOrg;
     private final JFileChooser fileChooser = new JFileChooser();
     ImageIcon logoImage;
     /**
      * Creates new form CreateNewListingJPanel
      */
-    public CreateNewListingJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
+    public CreateBulkListingJPanel(EcoSystem system,SellerAccount sellerAccount,Organization organization) {
         initComponents();
-        this.system=system;
-        this.seller=seller;
-        this.sellerOrg = org;
+        this.sellerAccount = sellerAccount;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.system = system;
         
         
         FileFilter jpegFilter = new FileNameExtensionFilter("JPEG file", "jpg", "jpeg");
@@ -70,7 +74,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         fileChooser.addChoosableFileFilter(pngFilter);
         fileChooser.setFileFilter(pngFilter);
         fileChooser.setFileFilter(jpegFilter);
-        txtQuantity.setEnabled(false);
+        
     }
 
     /**
@@ -95,8 +99,10 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         imgLogo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtQuantity = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtSellerID = new javax.swing.JTextField();
 
-        setBackground(new java.awt.Color(102, 255, 255));
+        setBackground(new java.awt.Color(255, 255, 204));
 
         btnCreate.setText("Create");
         btnCreate.addActionListener(new java.awt.event.ActionListener() {
@@ -133,7 +139,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Quantity");
 
-        txtQuantity.setText("1");
+        jLabel2.setText("Seller ID");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -161,20 +167,26 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(47, 47, 47)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnSelectImage, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(txtQuantity, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(txtPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))))
+                                        .addComponent(txtPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnSelectImage, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(28, 28, 28)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtSellerID)))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(88, 88, 88)
                                 .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(475, Short.MAX_VALUE))
+                .addContainerGap(440, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,11 +194,13 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 .addGap(58, 58, 58)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTitle)
-                    .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSelectImage)
                     .addComponent(lblImagePath)
-                    .addComponent(btnSelectImage))
+                    .addComponent(txtSellerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblPrice)
@@ -206,7 +220,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCreate)
                     .addComponent(btnReset))
-                .addGap(474, 474, 474))
+                .addGap(434, 434, 434))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -231,113 +245,115 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         // TODO add your handling code here:
         if (!validateForm()) {
-            return; // Validation failed, stop execution
+            return;
         }
 
         try {
-            // 2. Collect form data
+            // 1. Collect form data
             String title = txtTitle.getText().trim();
             String description = txtDescription.getText().trim();
-            String priceText = txtPrice.getText().trim();
-            double price = Double.parseDouble(priceText);
+            double price = Double.parseDouble(txtPrice.getText().trim());
+            int quantity = Integer.parseInt(txtQuantity.getText().trim());
+            String sellerId = txtSellerID.getText().trim();   // ⭐ ListingManager 版本新增
 
-            // 3. Generate unique ID (temporary, will be finalized after approval)
-            String listingId = generateListingId();
+            // Validate seller exists
+            UserAccount sellerAccount = system.getUserAccountDirectory().findByUserId(sellerId);
+            if (sellerAccount == null) {
+                JOptionPane.showMessageDialog(this,
+                    "Seller ID not found!\nPlease enter a valid seller ID.",
+                    "Invalid Seller",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-            // 4. Create temporary Listing object (status will be "Draft" or "Pending")
-            // The image will be saved only after approval, or we save it now with draft status
+            // 2. Generate listing ID using sellerId
+            String listingId = generateListingIdForSeller(sellerId);
+
+            // 3. Save image to draft folder
             String imagePath = "";
             if (logoImage != null && imgLogo.getIcon() != null) {
                 try {
-                    // Save image to draft folder
                     File draftDir = new File("draft_images");
-                    if (!draftDir.exists()) {
-                        draftDir.mkdirs();
-                    }
+                    if (!draftDir.exists()) draftDir.mkdirs();
 
-                    String fileName = seller.getUserId() + "_" + System.currentTimeMillis() + ".jpg";
+                    String fileName = sellerId + "_" + System.currentTimeMillis() + ".jpg";
                     File imageFile = new File(draftDir, fileName);
 
-                    // Save image
                     Image image = logoImage.getImage();
                     BufferedImage bufferedImage = new BufferedImage(
                         image.getWidth(null),
                         image.getHeight(null),
                         BufferedImage.TYPE_INT_RGB
                     );
-
                     Graphics2D g2d = bufferedImage.createGraphics();
                     g2d.drawImage(image, 0, 0, null);
                     g2d.dispose();
-
                     ImageIO.write(bufferedImage, "jpg", imageFile);
 
                     imagePath = "draft_images/" + fileName;
-                    System.out.println("Image saved to draft: " + imageFile.getAbsolutePath());
 
                 } catch (Exception e) {
-                    System.err.println("Error saving draft image: " + e.getMessage());
-                    imagePath = "";
+                    System.err.println("Error saving image: " + e.getMessage());
                 }
             }
 
-            // 5. Create a Listing object with PENDING status
+            // 4. Create Listing
             Listing newListing = new Listing(
                 listingId,
-                seller,
+                sellerAccount,     // ⭐ now uses the real seller from txtSellerID
                 title,
                 description,
                 imagePath,
                 price
             );
-            newListing.setStatus("Pending"); // Explicitly set to Pending
-            int quantity = Integer.parseInt(txtQuantity.getText().trim());
+            newListing.setStatus("Pending");
             newListing.setQuantity(quantity);
-            // 6. Add to seller's local list (for display purposes)
-            seller.addListing(newListing);
 
-            // 7. Create and submit ListingSubmissionRequest
-            ListingSubmissionRequest submissionRequest = new ListingSubmissionRequest(newListing, seller);
-
-            // Find the Listing Management Organization to send the request
-            boolean requestSubmitted = submitToListingManagement(submissionRequest);
-
-            if (requestSubmitted) {
+            // 5. Add to seller's listing list
+            
+            if (sellerAccount instanceof SellerAccount sellerAccount1) {
+                sellerAccount1.addListing(newListing);
+                system.getListingDirectory().addListing(newListing);
+            } else {
                 JOptionPane.showMessageDialog(this,
-                    "Listing submitted for approval!\n" +
-                    "Temporary ID: " + listingId + "\n" +
-                    "Status: Pending Review\n" +
-                    "You can track the status in your listings.\n" +
-                    "Note: The listing will be visible only after approval.",
-                    "Submission Successful",
+                    "The provided Seller ID does not belong to a SellerAccount.",
+                    "Invalid Seller Type",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 6. Create submissionRequest
+            ListingSubmissionRequest request = new ListingSubmissionRequest(newListing, sellerAccount);
+
+            boolean requestSent = submitToListingManagement(request, sellerAccount);
+
+            if (requestSent) {
+                JOptionPane.showMessageDialog(this,
+                    "Bulk Listing submitted for approval!\n" +
+                    "Listing ID: " + listingId,
+                    "Success",
                     JOptionPane.INFORMATION_MESSAGE);
 
-                // Clear form
                 clearForm();
-
-                
 
             } else {
                 JOptionPane.showMessageDialog(this,
-                    "Listing created but failed to submit for approval.\n" +
-                    "Please try again or contact administrator.",
-                    "Submission Failed",
+                    "Listing created but failed to submit for approval.",
+                    "Request Failed",
                     JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
-                "Invalid price format!\nPlease enter a valid number (e.g., 99.99)",
+                "Invalid price or quantity format.",
                 "Input Error",
                 JOptionPane.ERROR_MESSAGE);
-            txtPrice.requestFocus();
-            txtPrice.selectAll();
 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
-                "System error:\n" + e.getMessage() + "\nPlease try again or contact administrator.",
-                "System Error",
+                "System error: " + e.getMessage(),
+                "Error",
                 JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnCreateActionPerformed
@@ -354,6 +370,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnSelectImage;
     private javax.swing.JLabel imgLogo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblDescription;
     private javax.swing.JLabel lblImagePath;
     private javax.swing.JLabel lblPrice;
@@ -361,6 +378,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtDescription;
     private javax.swing.JTextField txtPrice;
     private javax.swing.JTextField txtQuantity;
+    private javax.swing.JTextField txtSellerID;
     private javax.swing.JTextField txtTitle;
     // End of variables declaration//GEN-END:variables
 
@@ -412,27 +430,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         return true;
     }
 
-    // Generate unique listing ID
-    private String generateListingId() {
-        String prefix = "LIST-" + seller.getUserId() + "-";
 
-        List<Listing> existingListings = system.getListingDirectory().getAllListings();
-
-        int maxNumber = 0;      
-        for (Listing l : existingListings) {
-            if (l.getId().startsWith(prefix)) {
-                String[] parts = l.getId().split("-");
-                String lastPart = parts[parts.length - 1];
-
-                try {
-                    int num = Integer.parseInt(lastPart);
-                    if (num > maxNumber) maxNumber = num;
-                } catch (NumberFormatException ignore) {}
-            }
-        }
-        int newNumber = maxNumber + 1;
-        return prefix + String.format("%04d", newNumber);
-    }
 
     // Clear form method
     private void clearForm() {
@@ -440,6 +438,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         txtDescription.setText("");
         txtPrice.setText("");
         txtQuantity.setText("");
+        txtSellerID.setText("");
 
         // Clear image
         logoImage = null;
@@ -453,28 +452,24 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
     }
 
 
-    private boolean submitToListingManagement(ListingSubmissionRequest submissionRequest) {
+    private boolean submitToListingManagement(ListingSubmissionRequest submissionRequest, UserAccount sender){
         try {
-            // Find the Marketplace Enterprise in the system
             for (Network network : system.getNetworks()) {
                 for (Enterprise enterprise : network.getEnterprises()) {
                     if (enterprise instanceof MarketplaceEnterprise) {
-                        // Find Listing Management Organization
-                        Organization listingOrg = enterprise.getOrganizationByName("Listing Management Organization");
+                        Organization listingOrg = enterprise.getOrganizationByName("Seller Organization");
 
                         if (listingOrg != null) {
-                            // Set sender
-                            submissionRequest.setSender(seller);
 
-                            // Add request to the organization's work queue
+                            // Set sender
+                            submissionRequest.setSender(sender);
+
                             listingOrg.getWorkRequestDirectory().addWorkRequest(submissionRequest);
 
                             System.out.println("Listing submission request sent to: " + listingOrg.getName());
                             System.out.println("Request ID: " + submissionRequest.getId());
 
-                            // Also save to a temporary file or database for persistence
                             saveTemporaryListing(submissionRequest.getListing());
-
                             return true;
                         }
                     }
@@ -508,6 +503,30 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             System.err.println("Failed to save temporary listing: " + e.getMessage());
         }
+    }
+
+    private String generateListingIdForSeller(String sellerId) {
+        String prefix = "LIST-" + sellerId + "-";
+
+        
+        List<Listing> existingListings = system.getListingDirectory().getAllListings();
+
+        int maxNumber = 0;
+        for (Listing l : existingListings) {
+            if (l.getId().startsWith(prefix)) {
+                String[] parts = l.getId().split("-");
+                String lastPart = parts[parts.length - 1];
+
+                try {
+                    int num = Integer.parseInt(lastPart);
+                    if (num > maxNumber) maxNumber = num;
+                } catch (NumberFormatException ignore) {}
+            }
+        }
+
+        int newNum = maxNumber + 1;
+
+        return prefix + String.format("%04d", newNum);
     }
     
 
