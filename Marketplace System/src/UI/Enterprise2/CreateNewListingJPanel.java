@@ -18,18 +18,14 @@ import basement_class.Organization;
 import basement_class.UserAccountDirectory;
 import java.awt.Container;
 import java.awt.Graphics2D;
-
-import java.util.Date;
 import javax.swing.JOptionPane;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +34,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import service.E2.ListingManagementService;
+
 
 
 
@@ -460,7 +456,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 for (Enterprise enterprise : network.getEnterprises()) {
                     if (enterprise instanceof MarketplaceEnterprise) {
                         // Find Listing Management Organization
-                        Organization listingOrg = enterprise.getOrganizationByName("Listing Management Organization");
+                        Organization listingOrg = enterprise.getOrganizationByName("Seller Organization");
 
                         if (listingOrg != null) {
                             // Set sender

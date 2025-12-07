@@ -4,6 +4,7 @@
  */
 package UI.Enterprise2;
 
+import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
@@ -12,7 +13,9 @@ import basement_class.Enterprise_2.Organization.OrderManagementOrganization;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Organization;
 import java.awt.BorderLayout;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -81,12 +84,11 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
             .addGroup(controlJPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(controlJPanel1Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(btnLogout1)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(controlJPanel1Layout.createSequentialGroup()
+                        .addComponent(btnLogout1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         controlJPanel1Layout.setVerticalGroup(
@@ -96,9 +98,9 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
                 .addComponent(btnCreateNewListing)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnListingMangement)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 538, Short.MAX_VALUE)
+                .addGap(29, 29, 29)
                 .addComponent(btnLogout1)
-                .addGap(33, 33, 33))
+                .addContainerGap(542, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout workProcessJPanelLayout = new javax.swing.GroupLayout(workProcessJPanel);
@@ -135,6 +137,14 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
 
     private void btnLogout1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogout1ActionPerformed
         // TODO add your handling code here:
+        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
+        mainFrame.dispose();
+
+        // ✅ 3️⃣ 用【同一个 system】重新打开 Login
+        LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
+        loginPage.setVisible(true);
     }//GEN-LAST:event_btnLogout1ActionPerformed
 
     private void btnListingMangementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListingMangementActionPerformed

@@ -4,13 +4,16 @@
  */
 package UI.Enterprise2;
 
+import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Organization;
 import java.awt.BorderLayout;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -93,13 +96,12 @@ public class SellerJPanel extends javax.swing.JPanel {
             .addGroup(controlJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(controlJPanelLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(btnLogout)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(btnViewComplaints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                    .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(controlJPanelLayout.createSequentialGroup()
+                        .addComponent(btnLogout)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         controlJPanelLayout.setVerticalGroup(
@@ -111,9 +113,9 @@ public class SellerJPanel extends javax.swing.JPanel {
                 .addComponent(btnListingMangement)
                 .addGap(18, 18, 18)
                 .addComponent(btnViewComplaints)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 487, Short.MAX_VALUE)
+                .addGap(38, 38, 38)
                 .addComponent(btnLogout)
-                .addGap(33, 33, 33))
+                .addContainerGap(482, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(controlJPanel);
@@ -159,6 +161,14 @@ public class SellerJPanel extends javax.swing.JPanel {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
+        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
+        mainFrame.dispose();
+
+        // ✅ 3️⃣ 用【同一个 system】重新打开 Login
+        LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
+        loginPage.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
 

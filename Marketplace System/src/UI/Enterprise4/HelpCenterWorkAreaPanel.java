@@ -37,6 +37,7 @@ public class HelpCenterWorkAreaPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
         jPanel1.setSize(new java.awt.Dimension(150, 100));
 
         jLabel1.setText("Communication Services");
@@ -49,6 +50,11 @@ public class HelpCenterWorkAreaPanel extends javax.swing.JPanel {
         jLabel3.setText("Issue Resolution");
 
         jButton2.setText("Complaint Handler");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -95,6 +101,11 @@ public class HelpCenterWorkAreaPanel extends javax.swing.JPanel {
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
