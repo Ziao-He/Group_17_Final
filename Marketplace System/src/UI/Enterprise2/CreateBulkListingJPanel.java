@@ -14,6 +14,7 @@ import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.ListingDirectory;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Enterprise_2.WorkRequest.ListingSubmissionRequest;
+import basement_class.Enterprise_3.WorkRequest.ListingReviewRequest;
 import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccount;
@@ -254,30 +255,30 @@ public class CreateBulkListingJPanel extends javax.swing.JPanel {
             String description = txtDescription.getText().trim();
             double price = Double.parseDouble(txtPrice.getText().trim());
             int quantity = Integer.parseInt(txtQuantity.getText().trim());
-            String sellerId = txtSellerID.getText().trim();   // ⭐ ListingManager 版本新增
+            String sellerId = txtSellerID.getText().trim();
 
-            // Validate seller exists
-            UserAccount sellerAccount = system.getUserAccountDirectory().findByUserId(sellerId);
-            if (sellerAccount == null) {
+            // 2. Validate seller exists
+            UserAccount ua = system.getUserAccountDirectory().findByUserId(sellerId);
+            if (!(ua instanceof SellerAccount targetSeller)) {
                 JOptionPane.showMessageDialog(this,
-                    "Seller ID not found!\nPlease enter a valid seller ID.",
+                    "Seller ID not found or invalid.",
                     "Invalid Seller",
                     JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // 2. Generate listing ID using sellerId
+            // 3. Generate listing ID
             String listingId = generateListingIdForSeller(sellerId);
 
-            // 3. Save image to draft folder
+            // 4. Save image (draft)
             String imagePath = "";
             if (logoImage != null && imgLogo.getIcon() != null) {
                 try {
-                    File draftDir = new File("draft_images");
-                    if (!draftDir.exists()) draftDir.mkdirs();
+                    File dir = new File("draft_images");
+                    if (!dir.exists()) dir.mkdirs();
 
                     String fileName = sellerId + "_" + System.currentTimeMillis() + ".jpg";
-                    File imageFile = new File(draftDir, fileName);
+                    File imageFile = new File(dir, fileName);
 
                     Image image = logoImage.getImage();
                     BufferedImage bufferedImage = new BufferedImage(
@@ -285,61 +286,59 @@ public class CreateBulkListingJPanel extends javax.swing.JPanel {
                         image.getHeight(null),
                         BufferedImage.TYPE_INT_RGB
                     );
+
                     Graphics2D g2d = bufferedImage.createGraphics();
                     g2d.drawImage(image, 0, 0, null);
                     g2d.dispose();
-                    ImageIO.write(bufferedImage, "jpg", imageFile);
 
+                    ImageIO.write(bufferedImage, "jpg", imageFile);
                     imagePath = "draft_images/" + fileName;
 
                 } catch (Exception e) {
-                    System.err.println("Error saving image: " + e.getMessage());
+                    System.err.println("Image save error: " + e.getMessage());
                 }
             }
 
-            // 4. Create Listing
+            // 5. Create Listing
             Listing newListing = new Listing(
                 listingId,
-                sellerAccount,     // ⭐ now uses the real seller from txtSellerID
+                targetSeller,
                 title,
                 description,
                 imagePath,
                 price
             );
-            newListing.setStatus("Pending");
             newListing.setQuantity(quantity);
+            newListing.setStatus("Pending");
 
-            // 5. Add to seller's listing list
-            
-            if (sellerAccount instanceof SellerAccount sellerAccount1) {
-                sellerAccount1.addListing(newListing);
-                system.getListingDirectory().addListing(newListing);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                    "The provided Seller ID does not belong to a SellerAccount.",
-                    "Invalid Seller Type",
-                    JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            // 6. Add to seller + system directory
+            targetSeller.addListing(newListing);
+            system.getListingDirectory().addListing(newListing);
 
-            // 6. Create submissionRequest
-            ListingSubmissionRequest request = new ListingSubmissionRequest(newListing, sellerAccount);
+            // ✅ 7. Create ListingReviewRequest（核心修改点）
+            ListingReviewRequest reviewRequest = new ListingReviewRequest(
+                newListing,
+                "seller_request_up",
+                "Bulk listing created by platform"
+            );
 
-            boolean requestSent = submitToListingManagement(request, sellerAccount);
+            // sender = 当前登录 ListingManager（你这个 Panel 里的 seller 变量）
+            reviewRequest.setSender(sellerAccount);
 
-            if (requestSent) {
+            // ✅ 8. Submit to Content Control（逻辑与投诉一致）
+            boolean submitted = submitListingReviewToContentControl(reviewRequest);
+
+            if (submitted) {
                 JOptionPane.showMessageDialog(this,
                     "Bulk Listing submitted for approval!\n" +
                     "Listing ID: " + listingId,
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE);
-
                 clearForm();
-
             } else {
                 JOptionPane.showMessageDialog(this,
-                    "Listing created but failed to submit for approval.",
-                    "Request Failed",
+                    "Listing created but submission failed.",
+                    "Warning",
                     JOptionPane.WARNING_MESSAGE);
             }
 
@@ -353,7 +352,7 @@ public class CreateBulkListingJPanel extends javax.swing.JPanel {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
                 "System error: " + e.getMessage(),
-                "Error",
+                "System Error",
                 JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnCreateActionPerformed
@@ -452,59 +451,6 @@ public class CreateBulkListingJPanel extends javax.swing.JPanel {
     }
 
 
-    private boolean submitToListingManagement(ListingSubmissionRequest submissionRequest, UserAccount sender){
-        try {
-            for (Network network : system.getNetworks()) {
-                for (Enterprise enterprise : network.getEnterprises()) {
-                    if (enterprise instanceof MarketplaceEnterprise) {
-                        Organization listingOrg = enterprise.getOrganizationByName("Seller Organization");
-
-                        if (listingOrg != null) {
-
-                            // Set sender
-                            submissionRequest.setSender(sender);
-
-                            listingOrg.getWorkRequestDirectory().addWorkRequest(submissionRequest);
-
-                            System.out.println("Listing submission request sent to: " + listingOrg.getName());
-                            System.out.println("Request ID: " + submissionRequest.getId());
-
-                            saveTemporaryListing(submissionRequest.getListing());
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            System.err.println("Listing Management Organization not found!");
-            return false;
-
-        } catch (Exception e) {
-            System.err.println("Error submitting to Listing Management: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    
-
-    private void saveTemporaryListing(Listing listing) {
-        try {
-            File tempDir = new File("temp_listings");
-            if (!tempDir.exists()) {
-                tempDir.mkdirs();
-            }
-
-            File tempFile = new File(tempDir, listing.getId() + ".tmp");
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tempFile))) {
-                oos.writeObject(listing);
-                System.out.println("Temporary listing saved: " + tempFile.getAbsolutePath());
-            }
-        } catch (Exception e) {
-            System.err.println("Failed to save temporary listing: " + e.getMessage());
-        }
-    }
-
     private String generateListingIdForSeller(String sellerId) {
         String prefix = "LIST-" + sellerId + "-";
 
@@ -527,6 +473,47 @@ public class CreateBulkListingJPanel extends javax.swing.JPanel {
         int newNum = maxNumber + 1;
 
         return prefix + String.format("%04d", newNum);
+    }
+
+    private boolean submitListingReviewToContentControl(ListingReviewRequest reviewRequest) {
+        System.out.println("=== SUBMIT BULK LISTING REVIEW ===");
+
+        try {
+            // 1. Always add to system directory
+            system.getWorkRequestDirectory().addWorkRequest(reviewRequest);
+            System.out.println("Added to system work directory");
+
+            // 2. Try to add to Content Control org
+            boolean foundOrg = false;
+
+            for (Network network : system.getNetworks()) {
+                for (Enterprise enterprise : network.getEnterprises()) {
+                    for (Organization org : enterprise.getOrganizations()) {
+
+                        if ("Content Control".equals(org.getName())) {
+                            org.getWorkRequestDirectory().addWorkRequest(reviewRequest);
+                            foundOrg = true;
+                            System.out.println("Added to Content Control queue");
+                        }
+                    }
+                }
+            }
+
+            if (!foundOrg) {
+                System.out.println(
+                    "WARNING: Content Control not found, request still saved system-wide"
+                );
+            }
+
+            System.out.println("=== SUBMIT LISTING REVIEW SUCCESS ===");
+            
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("ERROR submitting bulk listing review: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
     
 
