@@ -51,12 +51,32 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        SearchByID = new javax.swing.JLabel();
+        fieldID = new javax.swing.JTextField();
+        btnSearchByRequestID = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        btnSearchByUserName = new javax.swing.JButton();
+        fieldUserName = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblRequests = new javax.swing.JTable();
         btnDescpriton = new javax.swing.JButton();
         btnReject = new javax.swing.JButton();
         btnAccept = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        SearchByID1 = new javax.swing.JLabel();
+        fieldID1 = new javax.swing.JTextField();
+        btnSearchByRequestID1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        btnSearchByUserName1 = new javax.swing.JButton();
+        fieldUserName1 = new javax.swing.JTextField();
+
+        SearchByID.setText("Search by ID:");
+
+        btnSearchByRequestID.setText("Search");
+
+        jLabel3.setText("Search by User");
+
+        btnSearchByUserName.setText("Search");
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -102,13 +122,57 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 18)); // NOI18N
         jLabel1.setText("ContentModeration");
 
+        SearchByID1.setText("Search by ID:");
+
+        fieldID1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldID1ActionPerformed(evt);
+            }
+        });
+
+        btnSearchByRequestID1.setText("Search");
+        btnSearchByRequestID1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchByRequestID1ActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Search by User");
+
+        btnSearchByUserName1.setText("Search");
+        btnSearchByUserName1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchByUserName1ActionPerformed(evt);
+            }
+        });
+
+        fieldUserName1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldUserName1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(91, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(SearchByID1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldID1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSearchByRequestID1)
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fieldUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSearchByUserName1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(301, 301, 301)
@@ -117,17 +181,25 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
                         .addComponent(btnDescpriton, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 960, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(54, 54, 54))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(467, 467, 467)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel1)
+                        .addGap(27, 27, 27))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(SearchByID1)
+                            .addComponent(fieldID1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSearchByRequestID1)
+                            .addComponent(jLabel2)
+                            .addComponent(btnSearchByUserName1)
+                            .addComponent(fieldUserName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -151,6 +223,8 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "Listing Approved.");
 
         loadTable();
+        fieldID.setText("");
+        fieldUserName.setText("");
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
@@ -175,6 +249,8 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "Listing Rejected.");
 
         loadTable();
+        fieldID.setText("");
+        fieldUserName.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
@@ -209,41 +285,131 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
     
     }//GEN-LAST:event_btnDescpritonActionPerformed
 
+    private void fieldID1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldID1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldID1ActionPerformed
+
+    private void btnSearchByRequestID1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByRequestID1ActionPerformed
+            String input = fieldID1.getText().trim();
+
+    if (input.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter Request ID.");
+        return;
+    }
+
+    java.util.List<ListingReviewRequest> result = new java.util.ArrayList<>();
+
+    for (WorkRequest wr : contentOrg.getWorkRequestDirectory().getRequestList()) {
+        if (wr instanceof ListingReviewRequest) {
+            ListingReviewRequest req = (ListingReviewRequest) wr;
+
+            if ("Pending".equalsIgnoreCase(req.getStatus()) &&
+                req.getId().equalsIgnoreCase(input)) {
+                result.add(req);
+                break; // ✅ ID 唯一
+            }
+        }
+    }
+
+    if (result.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No matching Request ID found.");
+    }
+
+    refreshTable(result);   // ✅ 统一入口
+    fieldID.setText("");
+    }//GEN-LAST:event_btnSearchByRequestID1ActionPerformed
+
+    private void btnSearchByUserName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByUserName1ActionPerformed
+            String keyword = fieldUserName1.getText().trim().toLowerCase();
+
+    if (keyword.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter seller username.");
+        return;
+    }
+
+    java.util.List<ListingReviewRequest> result = new java.util.ArrayList<>();
+
+    for (WorkRequest wr : contentOrg.getWorkRequestDirectory().getRequestList()) {
+        if (wr instanceof ListingReviewRequest) {
+            ListingReviewRequest req = (ListingReviewRequest) wr;
+
+            if ("Pending".equalsIgnoreCase(req.getStatus())) {
+                String sellerName = req.getListing()
+                                       .getSeller()
+                                       .getUsername()
+                                       .toLowerCase();
+
+                if (sellerName.contains(keyword)) {
+                    result.add(req);
+                }
+            }
+        }
+    }
+
+    if (result.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No matching seller found.");
+    }
+
+    refreshTable(result);   // ✅ 统一入口
+    fieldUserName1.setText("");
+    }//GEN-LAST:event_btnSearchByUserName1ActionPerformed
+
+    private void fieldUserName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUserName1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldUserName1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SearchByID;
+    private javax.swing.JLabel SearchByID1;
     private javax.swing.JButton btnAccept;
     private javax.swing.JButton btnDescpriton;
     private javax.swing.JButton btnReject;
+    private javax.swing.JButton btnSearchByRequestID;
+    private javax.swing.JButton btnSearchByRequestID1;
+    private javax.swing.JButton btnSearchByUserName;
+    private javax.swing.JButton btnSearchByUserName1;
+    private javax.swing.JTextField fieldID;
+    private javax.swing.JTextField fieldID1;
+    private javax.swing.JTextField fieldUserName;
+    private javax.swing.JTextField fieldUserName1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblRequests;
     // End of variables declaration//GEN-END:variables
 
-    private void loadTable() {
-        DefaultTableModel model = (DefaultTableModel) tblRequests.getModel();
-        model.setRowCount(0);
+private void loadTable() {
+    java.util.List<ListingReviewRequest> list = new java.util.ArrayList<>();
 
-        for (WorkRequest wr : contentOrg.getWorkRequestDirectory().getRequestList()) {
-
-            if (wr instanceof ListingReviewRequest) {
-                ListingReviewRequest req = (ListingReviewRequest) wr;
-
-            // ✅ 核心过滤：只显示待处理的
-            if (!"Pending".equalsIgnoreCase(req.getStatus())) {
-                continue;
-            }
-
-            Object[] row = new Object[5];
-            row[0] = req.getId();
-            row[1] = req.getListing().getSeller().getUsername();
-            row[2] = req.getListing().getTitle();
-            row[3] = req.getStatus();
-            row[4] = req;   // 隐藏列存对象
-
-            model.addRow(row);
+    for (WorkRequest wr : contentOrg.getWorkRequestDirectory().getRequestList()) {
+        if (wr instanceof ListingReviewRequest) {
+            list.add((ListingReviewRequest) wr);
         }
-        }
+    }
 
-        }
+    refreshTable(list);  // ✅ 统一交给 refreshTable 画表
+}
+
+    private void refreshTable(java.util.List<ListingReviewRequest> list) {
+    DefaultTableModel model = (DefaultTableModel) tblRequests.getModel();
+    model.setRowCount(0);
+
+    for (ListingReviewRequest req : list) {
+
+        // ✅ 只显示 Pending（与你原逻辑完全一致）
+        if (!"Pending".equalsIgnoreCase(req.getStatus())) continue;
+
+        Object[] row = new Object[5];
+        row[0] = req.getId();
+        row[1] = req.getListing().getSeller().getUsername();
+        row[2] = req.getListing().getTitle();
+        row[3] = req.getStatus();
+        row[4] = req;
+
+        model.addRow(row);
+    }
+}
     
 }
