@@ -469,7 +469,9 @@ public class LoginPage extends javax.swing.JFrame {
     this.setContentPane(workArea);
     this.revalidate();
     this.repaint();
-
+    this.pack();                      
+    this.setLocationRelativeTo(null);
+    
     JOptionPane.showMessageDialog(workArea,
             "Welcome " + loginUser.getUsername()
             + "\nOrganization: " + (userOrg == null ? "System Admin" : userOrg.getName()),

@@ -248,6 +248,7 @@ public class AdminJPanel extends javax.swing.JPanel {
     // ✅ 3️⃣ 用【同一个 system】重新打开 Login
     LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
     loginPage.setVisible(true);
+    
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
@@ -293,6 +294,7 @@ public class AdminJPanel extends javax.swing.JPanel {
         workProcessJPanel.add(panel, java.awt.BorderLayout.CENTER);
         workProcessJPanel.revalidate();
         workProcessJPanel.repaint();
+        
     }
 private void configureButtonByOrganization() {
 
