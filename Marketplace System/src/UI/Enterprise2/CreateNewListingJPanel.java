@@ -131,6 +131,11 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         jLabel1.setText("Quantity");
 
         txtQuantity.setText("1");
+        txtQuantity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtQuantityActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -290,7 +295,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
 
             // 5. Add to seller's local list
             seller.addListing(newListing);
-
+            system.getListingDirectory().addListing(newListing);
             // ⭐ 6. Create ListingReviewRequest 代替 ListingSubmissionRequest
             ListingReviewRequest reviewRequest = new ListingReviewRequest(
                 newListing,
@@ -343,6 +348,10 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         clearForm(); 
     }//GEN-LAST:event_btnResetActionPerformed
+
+    private void txtQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtQuantityActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -436,7 +445,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         txtTitle.setText("");
         txtDescription.setText("");
         txtPrice.setText("");
-        txtQuantity.setText("");
+        
 
         // Clear image
         logoImage = null;
