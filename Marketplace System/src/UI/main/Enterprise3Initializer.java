@@ -75,7 +75,7 @@ public static void initialize(EcoSystem system, Network network) {
         UserAccount accountAdmin = new PlatformAdminAccount();
         accountAdmin.setUserId("ADMIN_002");
         accountAdmin.setUsername("a");
-        accountAdmin.setPasswordHash("123");
+        accountAdmin.setPasswordHash("1234");
         accountAdmin.setStatus("ACTIVE");
         accountAdmin.setRole(new AccountAdminRole());
 
@@ -85,7 +85,7 @@ public static void initialize(EcoSystem system, Network network) {
         UserAccount contentAdmin = new PlatformAdminAccount();
         contentAdmin.setUserId("ADMIN_003");
         contentAdmin.setUsername("c");
-        contentAdmin.setPasswordHash("123");
+        contentAdmin.setPasswordHash("1234");
         contentAdmin.setStatus("ACTIVE");
         contentAdmin.setRole(new ContentModeratorRole());
 

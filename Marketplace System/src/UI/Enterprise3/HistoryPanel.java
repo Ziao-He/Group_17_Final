@@ -24,6 +24,8 @@ public class HistoryPanel extends javax.swing.JPanel {
     private EcoSystem system;
     private UserAccount admin;
     private UserControlOrganization userOrg;
+        
+    
     /**
      * Creates new form AccountAdminWorkAreaPanel
      */
@@ -208,9 +210,8 @@ model.setRowCount(0);
 
 boolean found = false;
 
-boolean isPlatformAdmin =
-        admin.getRole() != null &&
-        "PlatformAdmin".equals(admin.getRole().getRoleName());
+boolean isSystemAdmin =
+        admin.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole;
 
 String keyword = fieldID.getText().trim();
 
@@ -223,7 +224,7 @@ for (Network n : system.getNetworks()) {
                 if (req.getId() == null) continue;
 
                 boolean canSee =
-                        isPlatformAdmin ||
+                        isSystemAdmin  ||
                         (req.getReviewer() != null && req.getReviewer().equals(admin));
 
                 if (canSee && req.getId().equalsIgnoreCase(keyword)) {
@@ -250,9 +251,8 @@ model.setRowCount(0);
 
 boolean found = false;
 
-boolean isPlatformAdmin =
-        admin.getRole() != null &&
-        "PlatformAdmin".equals(admin.getRole().getRoleName());
+boolean isSystemAdmin =
+        admin.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole;
 
 String keyword = fieldType.getText().trim().toLowerCase();
 
@@ -264,7 +264,7 @@ for (Network n : system.getNetworks()) {
                 if (!req.isResolved()) continue;
 
                 boolean canSee =
-                        isPlatformAdmin ||
+                        isSystemAdmin ||
                         (req.getReviewer() != null && req.getReviewer().equals(admin));
 
                 if (!canSee) continue;
@@ -302,9 +302,8 @@ if (!found) {
           DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
     model.setRowCount(0);
 
-    boolean isPlatformAdmin =
-            admin.getRole() != null &&
-            "PlatformAdmin".equals(admin.getRole().getRoleName());
+boolean isSystemAdmin =
+        admin.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole;
 
     // ✅✅✅ 统一从【全系统】扫描
     for (Network n : system.getNetworks()) {
@@ -313,21 +312,18 @@ if (!found) {
                 for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
 
                     // ✅ PlatformAdmin：看所有已完成
-                    if (isPlatformAdmin) {
-                        if (req.isResolved()) {
-                            addRow(req, model);
-                        }
-                    }
+                  if (isSystemAdmin) {
+    if (req.isResolved()) {
+        addRow(req, model);   // ✅ 超级管理员：显示所有已处理
+    }
+} else {
+    if (req.isResolved()
+            && req.getReviewer() != null
+            && req.getReviewer().equals(admin)) {
 
-                    // ✅ 普通管理员：只看“自己审批的”
-                    else {
-                        if (req.isResolved()
-                                && req.getReviewer() != null
-                                && req.getReviewer().equals(admin)) {
-
-                            addRow(req, model);
-                        }
-                    }
+        addRow(req, model);  // ✅ 普通管理员：只看自己
+    }
+}
                 }
             }
         }
