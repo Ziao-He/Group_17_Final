@@ -31,7 +31,7 @@ public class main {
                       .getEnterpriseByName("Platform Management"));
 
         // ✅ D. 从 Fake 数据中获取【总平台管理员】
-        UserAccount admin = system.getUserAccountDirectory().findByUsername("userB");
+        UserAccount admin = system.getUserAccountDirectory().findByUsername("userC");
         // 你也可以换成 userA / userB 来测试不同权限
 
         // E. 获取平台管理 Enterprise
