@@ -32,6 +32,7 @@ public class AdminJPanel extends javax.swing.JPanel {
         this.userOrg=userOrg;
         
         FakeDataGenerator.generate(system, enterprise);
+        configureButtonByRole();
     }
 
     /**
@@ -201,5 +202,36 @@ public class AdminJPanel extends javax.swing.JPanel {
         workProcessJPanel.add(panel, java.awt.BorderLayout.CENTER);
         workProcessJPanel.revalidate();
         workProcessJPanel.repaint();
+    }
+
+    private void configureButtonByRole() {
+        String role = adminUser.getRole().getRoleName();
+
+    // ✅ 总管理员 → 4 个按钮全部可见
+    if (role.equals("PlatformAdmin")) {
+        btnAccountManagement.setVisible(true);
+        btnRegistrationReview.setVisible(true);
+        btnContentModeration.setVisible(true);
+        btnPolicyEnforcement.setVisible(true);
+        return;
+    }
+
+    // ✅ 账号管理员 → 只能看账号相关
+    if (role.equals("AccountAdmin") || role.equals("RegistrationReviewer")) {
+        btnAccountManagement.setVisible(true);
+        btnRegistrationReview.setVisible(true);
+        btnContentModeration.setVisible(false);
+        btnPolicyEnforcement.setVisible(false);
+        return;
+    }
+
+    // ✅ 内容管理员 → 只能看内容相关
+    if (role.equals("ContentModerator") || role.equals("PolicyEnforcer")) {
+        btnAccountManagement.setVisible(false);
+        btnRegistrationReview.setVisible(false);
+        btnContentModeration.setVisible(true);
+        btnPolicyEnforcement.setVisible(true);
+    }
+
     }
 }
