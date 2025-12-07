@@ -269,6 +269,8 @@ public class LoginPage extends javax.swing.JFrame {
     UserAccount loginUser = null;
     Organization userOrg = null;
     Enterprise userEnterprise = null;
+    
+    
 
     // =====================================================
     // ✅ 2️⃣ 超级管理员登录（SystemAdmin → 不走 Organization）
@@ -368,7 +370,16 @@ public class LoginPage extends javax.swing.JFrame {
     // ✅ ✅ ✅ 后续由 Organization 控制按钮权限
     // =====================================================
     else {
+        if (loginUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
 
+        for (Network n : system.getNetworks()) {
+            if (!n.getEnterprises().isEmpty()) {
+                userEnterprise = n.getEnterprises().get(0);   // ✅ 你唯一的 Enterprise 3
+                break;
+            }
+        }
+    }
+        
         workArea = new UI.Enterprise3.AdminJPanel(
             system,
             loginUser,
