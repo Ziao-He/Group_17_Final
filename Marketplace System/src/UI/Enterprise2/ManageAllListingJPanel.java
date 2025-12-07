@@ -18,6 +18,7 @@ import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import java.io.File;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -468,8 +469,11 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
 
     private void btnComplaintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComplaintActionPerformed
         // TODO add your handling code here:
+        System.out.println("=== COMPLAINT PROCESS START ===");
+    
         int selectedRow = tblListing.getSelectedRow();
         if (selectedRow == -1) {
+            System.out.println("ERROR: No row selected");
             JOptionPane.showMessageDialog(this,
                 "Please select a listing first.",
                 "No Selection",
@@ -477,13 +481,17 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
             return;
         }
 
+        System.out.println("Step 1: Row selected: " + selectedRow);
+
         // 1. Get listing ID from table
         String listingId = (String) tblListing.getValueAt(selectedRow, 1);
+        System.out.println("Step 2: Listing ID from table: " + listingId);
 
         // 2. Get the listing object from global directory
         Listing selectedListing = system.getListingDirectory().findById(listingId);
 
         if (selectedListing == null) {
+            System.out.println("ERROR: Listing not found in system directory");
             JOptionPane.showMessageDialog(this,
                 "Listing not found in system.",
                 "Error",
@@ -491,16 +499,24 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
             return;
         }
 
+        System.out.println("Step 3: Listing found: " + selectedListing.getTitle());
+
         // 3. Get seller account from system
-        UserAccount targetSeller = system.getUserAccountDirectory().findByUserId(selectedListing.getSellerId());
+        String sellerId = selectedListing.getSellerId();
+        System.out.println("Step 4: Seller ID from listing: " + sellerId);
+
+        UserAccount targetSeller = system.getUserAccountDirectory().findByUserId(sellerId);
 
         if (targetSeller == null) {
+            System.out.println("ERROR: Cannot find seller account for ID: " + sellerId);
             JOptionPane.showMessageDialog(this,
                 "Cannot find seller account for this listing.",
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        System.out.println("Step 5: Target seller found: " + targetSeller.getUsername());
 
         // 4. Ask for complaint reason
         String reason = JOptionPane.showInputDialog(
@@ -510,7 +526,13 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
                 JOptionPane.PLAIN_MESSAGE
         );
 
-        if (reason == null || reason.trim().isEmpty()) {
+        if (reason == null) {
+            System.out.println("INFO: User cancelled complaint (clicked Cancel)");
+            return;
+        }
+
+        if (reason.trim().isEmpty()) {
+            System.out.println("INFO: User provided empty reason");
             JOptionPane.showMessageDialog(this,
                 "Complaint cancelled (no reason provided).",
                 "Cancelled",
@@ -518,50 +540,55 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // 5. Create the PolicyViolationRequest - FIXED: Use the correct constructor
-        System.out.println("DEBUG: Creating PolicyViolationRequest...");
-        System.out.println("DEBUG: Reporter: " + seller.getUsername());
-        System.out.println("DEBUG: Target: " + targetSeller.getUsername());
-        System.out.println("DEBUG: Listing: " + selectedListing.getId());
-        System.out.println("DEBUG: Category: listing_issue");
-        System.out.println("DEBUG: Reason: " + reason);
+        System.out.println("Step 6: Reason provided: " + reason);
 
-        PolicyViolationRequest request = new PolicyViolationRequest(
-            seller,                     // reporter
-            targetSeller,               // target user
-            selectedListing,            // listing - 这个参数确保调用第二个构造函数
-            "listing_issue",            // category
-            reason                      // info
-        );
+        // 5. Create the PolicyViolationRequest
+        System.out.println("Step 7: Creating PolicyViolationRequest...");
+        System.out.println("  Reporter: " + seller.getUsername());
+        System.out.println("  Target: " + targetSeller.getUsername());
+        System.out.println("  Listing: " + selectedListing.getId());
 
-        // 6. Verify the request was created correctly
-        if (request.getListing() == null) {
-            System.out.println("ERROR: Request listing is null - wrong constructor called!");
+        try {
+            PolicyViolationRequest request = new PolicyViolationRequest(
+                seller,                     // reporter
+                targetSeller,               // target user
+                selectedListing,            // listing
+                "listing_issue",            // category
+                reason                      // info
+            );
+
+            System.out.println("Step 8: Request created successfully");
+            System.out.println("  Request ID: " + request.getId());
+            System.out.println("  Request listing: " + (request.getListing() != null ? request.getListing().getId() : "NULL"));
+
+            // 6. Submit to Policy Management Organization
+            System.out.println("Step 9: Submitting complaint...");
+            boolean sent = submitComplaintToPolicyManagement(request);
+
+            if (sent) {
+                System.out.println("SUCCESS: Complaint submitted!");
+                JOptionPane.showMessageDialog(this,
+                    "Complaint submitted successfully!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                System.out.println("FAILED: submitComplaintToPolicyManagement returned false");
+                JOptionPane.showMessageDialog(this,
+                    "Failed to submit complaint.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            System.err.println("ERROR: Exception creating request: " + e.getMessage());
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this,
-                "System error: Failed to create complaint request.",
-                "Error",
+                "Error creating complaint: " + e.getMessage(),
+                "System Error",
                 JOptionPane.ERROR_MESSAGE);
-            return;
         }
 
-        System.out.println("DEBUG: Request created successfully");
-        System.out.println("DEBUG: Request ID: " + request.getId());
-        System.out.println("DEBUG: Request status: " + request.getStatus());
-
-        // 7. Submit to Policy Management Organization
-        boolean sent = submitComplaintToPolicyManagement(request);
-
-        if (sent) {
-            JOptionPane.showMessageDialog(this,
-                "Complaint submitted successfully!",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "Failed to submit complaint.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-        }
+        System.out.println("=== COMPLAINT PROCESS END ===");
     }//GEN-LAST:event_btnComplaintActionPerformed
 
 
@@ -672,32 +699,86 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
     }
 
     private boolean submitComplaintToPolicyManagement(PolicyViolationRequest request) {
+        System.out.println("Step 9.1: Starting submission...");
+    
         try {
-        // Set sender
+            // Set sender
             request.setSender(seller);
+            System.out.println("Step 9.2: Sender set to: " + seller.getUsername());
 
-            // Find Content Control organization
+            // 方案A: 尝试添加到系统目录
+            System.out.println("Step 9.3: Trying to add to system work directory...");
+            system.getWorkRequestDirectory().addWorkRequest(request);
+            System.out.println("Step 9.4: Added to system directory");
+
+            // 方案B: 尝试找到Content Control组织
+            System.out.println("Step 9.5: Looking for Content Control organization...");
+            boolean foundOrg = false;
+
             for (Network network : system.getNetworks()) {
+                System.out.println("  Network: " + network.getName());
+
                 for (Enterprise enterprise : network.getEnterprises()) {
-                    Organization contentOrg = enterprise.getOrganizationByName("Content Control");
+                    System.out.println("    Enterprise: " + enterprise.getName());
 
-                    if (contentOrg != null) {
-                        // Add to organization's work queue
-                        contentOrg.getWorkRequestDirectory().addWorkRequest(request);
+                    for (Organization org : enterprise.getOrganizations()) {
+                        System.out.println("      Organization: " + org.getName());
 
-                        // Also add to system directory as backup
-                        system.getWorkRequestDirectory().addWorkRequest(request);
-
-                        return true;
+                        if (org.getName().equals("Content Control")) {
+                            System.out.println("      FOUND Content Control!");
+                            org.getWorkRequestDirectory().addWorkRequest(request);
+                            foundOrg = true;
+                            System.out.println("      Added to organization queue");
+                        }
                     }
                 }
             }
 
-            return false;
+            if (!foundOrg) {
+                System.out.println("WARNING: Content Control organization not found, but complaint saved to system directory");
+            }
+
+            // 方案C: 保存到文件
+            System.out.println("Step 9.6: Saving complaint to file...");
+            saveComplaintToFile(request);
+
+            System.out.println("Step 9.7: All submission methods completed");
+            return true;
 
         } catch (Exception e) {
+            System.err.println("ERROR in submission: " + e.getMessage());
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private void saveComplaintToFile(PolicyViolationRequest request) {
+        try {
+            File dir = new File("data/complaints");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            String filename = "complaint_" + request.getId() + "_" + System.currentTimeMillis() + ".txt";
+            File file = new File(dir, filename);
+
+            try (PrintWriter pw = new PrintWriter(file)) {
+                pw.println("=== COMPLAINT REPORT ===");
+                pw.println("ID: " + request.getId());
+                pw.println("Date: " + new Date());
+                pw.println("Reporter: " + request.getReporter().getUsername());
+                pw.println("Target: " + request.getTargetUser().getUsername());
+                pw.println("Listing ID: " + request.getListing().getId());
+                pw.println("Listing Title: " + request.getListing().getTitle());
+                pw.println("Category: " + request.getViolationCategory());
+                pw.println("Reason: " + request.getViolationInfo());
+                pw.println("Status: " + request.getStatus());
+            }
+
+            System.out.println("Complaint saved to file: " + file.getAbsolutePath());
+
+        } catch (Exception e) {
+            System.err.println("WARNING: Could not save to file: " + e.getMessage());
         }
     }
     
