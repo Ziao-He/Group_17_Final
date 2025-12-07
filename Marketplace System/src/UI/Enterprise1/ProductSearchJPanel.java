@@ -287,7 +287,8 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDetailedActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        // Add selected listing to cart with status check
+
         Listing selected = getSelectedListing();
         if (selected == null) {
             JOptionPane.showMessageDialog(this,
@@ -297,6 +298,36 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
             return;
         }
 
+        // 1) Check listing status
+        // Only "Approved" listings can be added to cart
+        String status = selected.getStatus();
+        if (status == null || !"Approved".equalsIgnoreCase(status.trim())) {
+            JOptionPane.showMessageDialog(this,
+                    "This listing is not available for purchase (status: " + status + ").",
+                    "Cannot Add To Cart",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 2) Optional but recommended: check stock quantity
+        try {
+            if (selected.getQuantity() <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "This listing is out of stock and cannot be added to cart.",
+                        "Out Of Stock",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (Exception ex) {
+            // If quantity is not set correctly, be safe and block adding
+            JOptionPane.showMessageDialog(this,
+                    "Listing inventory information is invalid, cannot add to cart.",
+                    "Inventory Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 3) Parent panel must exist
         if (parentPanel == null) {
             JOptionPane.showMessageDialog(this,
                     "Parent buyer panel is not available.",
@@ -305,7 +336,7 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // Delegate to BuyerJPanel to manage the shared shopping cart
+        // 4) Delegate to BuyerJPanel to manage the shared shopping cart
         parentPanel.addToCart(selected);
 
         JOptionPane.showMessageDialog(this,
