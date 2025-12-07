@@ -52,74 +52,74 @@ public static void initialize(EcoSystem system, Network network) {
 
         contentOrg.addRole(new ContentModeratorRole());
         contentOrg.addRole(new PolicyEnforcerRole());
-
-        // ✅ 4️⃣ 创建 Platform Admin 账号（总管理员）
-        PlatformAdminAccount admin = new PlatformAdminAccount();
-        admin.setUserId("ADMIN_001");
-        admin.setUsername("platformadmin");
-        admin.setPasswordHash("123");
-        admin.setStatus("ACTIVE");
-
-        userOrg.getUserAccountDirectory().addUserAccount(admin);
-
-        UserAccount systemAdmin = new SystemAdminAccount();
-        systemAdmin.setUserId("SYS_001");
-        systemAdmin.setUsername("s");
-        systemAdmin.setPasswordHash("123");
-        systemAdmin.setStatus("ACTIVE");
-
-
-        system.getUserAccountDirectory().addUserAccount(systemAdmin);
-
-        // ✅ 5️⃣ 创建 UserControl 管理员
-        UserAccount accountAdmin = new PlatformAdminAccount();
-        accountAdmin.setUserId("ADMIN_002");
-        accountAdmin.setUsername("a");
-        accountAdmin.setPasswordHash("123");
-        accountAdmin.setStatus("ACTIVE");
-        accountAdmin.setRole(new AccountAdminRole());
-
-        userOrg.getUserAccountDirectory().addUserAccount(accountAdmin);
-
-        // ✅ 6️⃣ 创建 ContentControl 管理员
-        UserAccount contentAdmin = new PlatformAdminAccount();
-        contentAdmin.setUserId("ADMIN_003");
-        contentAdmin.setUsername("c");
-        contentAdmin.setPasswordHash("123");
-        contentAdmin.setStatus("ACTIVE");
-        contentAdmin.setRole(new ContentModeratorRole());
-
-        contentOrg.getUserAccountDirectory().addUserAccount(contentAdmin);
+//
+//        // ✅ 4️⃣ 创建 Platform Admin 账号（总管理员）
+//        PlatformAdminAccount admin = new PlatformAdminAccount();
+//        admin.setUserId("ADMIN_001");
+//        admin.setUsername("platformadmin");
+//        admin.setPasswordHash("123");
+//        admin.setStatus("ACTIVE");
+//
+//        userOrg.getUserAccountDirectory().addUserAccount(admin);
+//
+//        UserAccount systemAdmin = new SystemAdminAccount();
+//        systemAdmin.setUserId("SYS_001");
+//        systemAdmin.setUsername("s");
+//        systemAdmin.setPasswordHash("123");
+//        systemAdmin.setStatus("ACTIVE");
+//
+//
+//        system.getUserAccountDirectory().addUserAccount(systemAdmin);
+//
+//        // ✅ 5️⃣ 创建 UserControl 管理员
+//        UserAccount accountAdmin = new PlatformAdminAccount();
+//        accountAdmin.setUserId("ADMIN_002");
+//        accountAdmin.setUsername("a");
+//        accountAdmin.setPasswordHash("1234");
+//        accountAdmin.setStatus("ACTIVE");
+//        accountAdmin.setRole(new AccountAdminRole());
+//
+//        userOrg.getUserAccountDirectory().addUserAccount(accountAdmin);
+//
+//        // ✅ 6️⃣ 创建 ContentControl 管理员
+//        UserAccount contentAdmin = new PlatformAdminAccount();
+//        contentAdmin.setUserId("ADMIN_003");
+//        contentAdmin.setUsername("c");
+//        contentAdmin.setPasswordHash("1234");
+//        contentAdmin.setStatus("ACTIVE");
+//        contentAdmin.setRole(new ContentModeratorRole());
+//
+//        contentOrg.getUserAccountDirectory().addUserAccount(contentAdmin);
 
         // ✅ 7️⃣ 构造一些测试 Listing
-        Listing l1 = new Listing("L001", admin, "Old iPhone", "Used iPhone 11", "iphone.png", 200);
-        Listing l2 = new Listing("L002", accountAdmin, "MacBook", "M1 MacBook Air", "mac.png", 900);
-
-        system.getListingDirectory().addListing(l1);
-        system.getListingDirectory().addListing(l2);
-
-        // ✅ 8️⃣ 构造测试 WorkRequest
-        RegistrationApprovalRequest r1 =
-            new RegistrationApprovalRequest(accountAdmin);
-        r1.setReason("New student account");
-
-        userOrg.getWorkRequestDirectory().addWorkRequest(r1);
-
-        AccountStatusReviewRequest s1 =
-            new AccountStatusReviewRequest(accountAdmin, "suspend", "Spam behavior");
-
-        userOrg.getWorkRequestDirectory().addWorkRequest(s1);
-
-        ListingReviewRequest lReq =
-            new ListingReviewRequest(l1, "update_request", "Title updated");
-
-        contentOrg.getWorkRequestDirectory().addWorkRequest(lReq);
-
-        PolicyViolationRequest pReq =
-            new PolicyViolationRequest(accountAdmin, contentAdmin, l1,
-                "keyword_violation", "Illegal keyword found");
-
-        contentOrg.getWorkRequestDirectory().addWorkRequest(pReq);
+//        Listing l1 = new Listing("L001", admin, "Old iPhone", "Used iPhone 11", "iphone.png", 200);
+//        Listing l2 = new Listing("L002", accountAdmin, "MacBook", "M1 MacBook Air", "mac.png", 900);
+//
+//        system.getListingDirectory().addListing(l1);
+//        system.getListingDirectory().addListing(l2);
+//
+//        // ✅ 8️⃣ 构造测试 WorkRequest
+//        RegistrationApprovalRequest r1 =
+//            new RegistrationApprovalRequest(accountAdmin);
+//        r1.setReason("New student account");
+//
+//        userOrg.getWorkRequestDirectory().addWorkRequest(r1);
+//
+//        AccountStatusReviewRequest s1 =
+//            new AccountStatusReviewRequest(accountAdmin, "suspend", "Spam behavior");
+//
+//        userOrg.getWorkRequestDirectory().addWorkRequest(s1);
+//
+//        ListingReviewRequest lReq =
+//            new ListingReviewRequest(l1, "update_request", "Title updated");
+//
+//        contentOrg.getWorkRequestDirectory().addWorkRequest(lReq);
+//
+//        PolicyViolationRequest pReq =
+//            new PolicyViolationRequest(accountAdmin, contentAdmin, l1,
+//                "keyword_violation", "Illegal keyword found");
+//
+//        contentOrg.getWorkRequestDirectory().addWorkRequest(pReq);
 
         System.out.println("[Enterprise3] Platform Management initialized successfully.\n");
     }
