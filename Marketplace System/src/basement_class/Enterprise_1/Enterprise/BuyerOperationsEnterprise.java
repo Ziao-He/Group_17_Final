@@ -6,7 +6,7 @@ package basement_class.Enterprise_1.Enterprise;
 
 import basement_class.Enterprise;
 import basement_class.Enterprise_1.Organization.ShoppingServicesOrganization;
-import basement_class.Enterprise_1.Organization.OrderManagementOrganization;
+import basement_class.Enterprise_1.Organization.OrderSelfTrackerOrganization;
 
 
 /**
@@ -20,6 +20,6 @@ public class BuyerOperationsEnterprise extends Enterprise {
         
         // Add organizations
         this.addOrganization(new ShoppingServicesOrganization("Shopping Services"));
-        this.addOrganization(new OrderManagementOrganization("Order Management"));
+        this.addOrganization(new OrderSelfTrackerOrganization("Order Management"));
     }
 }

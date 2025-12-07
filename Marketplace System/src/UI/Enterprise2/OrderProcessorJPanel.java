@@ -148,7 +148,10 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
 
     private void btnCreateNewListingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewListingActionPerformed
         // TODO add your handling code here:
-        
+        ReviewOrdersJPanel panel =
+        new ReviewOrdersJPanel(orderProcessorAccount, organization, enterprise, system);
+
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnCreateNewListingActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed

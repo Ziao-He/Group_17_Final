@@ -99,9 +99,10 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(btnRemove)
-                        .addGap(357, 357, 357)
-                        .addComponent(btnDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -112,9 +113,10 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFinish, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDetail)
-                    .addComponent(btnRemove))
-                .addContainerGap(37, Short.MAX_VALUE))
+                    .addComponent(btnDetail))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRemove)
+                .addContainerGap(8, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -180,27 +182,23 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
                 
                 // Create Order object
                 Order order = new Order(
-                    orderId,                          // orderId
-                    listing.getId(),                  // listingId
-                    buyerAccount.getUserId(),         // buyerId
-                    listing.getSeller().getUserId(),  // sellerId
-                    listing.getPrice()                // totalPrice
+                    orderId,
+                    listing.getId(),
+                    buyerAccount.getUserId(),
+                    listing.getSeller().getUserId(),
+                    listing.getPrice()
                 );
-                order.setTotalPrice(listing.getPrice());
-                order.setQuantity(1);  // Always 1 for second-hand items
-                order.setStatus("Pending");
+                order.setQuantity(1);  // Always 1 for second-hand
+                order.setStatus(Order.STATUS_PENDING);
                 
                 // Create OrderReviewRequest (WorkRequest)
                 OrderReviewRequest orderRequest = new OrderReviewRequest(
-                    buyerAccount,  // sender
+                    buyerAccount,
                     order,
                     "Purchase request for: " + listing.getTitle()
                 );
                 orderRequest.setId(requestId);
                 orderRequest.setReceiver(listing.getSeller());
-                
-                // Save Order (if you have OrderDao)
-                // orderDao.save(order);
                 
                 // Add order ID to buyer's account
                 buyerAccount.addOrder(orderId);
@@ -208,12 +206,10 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
                 // Update listing status to Reserved
                 listing.setStatus("Reserved");
                 
-                // Add WorkRequest to system
-                // If you have WorkRequestDirectory:
-                // system.getWorkRequestDirectory().addWorkRequest(orderRequest);
-                
-                // Or add to Order Management Organization's work queue:
-                // Find OrderManagementOrganization and add to its queue
+                // Save WorkRequest to system
+                if (system.getWorkRequestDirectory() != null) {
+                    system.getWorkRequestDirectory().addWorkRequest(orderRequest);
+                }
                 
                 successCount++;
                 
@@ -227,7 +223,16 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
         }
 
         // 5. Update buyer account statistics
-        buyerAccount.recordOrder(totalPrice, true);
+        // IMPORTANT: Only update totalPurchases here, not completedPurchases
+        // completedPurchases should only be updated when order status becomes COMPLETED
+        // (which happens in TrackJPanel when buyer clicks Complete)
+        
+        // Update total purchases count (number of orders created)
+        // This is already done in addOrder() which increments totalPurchases
+        // So we don't need to do anything extra here
+        
+        // NOTE: Points are NOT awarded at checkout
+        // Points should be awarded when order is COMPLETED in TrackJPanel
 
         // 6. Clear shopping cart
         shoppingCart.clear();
@@ -237,16 +242,18 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
         StringBuilder resultMessage = new StringBuilder();
         resultMessage.append("Checkout successful!\n\n");
         resultMessage.append(String.format("Orders created: %d\n", successCount));
-        resultMessage.append(String.format("Total spent: $%.2f\n", totalPrice));
-        resultMessage.append(String.format("Points earned: %d\n", (int)(totalPrice / 10)));
+        resultMessage.append(String.format("Total amount: $%.2f\n", totalPrice));
+        resultMessage.append("\nStatus: Pending\n");
+        resultMessage.append("Your orders are waiting for seller approval.\n");
+        resultMessage.append("Check Order Tracker to view status updates.\n");
         
         if (maxBudget > 0) {
-            resultMessage.append(String.format("Remaining budget: $%.2f\n", 
+            resultMessage.append(String.format("\nRemaining budget: $%.2f", 
                 maxBudget - totalPrice));
         }
         
         if (!failedItems.isEmpty()) {
-            resultMessage.append("\nFailed items:\n");
+            resultMessage.append("\n\nFailed items:\n");
             for (String item : failedItems) {
                 resultMessage.append("- ").append(item).append("\n");
             }
