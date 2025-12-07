@@ -411,10 +411,31 @@ public class LoginPage extends javax.swing.JFrame {
     // ============================================================
     // ✅ ✅ ✅ Enterprise 2 — Seller（✅ 预留）
     // ============================================================
-    else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount) {
+    else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount sellerAccount) {
 
-        // TODO: Enterprise 2 卖家界面跳转逻辑
-        // workArea = new UI.Enterprise2.SellerJPanel(...);
+        Role role = sellerAccount.getRole();
+
+        if (role instanceof basement_class.Enterprise_2.Role.SellerRole) {
+
+            workArea = new UI.Enterprise2.SellerJPanel(sellerAccount, userOrg, userEnterprise, system);
+
+        } else if (role instanceof basement_class.Enterprise_2.Role.ListingManagerRole) {
+
+            workArea = new UI.Enterprise2.ListingManagerJPanel(
+                    sellerAccount, userOrg, userEnterprise, system);
+
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Unknown role for Seller account.",
+                    "Role Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+    else if (loginUser instanceof basement_class.Enterprise_2.Account.OrderProcessorAccount orderProcessorAccount) {
+
+        workArea = new UI.Enterprise2.OrderProcessorJPanel(
+                orderProcessorAccount, userOrg, userEnterprise, system);
     }
 
     // ============================================================
