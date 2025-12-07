@@ -10,6 +10,7 @@ import basement_class.Enterprise;
 import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import java.util.Locale;
 import javax.swing.JFrame;
 
 /**
@@ -18,12 +19,13 @@ import javax.swing.JFrame;
  */
 public class main {
     public static void main(String[] args) {
+         Locale.setDefault(Locale.US);
 
         // A. 初始化系统
         EcoSystem system = EcoSystem.getInstance();
 
         // B. 初始化 Enterprise3（创建 User Control / Content Control 组织等）
-        Enterprise3Initializer.initialize(system);
+//        Enterprise3Initializer.initialize(system);
 
         // ✅ C. 生成 Fake 用户（关键：必须在取用户之前）
         FakeDataGenerator.generate(system,

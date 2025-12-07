@@ -4,6 +4,7 @@
  */
 package basement_class.Enterprise_3.Account;
 
+import basement_class.Enterprise_3.Role.PlatformAdminRole;
 import basement_class.UserAccount;
 
 /**
@@ -13,6 +14,8 @@ import basement_class.UserAccount;
 public class PlatformAdminAccount extends UserAccount {
         public PlatformAdminAccount() {
         super();
+        this.setStatus("ACTIVE");
+        this.setRole(new PlatformAdminRole());
     }
 
     @Override

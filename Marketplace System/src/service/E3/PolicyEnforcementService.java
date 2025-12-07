@@ -21,14 +21,14 @@ import basement_class.UserAccount;
  */
 public class PolicyEnforcementService {
     
- private UserManagementService userService = new UserManagementService();
+     private UserManagementService userService = new UserManagementService();
 
     /**
-     * 审核通过（Approve）
-     * @param system 整个 EcoSystem，用来找到 Listing 审核组织
-     * @param req    违规工单
+     * ✅ 审核通过（Approve）——带【审批人 + 审计记录】
      */
-    public void approveViolation(EcoSystem system, PolicyViolationRequest req) {
+    public void approveViolation(EcoSystem system,
+                                 PolicyViolationRequest req,
+                                 UserAccount admin) {
 
         String category = req.getViolationCategory();
         UserAccount target = req.getTargetUser();
@@ -36,14 +36,17 @@ public class PolicyEnforcementService {
         switch (category) {
 
             case "account_issue" -> {
-                // 账号问题 → 直接封号
+                // ✅ 账号问题 → 直接封号
                 target.setStatus("BANNED");
                 req.setStatus("ACCOUNT_BANNED");
-                req.resolve();
+
+                // ✅ 关键：记录是谁审批的
+                req.resolve(admin, "ACCOUNT_BANNED",
+                        "Account violation confirmed and banned");
             }
 
             case "listing_issue" -> {
-                // 物品问题 → 封号 + 发 ListingReviewRequest 到卖家侧进行物品下架审核
+                // ✅ 物品问题 → 封号 + 下发 Listing 审核
 
                 target.setStatus("BANNED");
                 req.setStatus("LISTING_ISSUE_SUBMITTED");
@@ -57,7 +60,6 @@ public class PolicyEnforcementService {
                                     req.getViolationInfo()
                             );
 
-                    // 把证据也附加到 ListingReviewRequest 里（如果你在那边有 evidence 字段）
                     for (String path : req.getEvidencePaths()) {
                         listingReq.addEvidence(path);
                     }
@@ -65,51 +67,66 @@ public class PolicyEnforcementService {
                     sendToListingModeration(system, listingReq);
                 }
 
-                req.resolve();
+                // ✅ 关键：记录是谁审批的
+                req.resolve(admin, "LISTING_FORCE_DOWN + ACCOUNT_BANNED",
+                        "Listing violation confirmed, forced down & account banned");
             }
 
             case "minor_dispute" -> {
-                // 轻微纠纷 → 警告账号
-                userService.issueWarning(target);
+                // ✅ 轻微纠纷 → 警告（现在也走审计）
+
+                userService.issueWarningByRequest(req, admin);
+
                 req.setStatus("WARNING_ISSUED");
-                req.resolve();
+
+                // ✅ 关键：记录是谁审批的
+                req.resolve(admin, "ISSUE_WARNING",
+                        "Minor dispute, warning issued");
             }
 
             default -> {
                 req.setStatus("UNKNOWN_CATEGORY");
-                req.resolve();
+
+                // ✅ 关键：记录是谁审批的
+                req.resolve(admin, "UNKNOWN_CATEGORY",
+                        "System cannot identify violation type");
             }
         }
     }
 
     /**
-     * 审核拒绝（Reject）——什么都不做，只记录理由
+     * ✅ 审核拒绝（Reject）——带【审批人 + 拒绝理由】
      */
-    public void rejectViolation(PolicyViolationRequest req, String reason) {
+    public void rejectViolation(PolicyViolationRequest req,
+                                UserAccount admin,
+                                String reason) {
+
         req.setRejectionReason(reason);
         req.setStatus("REJECTED");
-        req.resolve();
+
+        // ✅ 关键：记录是谁拒绝的 + 为什么拒绝
+        req.resolve(admin, "REJECT_VIOLATION", reason);
     }
 
     /**
-     * 把 Listing 审核请求塞到 负责 Listing 的组织工作队列中
-     * 这里用了一个“按名称查找组织”的通用写法，你可以根据自己的 Enterprise 命名再微调
+     * ✅ 把 Listing 审核请求塞到 负责 Listing 的组织
      */
-    private void sendToListingModeration(EcoSystem system, ListingReviewRequest req) {
+    private void sendToListingModeration(EcoSystem system,
+                                         ListingReviewRequest req) {
 
         for (Network n : system.getNetworks()) {
             for (Enterprise e : n.getEnterprises()) {
                 for (Organization org : e.getOrganizations()) {
                     if ("Listing Moderation".equals(org.getName())) {
-                        org.getWorkRequestDirectory().getRequestList().add(req);
+                        org.getWorkRequestDirectory()
+                           .getRequestList()
+                           .add(req);
                         return;
                     }
                 }
             }
         }
 
-        // 如果没找到，可以打印一下日志，方便 debug
         System.out.println("[PolicyEnforcementService] WARNING: Listing Moderation organization not found.");
-    }   
-
+    }
 }

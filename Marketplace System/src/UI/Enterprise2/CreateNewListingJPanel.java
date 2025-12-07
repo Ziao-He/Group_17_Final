@@ -6,25 +6,36 @@ package UI.Enterprise2;
 
 import basement_class.DAO.ListingDao;
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.SellerAccount;
+import basement_class.Enterprise_2.Enterprise.MarketplaceEnterprise;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.ListingDirectory;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Enterprise_2.WorkRequest.ListingSubmissionRequest;
+import basement_class.Network;
+import basement_class.Organization;
 import basement_class.UserAccountDirectory;
+import java.awt.Container;
+import java.awt.Graphics2D;
 
 import java.util.Date;
 import javax.swing.JOptionPane;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import service.E2.ListingManagementService;
@@ -59,7 +70,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         fileChooser.addChoosableFileFilter(pngFilter);
         fileChooser.setFileFilter(pngFilter);
         fileChooser.setFileFilter(jpegFilter);
-        
+        txtQuantity.setEnabled(false);
     }
 
     /**
@@ -82,6 +93,10 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         txtTitle = new javax.swing.JTextField();
         btnSelectImage = new javax.swing.JButton();
         imgLogo = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtQuantity = new javax.swing.JTextField();
+
+        setBackground(new java.awt.Color(102, 255, 255));
 
         btnCreate.setText("Create");
         btnCreate.addActionListener(new java.awt.event.ActionListener() {
@@ -116,6 +131,10 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         imgLogo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         imgLogo.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
+        jLabel1.setText("Quantity");
+
+        txtQuantity.setText("1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,32 +142,39 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblDescription, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblImagePath, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSelectImage, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lblDescription, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblImagePath, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(45, 45, 45)
+                                .addComponent(btnCreate, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(47, 47, 47)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnSelectImage, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(txtQuantity, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(88, 88, 88)
+                                .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addComponent(btnReset, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(440, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(475, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,26 +183,30 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTitle)
                     .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblImagePath)
                     .addComponent(btnSelectImage))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblPrice)
                     .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblDescription)
                         .addGap(18, 18, 18)
                         .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txtDescription))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCreate)
                     .addComponent(btnReset))
-                .addGap(434, 434, 434))
+                .addGap(474, 474, 474))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -200,7 +230,6 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         // TODO add your handling code here:
-        // 1. Validate form data
         if (!validateForm()) {
             return; // Validation failed, stop execution
         }
@@ -212,75 +241,88 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
             String priceText = txtPrice.getText().trim();
             double price = Double.parseDouble(priceText);
 
-            // 3. Get image path (if image was selected)
-            String imagePath = "";
-            if (logoImage != null && imgLogo.getIcon() != null) {
-                // You need to save the image to a file and get the path
-                // For now, we'll use a placeholder
-                imagePath = "/images/user_uploads/" + seller.getUserId() + "_" + System.currentTimeMillis() + ".jpg";
-            } else {
-                imagePath = "/images/default_product.jpg";
-            }
-
-            // 4. Generate unique ID
+            // 3. Generate unique ID (temporary, will be finalized after approval)
             String listingId = generateListingId();
 
-            // 5. Create Listing object - need to initialize service first
-            // Initialize ListingDao and service
-            UserAccountDirectory userDirectory = system.getUserAccountDirectory();
-            ListingDao listingDao = new ListingDao(userDirectory);
-            ListingDirectory listingDirectory = new ListingDirectory();
-            ListingManagementService listingService = new ListingManagementService(
-                system, listingDao, listingDirectory
-            );
+            // 4. Create temporary Listing object (status will be "Draft" or "Pending")
+            // The image will be saved only after approval, or we save it now with draft status
+            String imagePath = "";
+            if (logoImage != null && imgLogo.getIcon() != null) {
+                try {
+                    // Save image to draft folder
+                    File draftDir = new File("draft_images");
+                    if (!draftDir.exists()) {
+                        draftDir.mkdirs();
+                    }
 
-            System.out.println("Creating product listing...");
-            System.out.println("ID: " + listingId);
-            System.out.println("Title: " + title);
-            System.out.println("Price: " + price);
-            System.out.println("Seller: " + seller.getUsername());
+                    String fileName = seller.getUserId() + "_" + System.currentTimeMillis() + ".jpg";
+                    File imageFile = new File(draftDir, fileName);
 
-            // Create the listing
-            Listing newListing = listingService.createListing(
+                    // Save image
+                    Image image = logoImage.getImage();
+                    BufferedImage bufferedImage = new BufferedImage(
+                        image.getWidth(null),
+                        image.getHeight(null),
+                        BufferedImage.TYPE_INT_RGB
+                    );
+
+                    Graphics2D g2d = bufferedImage.createGraphics();
+                    g2d.drawImage(image, 0, 0, null);
+                    g2d.dispose();
+
+                    ImageIO.write(bufferedImage, "jpg", imageFile);
+
+                    imagePath = "draft_images/" + fileName;
+                    System.out.println("Image saved to draft: " + imageFile.getAbsolutePath());
+
+                } catch (Exception e) {
+                    System.err.println("Error saving draft image: " + e.getMessage());
+                    imagePath = "";
+                }
+            }
+
+            // 5. Create a Listing object with PENDING status
+            Listing newListing = new Listing(
                 listingId,
-                seller,  // Using SellerAccount which extends UserAccount
+                seller,
                 title,
                 description,
                 imagePath,
                 price
             );
+            newListing.setStatus("Pending"); // Explicitly set to Pending
+            int quantity = Integer.parseInt(txtQuantity.getText().trim());
+            newListing.setQuantity(quantity);
+            // 6. Add to seller's local list (for display purposes)
+            seller.addListing(newListing);
 
-            // 6. Submit for approval
-            if (newListing != null) {
-                // Add to seller's listing list
-                seller.addListing(newListing);
+            // 7. Create and submit ListingSubmissionRequest
+            ListingSubmissionRequest submissionRequest = new ListingSubmissionRequest(newListing, seller);
 
-                // Submit for approval
-                ListingSubmissionRequest request = listingService.submitListing(seller, newListing);
+            // Find the Listing Management Organization to send the request
+            boolean requestSubmitted = submitToListingManagement(submissionRequest);
 
-                if (request != null) {
-                    JOptionPane.showMessageDialog(this,
-                        "Product created successfully!\n" +
-                        "Product ID: " + listingId + "\n" +
-                        "Status: " + newListing.getStatus() + "\n" +
-                        "Submitted for approval. Please wait for admin review.",
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+            if (requestSubmitted) {
+                JOptionPane.showMessageDialog(this,
+                    "Listing submitted for approval!\n" +
+                    "Temporary ID: " + listingId + "\n" +
+                    "Status: Pending Review\n" +
+                    "You can track the status in your listings.\n" +
+                    "Note: The listing will be visible only after approval.",
+                    "Submission Successful",
+                    JOptionPane.INFORMATION_MESSAGE);
 
-                    // Clear form
-                    clearForm();
+                // Clear form
+                clearForm();
 
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                        "Product created but approval request failed.\nPlease contact administrator.",
-                        "Partial Success",
-                        JOptionPane.WARNING_MESSAGE);
-                }
+                
+
             } else {
                 JOptionPane.showMessageDialog(this,
-                    "Product creation failed. Please try again.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    "Listing created but failed to submit for approval.\n" +
+                    "Please try again or contact administrator.",
+                    "Submission Failed",
+                    JOptionPane.WARNING_MESSAGE);
             }
 
         } catch (NumberFormatException e) {
@@ -311,12 +353,14 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnReset;
     private javax.swing.JButton btnSelectImage;
     private javax.swing.JLabel imgLogo;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblDescription;
     private javax.swing.JLabel lblImagePath;
     private javax.swing.JLabel lblPrice;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTextField txtDescription;
     private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtQuantity;
     private javax.swing.JTextField txtTitle;
     // End of variables declaration//GEN-END:variables
 
@@ -370,10 +414,24 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
 
     // Generate unique listing ID
     private String generateListingId() {
-        // Simple ID generation: seller ID + timestamp
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        String timestamp = sdf.format(new Date());
-        return "LIST-" + seller.getUserId() + "-" + timestamp;
+        String prefix = "LIST-" + seller.getUserId() + "-";
+
+        List<Listing> existingListings = system.getListingDirectory().getAllListings();
+
+        int maxNumber = 0;      
+        for (Listing l : existingListings) {
+            if (l.getId().startsWith(prefix)) {
+                String[] parts = l.getId().split("-");
+                String lastPart = parts[parts.length - 1];
+
+                try {
+                    int num = Integer.parseInt(lastPart);
+                    if (num > maxNumber) maxNumber = num;
+                } catch (NumberFormatException ignore) {}
+            }
+        }
+        int newNumber = maxNumber + 1;
+        return prefix + String.format("%04d", newNumber);
     }
 
     // Clear form method
@@ -381,6 +439,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         txtTitle.setText("");
         txtDescription.setText("");
         txtPrice.setText("");
+        txtQuantity.setText("");
 
         // Clear image
         logoImage = null;
@@ -391,6 +450,64 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
 
         // Set focus back to title
         txtTitle.requestFocus();
+    }
+
+
+    private boolean submitToListingManagement(ListingSubmissionRequest submissionRequest) {
+        try {
+            // Find the Marketplace Enterprise in the system
+            for (Network network : system.getNetworks()) {
+                for (Enterprise enterprise : network.getEnterprises()) {
+                    if (enterprise instanceof MarketplaceEnterprise) {
+                        // Find Listing Management Organization
+                        Organization listingOrg = enterprise.getOrganizationByName("Listing Management Organization");
+
+                        if (listingOrg != null) {
+                            // Set sender
+                            submissionRequest.setSender(seller);
+
+                            // Add request to the organization's work queue
+                            listingOrg.getWorkRequestDirectory().addWorkRequest(submissionRequest);
+
+                            System.out.println("Listing submission request sent to: " + listingOrg.getName());
+                            System.out.println("Request ID: " + submissionRequest.getId());
+
+                            // Also save to a temporary file or database for persistence
+                            saveTemporaryListing(submissionRequest.getListing());
+
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            System.err.println("Listing Management Organization not found!");
+            return false;
+
+        } catch (Exception e) {
+            System.err.println("Error submitting to Listing Management: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    
+
+    private void saveTemporaryListing(Listing listing) {
+        try {
+            File tempDir = new File("temp_listings");
+            if (!tempDir.exists()) {
+                tempDir.mkdirs();
+            }
+
+            File tempFile = new File(tempDir, listing.getId() + ".tmp");
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(tempFile))) {
+                oos.writeObject(listing);
+                System.out.println("Temporary listing saved: " + tempFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to save temporary listing: " + e.getMessage());
+        }
     }
     
 

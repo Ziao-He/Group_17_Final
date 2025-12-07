@@ -10,9 +10,9 @@ import basement_class.UserAccount;
  *
  * @author 心火牧神塞勒斯
  */
-public class ListingManagerAccount extends UserAccount {
+public class OrderProcessorAccount extends UserAccount {
 
-    public ListingManagerAccount() {
+    public OrderProcessorAccount() {
         super();
     }
 

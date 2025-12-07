@@ -70,6 +70,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
         btnSearchByUserName2 = new javax.swing.JButton();
         fieldUserName2 = new javax.swing.JTextField();
         SearchByID2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -145,6 +146,8 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
         SearchByID2.setText("Search by ID:");
 
+        jButton1.setText("jButton1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -166,13 +169,15 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
                         .addComponent(btnSearchByUserName2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 960, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(301, 301, 301)
                         .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnDescpriton, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 960, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDescpriton, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))))
                 .addGap(54, 54, 54))
         );
         layout.setVerticalGroup(
@@ -195,24 +200,30 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
                     .addComponent(btnAccept)
                     .addComponent(btnReject)
                     .addComponent(btnDescpriton))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addGap(39, 39, 39)
+                .addComponent(jButton1)
+                .addContainerGap(44, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-        PolicyViolationRequest req = getSelectedRequest();
-        if (req == null) return;
+            PolicyViolationRequest req = getSelectedRequest();
+             if (req == null) return;
 
-        int confirm = JOptionPane.showConfirmDialog(
-                this, 
-                "Approve this violation request?", 
-                "Confirm", 
+            // ✅ 当前登录管理员
+            UserAccount admin = this.admin;
+
+             int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Approve this violation request?",
+                "Confirm",
                 JOptionPane.YES_NO_OPTION
         );
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
-        service.approveViolation(system, req);
+        // ✅ 审计版 Service（必须传 admin）
+        service.approveViolation(system, req, admin);
 
         JOptionPane.showMessageDialog(this, "Request approved and processed.");
         loadTable();
@@ -220,16 +231,39 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
 
-        PolicyViolationRequest req = getSelectedRequest();
-        if (req == null) return;
+       PolicyViolationRequest req = getSelectedRequest();
+    if (req == null) return;
 
-        String reason = JOptionPane.showInputDialog("Enter rejection reason:");
-        if (reason == null || reason.trim().isEmpty()) return;
+    // ✅ 当前登录管理员
+    UserAccount admin = this.admin;
 
-        service.rejectViolation(req, reason);
+    String reason = JOptionPane.showInputDialog(
+            this,
+            "Enter rejection reason:",
+            "Rejection Reason",
+            JOptionPane.PLAIN_MESSAGE
+    );
 
-        JOptionPane.showMessageDialog(this, "Request rejected.");
-        loadTable();
+    if (reason == null || reason.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Rejection reason cannot be empty.");
+        return;
+    }
+
+    // ✅ 二次确认
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Confirm rejection with reason:\n\n" + reason,
+            "Confirm Rejection",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) return;
+
+    // ✅ 审计版 Service（必须传 admin + reason）
+    service.rejectViolation(req, admin, reason);
+
+    JOptionPane.showMessageDialog(this, "Request rejected.");
+    loadTable();
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
@@ -390,6 +424,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnSearchByUserName2;
     private javax.swing.JTextField fieldID2;
     private javax.swing.JTextField fieldUserName2;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;

@@ -160,7 +160,7 @@ public class ListingDao {
     }
 
     private String getHeader() {
-        return "id,sellerId,title,description,imagePath,price,status,submitTime";
+        return "id,sellerId,title,description,imagePath,price,status,submitTime,quantity";
     }
 
     private Listing parse(String line) {
@@ -170,43 +170,51 @@ public class ListingDao {
 
             String id = p[0];
             String sellerId = p[1];
-
             UserAccount seller = userAccountDirectory.findByUserId(sellerId);
-            if (seller == null) {
-                System.err.println("Seller not found for ID = " + sellerId);
-                return null;
-            }
+            if (seller == null) return null;
 
             Listing listing = new Listing(
-                    id,
-                    seller,
-                    p[2],      // title
-                    p[3],      // description
-                    p[4],      // imagePath
-                    Double.parseDouble(p[5])
+                id,
+                seller,
+                p[2], // title
+                p[3], // desc
+                p[4], // image
+                Double.parseDouble(p[5])
             );
 
             listing.setStatus(p[6]);
             listing.setSubmitTime(LocalDateTime.parse(p[7], DF));
 
+            // --- NEW: quantity optional ---
+            if (p.length >= 9) {
+                try {
+                    listing.setQuantity(Integer.parseInt(p[8]));
+                } catch (Exception e) {
+                    listing.setQuantity(1);
+                }
+            } else {
+                listing.setQuantity(1);
+            }
+
             return listing;
 
         } catch (Exception e) {
-            System.err.println("Error parsing listing line: " + line);
+            System.err.println("Error parsing listing: " + e.getMessage());
             return null;
         }
     }
 
     private String toCSV(Listing l) {
         return String.join(DELIMITER,
-                l.getId(),
-                l.getSellerId(),
-                escape(l.getTitle()),
-                escape(l.getDescription()),
-                escape(l.getImagePath()),
-                String.valueOf(l.getPrice()),
-                l.getStatus(),
-                l.getSubmitTime().format(DF)
+            l.getId(),
+            l.getSellerId(),
+            escape(l.getTitle()),
+            escape(l.getDescription()),
+            escape(l.getImagePath()),
+            String.valueOf(l.getPrice()),
+            l.getStatus(),
+            l.getSubmitTime().format(DF),
+            String.valueOf(l.getQuantity())  // NEW
         );
     }
 
