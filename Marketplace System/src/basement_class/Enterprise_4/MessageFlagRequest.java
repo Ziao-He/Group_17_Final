@@ -12,7 +12,8 @@ import basement_class.WorkRequest;
  * @author yujie-liang
  */
 public class MessageFlagRequest extends WorkRequest {
-
+    private static int counter = 1;
+    private static final String PREFIX = "MFR"; 
     private Message flaggedMessage;   
     private String reason;
 
@@ -20,10 +21,14 @@ public class MessageFlagRequest extends WorkRequest {
                               UserAccount reporter,
                               String reason) {
         super();
+        this.id = generateId();
         this.flaggedMessage = flaggedMessage;
         this.sender = reporter;
         this.reason = reason;
         this.setStatus("Pending");
+    }
+     private static synchronized String generateId() {
+        return String.format("%s%03d", PREFIX, counter++);
     }
 
     public Message getFlaggedMessage() {

@@ -28,6 +28,7 @@ public class Message extends BaseEntity{
     
     public void contentIsInappropriate(){
         isFlagged = true;
+        content = "*****";
         this.touch();
     }
     
@@ -78,6 +79,17 @@ public class Message extends BaseEntity{
         this.flaggedByUser = flaggedByUser;
     }
     
-    
+
+    @Override
+    public String toString() {
+        String senderName = (sender != null) ? sender.getUsername() : "Unknown";
+        
+        String shortContent = content;
+        if (shortContent != null && shortContent.length() > 40) {
+            shortContent = shortContent.substring(0, 37) + "...";
+        }
+        return senderName + ": " + shortContent;
+    }
+
 }
 
