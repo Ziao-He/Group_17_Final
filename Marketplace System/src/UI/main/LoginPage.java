@@ -485,6 +485,7 @@ public class LoginPage extends javax.swing.JFrame {
 
     private void btnSignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnSignActionPerformed
 
     /**

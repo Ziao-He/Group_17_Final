@@ -10,6 +10,7 @@ import basement_class.Network;
 import basement_class.Organization;
 import basement_class.Role;
 import basement_class.UserAccount;
+import java.util.UUID;
 
 /**
  *
@@ -120,4 +121,53 @@ public void distributeUsersToOrganizations() {
 
     System.out.println("===== [END REDISTRIBUTE] =====\n");
 }
+
+//public UserAccount registerUser(
+//        String username,
+//        String password,
+//        String email,
+//        String phone,
+//        String userType   // "BUYER" or "SELLER"
+//) {
+//    // ✅ 1️⃣ 重名校验
+//    if (system.getUserAccountDirectory().findByUsername(username) != null) {
+//        throw new IllegalArgumentException("Username already exists");
+//    }
+//
+//    UserAccount ua;
+//
+//    // ✅ 2️⃣ 只允许注册 Enterprise 1 和 2
+//    if ("BUYER".equalsIgnoreCase(userType)) {
+//        ua = new basement_class.Enterprise_1.Account.BuyerAccount();
+//        ua.setRole(new basement_class.Enterprise_1.Role.BuyerRole());
+//        ua.setOrganizationId("SHOPPING_ORG");  // 可按你现在 CSV 风格
+//    } 
+//    else if ("SELLER".equalsIgnoreCase(userType)) {
+//        ua = new basement_class.Enterprise_2.Account.SellerAccount();
+//        ua.setRole(new basement_class.Enterprise_2.Role.SellerRole());
+//        ua.setOrganizationId("SELLER_ORG");
+//    } 
+//    else {
+//        throw new IllegalArgumentException("Only Buyer and Seller can register.");
+//    }
+//
+//    // ✅ 3️⃣ 基本字段
+//    ua.setUserId(UUID.randomUUID().toString());
+//    ua.setUsername(username);
+//    ua.setPasswordHash(password);   // 你现在是明文，先按现有风格
+//    ua.setEmail(email);
+//    ua.setPhoneNumber(phone);
+//    ua.setStatus("ACTIVE");
+//
+//    // ✅ 4️⃣ 加入 system 全局目录
+//    system.getUserAccountDirectory().addUserAccount(ua);
+//
+//    // ✅ 5️⃣ 立刻回绑到 Organization（否则登录会丢 org）
+//    distributeUsersToOrganizations();
+//
+//    // ✅ 6️⃣ 立刻回写 CSV
+//    dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
+//
+//    return ua;
+//}
 }
