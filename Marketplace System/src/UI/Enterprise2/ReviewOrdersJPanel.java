@@ -59,13 +59,13 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
 
         tblOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "OrderID", "BuyerID", "List Title", "Status", "Quantity"
+                "OrderID", "BuyerID", "SellerID", "List Title", "Status", "Quantity"
             }
         ));
         jScrollPane1.setViewportView(tblOrder);
@@ -139,7 +139,7 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
                     .addComponent(btnAccept)
                     .addComponent(btnReject)
                     .addComponent(btnDescpriton))
-                .addContainerGap(830, Short.MAX_VALUE))
+                .addContainerGap(171, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -473,12 +473,13 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
 
             Order order = req.getOrder();
 
-            Object[] row = new Object[5];
+            Object[] row = new Object[6];
             row[0] = order.getOrderId();          // Order ID
             row[1] = order.getBuyerId();          // Buyer ID
-            row[2] = order.getListingId();        // Listing Title（如需 title，下方说明）
-            row[3] = order.getStatus();           // Order status
-            row[4] = order.getQuantity();         // Quantity
+            row[2] = order.getSellerId();          // Buyer ID
+            row[3] = order.getListingId();        // Listing Title（如需 title，下方说明）
+            row[4] = order.getStatus();           // Order status
+            row[5] = order.getQuantity();         // Quantity
 
             model.addRow(row);
         }

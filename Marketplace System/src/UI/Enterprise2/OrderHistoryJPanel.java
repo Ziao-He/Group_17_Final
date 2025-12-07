@@ -4,9 +4,18 @@
  */
 package UI.Enterprise2;
 
+
 import basement_class.EcoSystem;
-import basement_class.Enterprise_2.Account.SellerAccount;
-import basement_class.Enterprise_2.Organization.SellerOrganization;
+import basement_class.Enterprise;
+import basement_class.Enterprise_2.Account.OrderProcessorAccount;
+import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_2.WorkRequest.OrderReviewRequest;
+import basement_class.Organization;
+import basement_class.WorkRequest;
+import common_class.Order;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -14,17 +23,20 @@ import basement_class.Enterprise_2.Organization.SellerOrganization;
  */
 public class OrderHistoryJPanel extends javax.swing.JPanel {
 
+    private OrderProcessorAccount orderProcessorAccount;
+    private Organization organization;
+    private Enterprise enterprise;
     private EcoSystem system;
-    private SellerAccount seller;
-    private SellerOrganization sellerOrg;
     /**
      * Creates new form ViewComplaintsJPanel
      */
-    public OrderHistoryJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
+    public OrderHistoryJPanel(OrderProcessorAccount orderProcessorAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
-        this.system=system;
-        this.seller=seller;
-        this.sellerOrg = org;
+        this.orderProcessorAccount = orderProcessorAccount;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.system = system;
+        loadtable();
         
     }
 
@@ -37,19 +49,75 @@ public class OrderHistoryJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblOrderHistory = new javax.swing.JTable();
+
+        setBackground(new java.awt.Color(255, 204, 204));
+
+        tblOrderHistory.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "OrderID", "BuyerID", "SellerID", "List Title", "Status", "Quantity"
+            }
+        ));
+        jScrollPane1.setViewportView(tblOrderHistory);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 582, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1052, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 434, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(297, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblOrderHistory;
     // End of variables declaration//GEN-END:variables
+
+   
+
+    private void loadtable() {
+        DefaultTableModel model =
+        (DefaultTableModel) tblOrderHistory.getModel();
+        model.setRowCount(0);
+
+        for (Order order : system.getOrderDirectory().getAllOrders()) {
+
+            String listingTitle = order.getListingId();
+            Listing listing =
+                system.getListingDirectory().findById(order.getListingId());
+            if (listing != null) {
+                listingTitle = listing.getTitle();
+            }
+
+            Object[] row = new Object[6];
+            row[0] = order.getOrderId();
+            row[1] = order.getBuyerId();
+            row[2] = order.getSellerId();
+            row[3] = listingTitle;
+            row[4] = order.getStatus();   // ✅ 全局实时状态
+            row[5] = order.getQuantity();
+
+            model.addRow(row);
+        }
+
+        
+    }
 }

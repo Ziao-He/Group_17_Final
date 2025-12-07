@@ -19,7 +19,7 @@ public class EcoSystem {
     private WorkRequestDirectory workRequestDirectory;
     private ListingDirectory listingDirectory;
     private MessageDirectory messageDirectory;
-
+    private OrderDirectory orderDirectory;
     // Singleton instance
     private static EcoSystem instance;
     
@@ -29,6 +29,7 @@ public class EcoSystem {
         this.userAccountDirectory = new UserAccountDirectory();
         this.workRequestDirectory = new WorkRequestDirectory();
         this.listingDirectory = new ListingDirectory();
+        this.orderDirectory = new OrderDirectory();
     }
     
     /**
@@ -86,6 +87,16 @@ public class EcoSystem {
         
     public void setWorkRequestDirectory(WorkRequestDirectory workRequestDirectory) {
         this.workRequestDirectory = workRequestDirectory;
+    }
+    
+    
+
+    public OrderDirectory getOrderDirectory() {
+        return orderDirectory;
+    }
+
+    public void setOrderDirectory(OrderDirectory orderDirectory) {
+        this.orderDirectory = orderDirectory;
     }
 
     
