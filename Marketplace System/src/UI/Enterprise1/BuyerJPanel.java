@@ -377,4 +377,11 @@ public class BuyerJPanel extends javax.swing.JPanel {
         layout.show(workArea, "ReportCard");
         currentPanel = "ReportCard";
     }
+    
+    public void showChatPanel(javax.swing.JPanel chatPanel) {
+        workArea.add(chatPanel, "ChatCard");
+        CardLayout layout = (CardLayout) workArea.getLayout();
+        layout.show(workArea, "ChatCard");
+        currentPanel = "ChatCard";
+    }
 }
