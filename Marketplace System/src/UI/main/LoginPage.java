@@ -4,7 +4,6 @@
  */
 package UI.main;
 
-import UI.Enterprise3.SuperAdmin;
 import basement_class.*;
 import basement_class.DAO.UserAccountDAO;
 import basement_class.DAO.UserAccountFileDAO;
@@ -337,24 +336,6 @@ public class LoginPage extends javax.swing.JFrame {
     // ✅ 4️⃣ System Admin 登录（不挂 Organization / Enterprise）
     // ============================================================
     loginUser = system.getUserAccountDirectory().findByUsername(username);
-
-    if (loginUser != null
-            && loginUser.authenticate(password)
-            && loginUser.getRole().getClass().getSimpleName().equals("SystemAdminRole")) {
-
-        loginUser.recordLogin();
-
-        JPanel workArea = new SuperAdmin(system, loginUser);
-        this.setContentPane(workArea);
-        this.revalidate();
-        this.repaint();
-
-        JOptionPane.showMessageDialog(workArea,
-                "Welcome System Admin: " + loginUser.getUsername(),
-                "Login Successful",
-                JOptionPane.INFORMATION_MESSAGE);
-        return;   // ✅ System Admin 登录结束
-    }
 
     // ============================================================
     // ✅ 5️⃣ 普通用户 / Enterprise 管理员登录（按 Organization 查找）

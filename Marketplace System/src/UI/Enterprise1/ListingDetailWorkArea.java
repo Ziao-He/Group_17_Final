@@ -6,13 +6,21 @@ package UI.Enterprise1;
 
 import UI.Enterprise4.BuyerSellerChatPanel;
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_4.CommunicationServiceOrganization;
+import basement_class.Enterprise_4.HelpCenterEnterprise;
+import basement_class.Enterprise_4.MessageDirectory;
+import basement_class.Network;
+import basement_class.Organization;
 import basement_class.UserAccount;
 import java.awt.Image;
 import java.io.File;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -316,36 +324,55 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnTalkWithUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTalkWithUserActionPerformed
-        // TODO add your handling code here:
-            if (listing == null || buyerAccount == null) {
+        // Start a chat with the seller of this listing
+
+        // Basic checks
+        if (listing == null || buyerAccount == null) {
             JOptionPane.showMessageDialog(this,
-                "Buyer or listing information is missing.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "Listing or buyer information is missing.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        UserAccount seller = listing.getSeller();   
+        // 1) Get the seller of this listing
+        UserAccount seller = listing.getSeller();
         if (seller == null) {
             JOptionPane.showMessageDialog(this,
-                "This listing has no seller assigned.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+                    "This listing does not have a seller assigned.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+        // 2) Wrap the seller into an ArrayList<UserAccount>
+        //    Because BuyerSellerChatPanel expects a list of partners
+        ArrayList<UserAccount> partners = new ArrayList<>();
+        partners.add(seller);
 
-        BuyerJPanel parentPanel = this.parentPanel;
+        // 3) Get the global MessageDirectory (you or your teammate
+        //    should make sure EcoSystem provides this method)
+        MessageDirectory messageDirectory = system.getMessageDirectory();
 
+        // 4) Find the CommunicationServiceOrganization (chat backend)
+        CommunicationServiceOrganization commOrg = findCommunicationServiceOrg(system);
+        if (commOrg == null) {
+            JOptionPane.showMessageDialog(this,
+                    "CommunicationServiceOrganization was not found in the system.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        // 5) Create the chat panel
         BuyerSellerChatPanel chatPanel = new BuyerSellerChatPanel(
-                buyerAccount,
-                seller,
-                system,
-                parentPanel
+                buyerAccount,          // current user (buyer)
+                partners,              // one partner: the seller
+                messageDirectory,      // message storage
+                commOrg                // organization that processes chat / flags
         );
 
-
+        // 6) Show chat panel via the parent BuyerJPanel (CardLayout)
         parentPanel.showChatPanel(chatPanel);
     }//GEN-LAST:event_btnTalkWithUserActionPerformed
 
@@ -527,5 +554,30 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         } else {
             Picture.setText("No Image Available");
         }
+    }
+    
+    private CommunicationServiceOrganization findCommunicationServiceOrg(EcoSystem system) {
+
+        if (system == null) {
+            return null;
+        }
+
+        // Search through all networks → enterprises → organizations
+        for (Network net : system.getNetworks()) {
+            for (Enterprise ent : net.getEnterprises()) {
+
+                // Loop through organizations inside this enterprise
+                for (Organization org : ent.getOrganizations()) {
+
+                    // Check if this org is the communication service org
+                    if (org instanceof CommunicationServiceOrganization) {
+                        return (CommunicationServiceOrganization) org;
+                    }
+                }
+            }
+        }
+
+        // Not found
+        return null;
     }
 }
