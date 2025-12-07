@@ -4,6 +4,7 @@
  */
 package UI.Enterprise2;
 
+import basement_class.DAO.ListingDao;
 import basement_class.EcoSystem;
 import java.awt.Image;
 import java.util.logging.Level;
@@ -11,11 +12,11 @@ import java.util.logging.Logger;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
-import java.awt.MediaTracker;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -54,6 +55,8 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         fileChooser.setFileFilter(jpegFilter);
         
         loadSellerListings();
+        setViewMode();
+        
     }
 
     /**
@@ -85,16 +88,18 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         txtSubmitTime = new javax.swing.JTextField();
         txtID = new javax.swing.JTextField();
         lblListingID = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtQuantity = new javax.swing.JTextField();
 
         tblListing.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title", "Listing ID", "Price", "Status", "SubmitTime"
+                "Title", "Listing ID", "Price", "Status", "SubmitTime", "Quantity"
             }
         ));
         jScrollPane1.setViewportView(tblListing);
@@ -133,12 +138,19 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         });
 
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         lblStatus.setText("Status");
 
         lblSubmitTime.setText("Submit Time");
 
         lblListingID.setText("Listing ID");
+
+        jLabel1.setText("Quantity");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -159,6 +171,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(lblPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lblImagePath, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -169,22 +182,27 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                         .addGap(139, 139, 139)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(103, 103, 103)
-                                .addComponent(lblDescription)
-                                .addGap(55, 55, 55))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(103, 103, 103)
+                                        .addComponent(lblDescription)
+                                        .addGap(55, 55, 55))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(btnSelectImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                                            .addComponent(txtStatus)
+                                            .addComponent(txtSubmitTime)
+                                            .addComponent(txtID))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                                        .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(20, 20, 20)))
+                                .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnSelectImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                                    .addComponent(txtStatus)
-                                    .addComponent(txtSubmitTime)
-                                    .addComponent(txtID))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
-                                .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(20, 20, 20)))
-                        .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(248, Short.MAX_VALUE))
+                                .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addContainerGap(245, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,7 +244,11 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                                     .addComponent(txtSubmitTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblSubmitTime)))))
                     .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
                     .addComponent(btnUpdate))
@@ -292,6 +314,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             txtDescription.setText(selectedListing.getDescription());
             txtPrice.setText(String.format("%.2f", selectedListing.getPrice()));
             txtStatus.setText(selectedListing.getStatus());
+            txtQuantity.setText(String.valueOf(selectedListing.getQuantity()));
 
             // 格式化提交时间
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -354,12 +377,96 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 "System Error",
                 JOptionPane.ERROR_MESSAGE);
         }
+        btnUpdate.setEnabled(true);
     }//GEN-LAST:event_btnViewActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
-        
+        int selectedRow = tblListing.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a listing to save changes.",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // 1. Get listing ID from table
+            String listingId = (String) tblListing.getValueAt(selectedRow, 1);
+
+            // 2. Find listing object from seller
+            Listing selectedListing = null;
+            for (Listing listing : seller.getListings()) {
+                if (listing.getId().equals(listingId)) {
+                    selectedListing = listing;
+                    break;
+                }
+            }
+
+            if (selectedListing == null) {
+                JOptionPane.showMessageDialog(this,
+                    "Listing not found.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 3. Read updated values from text fields
+            String newTitle = txtTitle.getText().trim();
+            String newDescription = txtDescription.getText().trim();
+            double newPrice = Double.parseDouble(txtPrice.getText().trim());
+            int newQuantity = Integer.parseInt(txtQuantity.getText().trim());
+
+            // 4. Update Listing object
+            selectedListing.setTitle(newTitle);
+            selectedListing.setDescription(newDescription);
+            selectedListing.setPrice(newPrice);
+            selectedListing.setQuantity(newQuantity);
+
+            // 5. Update submit time to "now" (optional but realistic)
+            selectedListing.setSubmitTime(LocalDateTime.now());
+
+            // 6. Update table row to reflect changes
+            DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
+            model.setValueAt(newTitle, selectedRow, 0);
+            model.setValueAt(String.format("$%.2f", newPrice), selectedRow, 2);
+            model.setValueAt(selectedListing.getStatus(), selectedRow, 3);
+
+            String updatedTime = new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                    .format(Date.from(selectedListing.getSubmitTime()
+                            .atZone(ZoneId.systemDefault())
+                            .toInstant()));
+
+            model.setValueAt(updatedTime, selectedRow, 4);
+            model.setValueAt(newQuantity, selectedRow, 5);  // Quantity column
+
+            // 7. Notify user
+            JOptionPane.showMessageDialog(this,
+                "Listing updated successfully!",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                "Invalid number format in Price or Quantity.",
+                "Input Error",
+                JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error saving changes: " + e.getMessage(),
+                "System Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        clearForm(); 
+        setViewMode();
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+        setUpdateMode();
+    }//GEN-LAST:event_btnUpdateActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -368,6 +475,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnView;
     private javax.swing.JLabel imgLogo;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDescription;
     private javax.swing.JLabel lblImagePath;
@@ -380,6 +488,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtDescription;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtQuantity;
     private javax.swing.JTextField txtStatus;
     private javax.swing.JTextField txtSubmitTime;
     private javax.swing.JTextField txtTitle;
@@ -401,14 +510,14 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         for (Listing listing : sellerListings) {
-            Object[] rowData = new Object[5];
+            Object[] rowData = new Object[6];
 
             rowData[0] = listing.getTitle();                // Title
             rowData[1] = listing.getId();                   // ID
             rowData[2] = String.format("$%.2f", listing.getPrice()); // Price
             rowData[3] = listing.getStatus();               // Status
             rowData[4] = dateFormat.format(Date.from(listing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())); // Submit Date
-
+            rowData[5] = listing.getQuantity();   
             model.addRow(rowData);
         }
 
@@ -419,6 +528,50 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         // 6. 显示记录数
         System.out.println("Loaded " + sellerListings.size() + " listings for seller: " + seller.getUsername());
     }
+
+    private void clearForm() {
+        txtTitle.setText("");
+        txtDescription.setText("");
+        txtPrice.setText("");
+        txtQuantity.setText("");
+
+        // Clear image
+        logoImage = null;
+        if (imgLogo != null) {
+            imgLogo.setIcon(null);
+            imgLogo.setText("No Image Selected");
+        }
+
+        // Set focus back to title
+        txtTitle.requestFocus();
+    }
+
+    private void setViewMode() {
+        btnSave.setEnabled(false);
+        btnUpdate.setEnabled(false);
+        txtDescription.setEnabled(false);
+        txtID.setEnabled(false);
+        txtPrice.setEnabled(false);
+        txtQuantity.setEnabled(false);
+        txtStatus.setEnabled(false);
+        txtSubmitTime.setEnabled(false);
+        txtTitle.setEnabled(false);
+        btnSelectImage.setEnabled(false);
+    }
+
+    private void setUpdateMode() {
+        btnSave.setEnabled(true);
+        btnUpdate.setEnabled(false);
+        txtDescription.setEnabled(true);
+        txtID.setEnabled(true);
+        txtPrice.setEnabled(true);
+        txtQuantity.setEnabled(true);
+        txtStatus.setEnabled(true);
+        txtSubmitTime.setEnabled(true);
+        txtTitle.setEnabled(true);
+        btnSelectImage.setEnabled(true);
+    }
+    
 
     
 }
