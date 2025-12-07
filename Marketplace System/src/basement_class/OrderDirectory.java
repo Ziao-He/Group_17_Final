@@ -30,6 +30,9 @@ public class OrderDirectory {
             orderList.add(order);
         }
     }
+    public void updateOrder(Order order) {
+        
+    }
 
     public boolean removeOrder(Order order) {
         return orderList.remove(order);
