@@ -6,8 +6,11 @@ package UI.Enterprise3;
 
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_3.Organization.ContentControlOrganization;
+import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import javax.swing.JPanel;
 
 /**
  *
@@ -27,6 +30,9 @@ public class AdminJPanel extends javax.swing.JPanel {
         this.adminUser=adminUser;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+        
+//        FakeDataGenerator.generate(system, enterprise);
+        configureButtonByRole();
     }
 
     /**
@@ -53,6 +59,11 @@ public class AdminJPanel extends javax.swing.JPanel {
         controlJPanel.setForeground(new java.awt.Color(102, 255, 255));
 
         btnLogout.setText("Log out");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         btnAccountManagement.setText("Acoount Management");
         btnAccountManagement.addActionListener(new java.awt.event.ActionListener() {
@@ -133,20 +144,54 @@ public class AdminJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAccountManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountManagementActionPerformed
-        
+        UserControlOrganization org =
+        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+
+        AccountAdminWorkAreaPanel panel =
+        new AccountAdminWorkAreaPanel(system, adminUser, org);
+
+        replaceWorkArea(panel); 
     }//GEN-LAST:event_btnAccountManagementActionPerformed
 
     private void btnRegistrationReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrationReviewActionPerformed
         // TODO add your handling code here:
+         UserControlOrganization org =
+        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+
+        RegistrationReviewJPanel panel =
+        new RegistrationReviewJPanel(
+            adminUser,
+            org,
+            enterprise,
+            system
+        );
+
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnRegistrationReviewActionPerformed
 
     private void btnContentModerationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnContentModerationActionPerformed
         // TODO add your handling code here:
+        ContentControlOrganization org =
+        (ContentControlOrganization) enterprise.getOrganizationByName("Content Control");
+
+        ContentModerationJpanel panel =
+        new ContentModerationJpanel(system, adminUser, org);
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnContentModerationActionPerformed
 
     private void btnPolicyEnforcementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPolicyEnforcementActionPerformed
         // TODO add your handling code here:
+        ContentControlOrganization org =
+        (ContentControlOrganization) enterprise.getOrganizationByName("Content Control");
+
+        PolicyEnforcementJPanel panel =
+        new PolicyEnforcementJPanel(system, adminUser, org);
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnPolicyEnforcementActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -159,4 +204,42 @@ public class AdminJPanel extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel workProcessJPanel;
     // End of variables declaration//GEN-END:variables
+    private void replaceWorkArea(JPanel panel) {
+        workProcessJPanel.removeAll();
+        workProcessJPanel.setLayout(new java.awt.BorderLayout());
+        workProcessJPanel.add(panel, java.awt.BorderLayout.CENTER);
+        workProcessJPanel.revalidate();
+        workProcessJPanel.repaint();
+    }
+
+    private void configureButtonByRole() {
+        String role = adminUser.getRole().getRoleName();
+
+    // ✅ 总管理员 → 4 个按钮全部可见
+    if (role.equals("PlatformAdmin")) {
+        btnAccountManagement.setVisible(true);
+        btnRegistrationReview.setVisible(true);
+        btnContentModeration.setVisible(true);
+        btnPolicyEnforcement.setVisible(true);
+        return;
+    }
+
+    // ✅ 账号管理员 → 只能看账号相关
+    if (role.equals("AccountAdmin") || role.equals("RegistrationReviewer")) {
+        btnAccountManagement.setVisible(true);
+        btnRegistrationReview.setVisible(true);
+        btnContentModeration.setVisible(false);
+        btnPolicyEnforcement.setVisible(false);
+        return;
+    }
+
+    // ✅ 内容管理员 → 只能看内容相关
+    if (role.equals("ContentModerator") || role.equals("PolicyEnforcer")) {
+        btnAccountManagement.setVisible(false);
+        btnRegistrationReview.setVisible(false);
+        btnContentModeration.setVisible(true);
+        btnPolicyEnforcement.setVisible(true);
+    }
+
+    }
 }

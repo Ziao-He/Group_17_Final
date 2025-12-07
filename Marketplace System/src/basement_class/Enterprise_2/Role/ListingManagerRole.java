@@ -4,8 +4,12 @@
  */
 package basement_class.Enterprise_2.Role;
 
+
+import UI.Enterprise2.ListingManagerJPanel;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_2.Account.ListingManagerAccount;
 import basement_class.Organization;
 import basement_class.Role;
 import basement_class.UserAccount;
@@ -22,7 +26,12 @@ public class ListingManagerRole extends Role {
                                  Enterprise enterprise,
                                  EcoSystem system) {
         // TODO: Implement Listing Manager WorkArea Panel
-        return null;
+        ListingManagerAccount listingManageAccount = (ListingManagerAccount) userAccount;
+        
+        // Create and return BuyerJPanel
+        ListingManagerJPanel panel = new ListingManagerJPanel(listingManageAccount, organization, enterprise, system);
+        return panel;
+       
     }
 
     @Override

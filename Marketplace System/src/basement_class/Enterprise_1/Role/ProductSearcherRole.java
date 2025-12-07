@@ -4,7 +4,9 @@
  */
 package basement_class.Enterprise_1.Role;
 
+import UI.Enterprise1.ProductSearchJPanel;
 import basement_class.*;
+import basement_class.Enterprise_1.Account.BuyerAccount;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
@@ -18,8 +20,8 @@ public class ProductSearcherRole extends Role {
                                  Organization organization, 
                                  Enterprise enterprise, 
                                  EcoSystem system) {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Product Searcher Dashboard"));
+        BuyerAccount buyerAccount = (BuyerAccount) userAccount;
+        ProductSearchJPanel  panel = new ProductSearchJPanel(buyerAccount, organization, enterprise, system);
         return panel;
     }
     

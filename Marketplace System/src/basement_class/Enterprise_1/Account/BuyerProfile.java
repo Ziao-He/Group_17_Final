@@ -18,7 +18,6 @@ public class BuyerProfile extends Profile {
     private List<String> preferredCategories;
     private double maxBudget;
     private String preferredLocation;
-    private boolean receiveNotifications;
     
     /**
      * Constructor
@@ -27,7 +26,6 @@ public class BuyerProfile extends Profile {
         super();
         this.preferredCategories = new ArrayList<>();
         this.maxBudget = 0.0;
-        this.receiveNotifications = true;
     }
     
     @Override
@@ -75,13 +73,5 @@ public class BuyerProfile extends Profile {
     
     public void setPreferredLocation(String preferredLocation) {
         this.preferredLocation = preferredLocation;
-    }
-    
-    public boolean isReceiveNotifications() {
-        return receiveNotifications;
-    }
-    
-    public void setReceiveNotifications(boolean receiveNotifications) {
-        this.receiveNotifications = receiveNotifications;
     }
 }

@@ -27,6 +27,7 @@ public abstract class Role {
         EcoSystem system
     );
     
+    
     /**
      * Get the role name (for display purposes)
      * @return Role name as string

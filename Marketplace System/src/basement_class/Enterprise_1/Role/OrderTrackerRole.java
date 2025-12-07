@@ -4,7 +4,9 @@
  */
 package basement_class.Enterprise_1.Role;
 
+import UI.Enterprise1.TrackJPanel;
 import basement_class.*;
+import basement_class.Enterprise_1.Account.BuyerAccount;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
@@ -18,8 +20,8 @@ public class OrderTrackerRole extends Role {
                                  Organization organization, 
                                  Enterprise enterprise, 
                                  EcoSystem system) {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Order Tracker Dashboard"));
+        BuyerAccount buyerAccount = (BuyerAccount) userAccount;
+        TrackJPanel panel = new TrackJPanel(buyerAccount, organization, enterprise, system);
         return panel;
     }
     

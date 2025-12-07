@@ -17,7 +17,7 @@ import basement_class.Organization;
 public class ContentControlOrganization extends Organization {
         
     public ContentControlOrganization(){
-        super("User Control");
+        super("Content Control");
         this.addRole(new ContentModeratorRole());
         this.addRole(new PolicyEnforcerRole());
     }

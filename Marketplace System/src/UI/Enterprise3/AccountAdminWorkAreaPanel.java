@@ -32,6 +32,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         loadTable();
     }
 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -46,6 +47,13 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         btnDescpriton = new javax.swing.JButton();
         btnReject = new javax.swing.JButton();
         btnAccept = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        SearchByID = new javax.swing.JLabel();
+        fieldID = new javax.swing.JTextField();
+        btnSearchByRequestID = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        btnSearchByUserName = new javax.swing.JButton();
+        fieldUserName = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -73,7 +81,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
                 btnDescpritonActionPerformed(evt);
             }
         });
-
+        
         btnReject.setText("Reject");
         btnReject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,6 +96,39 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 18)); // NOI18N
+        jLabel1.setText("AccountAdmin");
+
+        SearchByID.setText("Search by ID:");
+
+        fieldID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldIDActionPerformed(evt);
+            }
+        });
+
+        btnSearchByRequestID.setText("Search");
+        btnSearchByRequestID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchByRequestIDActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setText("Search by User");
+
+        btnSearchByUserName.setText("Search");
+        btnSearchByUserName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchByUserNameActionPerformed(evt);
+            }
+        });
+
+        fieldUserName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fieldUserNameActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,6 +136,20 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(91, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(SearchByID, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSearchByRequestID)
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSearchByUserName)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(301, 301, 301)
@@ -107,14 +162,23 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(65, 65, 65)
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(SearchByID)
+                    .addComponent(fieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearchByRequestID)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(btnSearchByUserName)
+                    .addComponent(fieldUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAccept)
                     .addComponent(btnReject)
                     .addComponent(btnDescpriton))
-                .addContainerGap(115, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -152,6 +216,8 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
 
         JOptionPane.showMessageDialog(this, "Request processed successfully.");
         loadTable();
+        fieldID.setText("");
+        fieldUserName.setText("");
 
     }//GEN-LAST:event_btnAcceptActionPerformed
 
@@ -207,6 +273,8 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     // Step 4: UI 提示 + 刷新
     JOptionPane.showMessageDialog(this, "Request rejected.");
     loadTable();
+            fieldID.setText("");
+        fieldUserName.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
@@ -217,7 +285,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         }
 
         AccountStatusReviewRequest req =
-            (AccountStatusReviewRequest) tblUser.getValueAt(row, 6);
+            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
 
         StringBuilder msg = new StringBuilder();
         msg.append("User: ").append(req.getTargetUser().getUsername()).append("\n");
@@ -235,11 +303,116 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, msg.toString(), "Request Details", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnDescpritonActionPerformed
 
+    private void fieldIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldIDActionPerformed
+
+    private void btnSearchByRequestIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByRequestIDActionPerformed
+            String input = fieldID.getText().trim();
+
+    if (input.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter Request ID.");
+        return;
+    }
+
+    DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+    model.setRowCount(0);
+
+    boolean found = false;
+
+    for (WorkRequest wr : userOrg.getWorkRequestDirectory().getRequestList()) {
+
+        if (wr instanceof AccountStatusReviewRequest) {
+            AccountStatusReviewRequest req = (AccountStatusReviewRequest) wr;
+
+            // ✅ 只查 PENDING（与你原逻辑一致）
+            if (!req.getStatus().equalsIgnoreCase("PENDING")) continue;
+
+            if (req.getId().equalsIgnoreCase(input)) {
+
+                Object[] row = new Object[]{
+                        req.getId(),
+                        req.getTargetUser().getUsername(),
+                        req.getAction(),
+                        req.getStatus(),
+                        req
+                };
+                model.addRow(row);
+                found = true;
+                break; // ID 唯一，找到就停止
+                
+            }
+        }
+    }
+
+
+    if (!found) {
+        JOptionPane.showMessageDialog(this, "No matching Request ID found.");
+    }
+    
+    }//GEN-LAST:event_btnSearchByRequestIDActionPerformed
+
+    private void fieldUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUserNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fieldUserNameActionPerformed
+
+    private void btnSearchByUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByUserNameActionPerformed
+            String keyword = fieldUserName.getText().trim().toLowerCase();
+
+    if (keyword.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter username.");
+        return;
+    }
+
+    DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+    model.setRowCount(0);
+
+    boolean found = false;
+
+    for (WorkRequest wr : userOrg.getWorkRequestDirectory().getRequestList()) {
+
+        if (wr instanceof AccountStatusReviewRequest) {
+            AccountStatusReviewRequest req = (AccountStatusReviewRequest) wr;
+
+            if (!req.getStatus().equalsIgnoreCase("PENDING")) continue;
+
+            String username = req.getTargetUser().getUsername().toLowerCase();
+
+            // ✅ 模糊匹配
+            if (username.contains(keyword)) {
+
+                Object[] row = new Object[]{
+                        req.getId(),
+                        req.getTargetUser().getUsername(),
+                        req.getAction(),
+                        req.getStatus(),
+                        req
+                };
+
+                model.addRow(row);
+                found = true;
+            }
+        }
+    }
+
+    if (!found) {
+        JOptionPane.showMessageDialog(this, "No matching username found.");
+    }
+
+    }//GEN-LAST:event_btnSearchByUserNameActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel SearchByID;
     private javax.swing.JButton btnAccept;
     private javax.swing.JButton btnDescpriton;
     private javax.swing.JButton btnReject;
+    private javax.swing.JButton btnSearchByRequestID;
+    private javax.swing.JButton btnSearchByUserName;
+    private javax.swing.JTextField fieldID;
+    private javax.swing.JTextField fieldUserName;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblUser;
     // End of variables declaration//GEN-END:variables
@@ -267,4 +440,6 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
             }
          }        
     }
+
+   
 }
