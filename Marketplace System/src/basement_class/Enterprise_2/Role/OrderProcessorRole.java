@@ -9,6 +9,7 @@ package basement_class.Enterprise_2.Role;
 import UI.Enterprise2.OrderProcessorJPanel;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Organization;
 import basement_class.Role;
@@ -26,10 +27,10 @@ public class OrderProcessorRole extends Role {
                                  Enterprise enterprise,
                                  EcoSystem system) {
         // TODO: Implement Order Processor WorkArea Panel
-        SellerAccount sellerAccount = (SellerAccount) userAccount;
+        OrderProcessorAccount orderProcessorAccount = (OrderProcessorAccount) userAccount;
         
         // Create and return JPanel
-        OrderProcessorJPanel panel = new OrderProcessorJPanel(sellerAccount, organization, enterprise, system);
+        OrderProcessorJPanel panel = new OrderProcessorJPanel(orderProcessorAccount, organization, enterprise, system);
         return panel;
     }
 

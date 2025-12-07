@@ -55,7 +55,7 @@ public class LoginPage extends javax.swing.JFrame {
 
         lblUser.setText("Username:");
 
-        txtUser.setText("seller1");
+        txtUser.setText("listingmanager1");
         txtUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUserActionPerformed(evt);
@@ -64,7 +64,7 @@ public class LoginPage extends javax.swing.JFrame {
 
         lblPass.setText("Password:");
 
-        txtPass.setText("123");
+        txtPass.setText("1234");
 
         btnLogin.setText("Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {

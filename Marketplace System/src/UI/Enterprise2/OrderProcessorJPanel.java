@@ -6,6 +6,7 @@ package UI.Enterprise2;
 
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Organization;
 
@@ -15,16 +16,16 @@ import basement_class.Organization;
  */
 public class OrderProcessorJPanel extends javax.swing.JPanel {
 
-    private SellerAccount sellerAccount;
+    private OrderProcessorAccount orderProcessorAccount;
     private Organization organization;
     private Enterprise enterprise;
     private EcoSystem system;
     /**
      * Creates new form OrderProcessorJPanel
      */
-    public OrderProcessorJPanel(SellerAccount sellerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
+    public OrderProcessorJPanel(OrderProcessorAccount orderProcessorAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
-        this.sellerAccount = sellerAccount;
+        this.orderProcessorAccount = orderProcessorAccount;
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;

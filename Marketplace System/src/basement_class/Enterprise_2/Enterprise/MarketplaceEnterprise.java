@@ -6,7 +6,7 @@ package basement_class.Enterprise_2.Enterprise;
 
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
-import basement_class.Enterprise_2.Organization.ListingManagementOrganization;
+import basement_class.Enterprise_2.Organization.OrderManagementOrganization;
 /**
  *
  * @author 心火牧神塞勒斯
@@ -18,6 +18,6 @@ public class MarketplaceEnterprise extends Enterprise {
         
         // Add organizations
         this.addOrganization(new SellerOrganization());
-        this.addOrganization(new ListingManagementOrganization());
+        this.addOrganization(new OrderManagementOrganization());
     }
 }
