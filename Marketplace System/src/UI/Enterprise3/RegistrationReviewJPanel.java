@@ -182,7 +182,7 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
-            int row = tblUser.getSelectedRow();
+             int row = tblUser.getSelectedRow();
     if (row < 0) {
         JOptionPane.showMessageDialog(this, "Please select a request to approve.");
         return;
@@ -191,73 +191,91 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
     RegistrationApprovalRequest req =
             (RegistrationApprovalRequest) tblUser.getValueAt(row, 4);
 
+    // ✅ 只能处理 PENDING
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request has already been processed.");
         return;
     }
 
-    // 调用 service 完成逻辑
+    // ✅ 当前管理员
+    UserAccount admin = this.userAccount;
+
+    // ✅ 二次确认
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Confirm approve this registration request?",
+            "Confirm Approval",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // ✅ 调用【审计版】Service
     RegistrationService service = new RegistrationService();
-    service.approve(req);
+    service.approve(req, admin);
 
     JOptionPane.showMessageDialog(this, "User approved successfully!");
 
-    populateTable(); // 自动刷新，审批完成后从表格消失
+    populateTable();  // 审批完成后从表格消失
     }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
-       int row = tblUser.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a registration request first.");
-            return;
-        }
+        int row = tblUser.getSelectedRow();
+    if (row < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a registration request first.");
+        return;
+    }
 
-        // 从隐藏列取出 request 对象
-        RegistrationApprovalRequest req =
+    RegistrationApprovalRequest req =
             (RegistrationApprovalRequest) tblUser.getValueAt(row, 4);
 
-        if (!req.getStatus().equalsIgnoreCase("PENDING")) {
-            JOptionPane.showMessageDialog(this, "This request has already been processed.");
-            return;
-        }
+    // ✅ 只能处理 PENDING
+    if (!req.getStatus().equalsIgnoreCase("PENDING")) {
+        JOptionPane.showMessageDialog(this, "This request has already been processed.");
+        return;
+    }
 
-        // 1. 输入拒绝理由
-        String reason = JOptionPane.showInputDialog(
-                this,
-                "Please enter the reason for rejection:",
-                "Rejection Reason",
-                JOptionPane.PLAIN_MESSAGE
-        );
+    // ✅ 当前管理员
+    UserAccount admin = this.userAccount;
 
-        // 用户取消 或输入空
-        if (reason == null || reason.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Rejection cancelled.");
-            return;
-        }
+    // ✅ 输入拒绝理由
+    String reason = JOptionPane.showInputDialog(
+            this,
+            "Please enter the reason for rejection:",
+            "Rejection Reason",
+            JOptionPane.PLAIN_MESSAGE
+    );
 
-        // 2. 再次确认
-        int confirm = JOptionPane.showConfirmDialog(
+    if (reason == null || reason.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Rejection cancelled.");
+        return;
+    }
+
+    // ✅ 二次确认
+    int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm rejection with reason:\n\n" + reason,
             "Confirm Rejection",
             JOptionPane.YES_NO_OPTION
-        );
+    );
 
-        if (confirm != JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(this, "Rejection cancelled.");
-            return;
-        }
+    if (confirm != JOptionPane.YES_OPTION) {
+        JOptionPane.showMessageDialog(this, "Rejection cancelled.");
+        return;
+    }
 
-        // 3. 记录拒绝理由
-        req.setReason(reason);
+    // ✅ 记录拒绝理由（业务字段）
+    req.setReason(reason);
 
-        // 4. 调用你写好的业务层逻辑（service）
-        RegistrationService service = new RegistrationService();
-        service.reject(req, reason);
+    // ✅ 调用【审计版】Service
+    RegistrationService service = new RegistrationService();
+    service.reject(req, admin, reason);
 
-        // 5. 通知 & 刷新 Table
-        JOptionPane.showMessageDialog(this, "Registration request rejected.");
-        populateTable();   // 或你自己的 loadTable()
+    JOptionPane.showMessageDialog(this, "Registration request rejected.");
+
+    populateTable();   // 或你自己的 loadTable()
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void fieldID2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldID2ActionPerformed

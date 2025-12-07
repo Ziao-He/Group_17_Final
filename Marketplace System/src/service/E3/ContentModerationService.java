@@ -6,6 +6,7 @@ package service.E3;
 
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_3.WorkRequest.ListingReviewRequest;
+import basement_class.UserAccount;
 
 /**
  *
@@ -15,26 +16,15 @@ import basement_class.Enterprise_3.WorkRequest.ListingReviewRequest;
 public class ContentModerationService {
     
        /** 审核通过 */
-    public void approveListing(ListingReviewRequest request) {
-        Listing listing = request.getListing();
+        public void approveListing(ListingReviewRequest req,  UserAccount admin) {
+            req.getListing().setStatus("Approved");
+            req.setStatus("Approved");
+            req.resolve(admin, "APPROVE_LISTING", "Listing approved");
+}
 
-        // 1. 更新 Listing 状态
-        listing.setStatus("Approved");
-
-        // 2. 更新 WorkRequest 状态
-        request.setStatus("Approved");
-        request.resolve();
-    }
-
-    /** 审核拒绝 */
-    public void rejectListing(ListingReviewRequest request, String reason) {
-        Listing listing = request.getListing();
-
-        // 1. 更新 Listing 状态
-        listing.setStatus("Rejected: " + reason);
-
-        // 2. 更新 WorkRequest 状态
-        request.setStatus("Rejected");
-        request.resolve();
-    }
+        public void rejectListing(ListingReviewRequest req, UserAccount admin, String reason) {
+            req.getListing().setStatus("Rejected");
+            req.setStatus("Rejected");
+            req.resolve(admin, "REJECT_LISTING", reason);
+}
 }

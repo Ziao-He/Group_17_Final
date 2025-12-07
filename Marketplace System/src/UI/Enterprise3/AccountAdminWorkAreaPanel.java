@@ -183,46 +183,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-        int row = tblUser.getSelectedRow();
-            if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a request first.");
-            return;
-        }
-
-         AccountStatusReviewRequest req =
-            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
-
-        UserManagementService service = new UserManagementService();
-
-        String action = req.getAction().toUpperCase();
-
-        switch (action) {
-            case "SUSPEND":
-                service.suspendUser(req);
-                break;
-
-            case "REACTIVATE":
-                service.reactivateUser(req);
-                break;
-
-            case "BAN":
-                service.banUser(req);
-                break;
-
-            default:
-                JOptionPane.showMessageDialog(this, "Unknown action: " + req.getAction());
-                return;
-        }
-
-        JOptionPane.showMessageDialog(this, "Request processed successfully.");
-        loadTable();
-        fieldID.setText("");
-        fieldUserName.setText("");
-
-    }//GEN-LAST:event_btnAcceptActionPerformed
-
-    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
-             int row = tblUser.getSelectedRow();
+ int row = tblUser.getSelectedRow();
     if (row < 0) {
         JOptionPane.showMessageDialog(this, "Please select a request first.");
         return;
@@ -231,12 +192,89 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     AccountStatusReviewRequest req =
             (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
 
+    // ✅ 防止重复处理
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request is already processed.");
         return;
     }
 
-    // Step 1: 输入理由
+    // ✅ 获取当前管理员
+    UserAccount admin = this.admin;
+
+    // ✅ 获取动作
+    String action = req.getAction().toUpperCase();
+
+    // ✅ 输入审批理由
+    String reason = JOptionPane.showInputDialog(
+            this,
+            "Please enter the reason for this action:",
+            "Action Reason",
+            JOptionPane.PLAIN_MESSAGE
+    );
+
+    if (reason == null || reason.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Reason cannot be empty.");
+        return;
+    }
+
+    // ✅ 二次确认
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Confirm action: " + action + "\n\nReason:\n" + reason,
+            "Confirm Action",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // ✅ 调用审计版 Service
+    UserManagementService service = new UserManagementService();
+
+    switch (action) {
+
+        case "SUSPEND" -> 
+            service.suspendUser(req, admin, reason);
+
+        case "REACTIVATE" -> 
+            service.reactivateUser(req, admin, reason);
+
+        case "BAN" -> 
+            service.banUser(req, admin, reason);
+
+        default -> {
+            JOptionPane.showMessageDialog(this,
+                    "Unknown action: " + req.getAction());
+            return;
+        }
+    }
+
+    // ✅ 成功提示 + 刷新
+    JOptionPane.showMessageDialog(this, "Request processed successfully.");
+
+    loadTable();
+    fieldID.setText("");
+    fieldUserName.setText("");
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
+    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+   int row = tblUser.getSelectedRow();
+    if (row < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a request first.");
+        return;
+    }
+
+    AccountStatusReviewRequest req =
+            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
+
+    // ✅ 防止重复处理
+    if (!req.getStatus().equalsIgnoreCase("PENDING")) {
+        JOptionPane.showMessageDialog(this, "This request is already processed.");
+        return;
+    }
+
+    // ✅ 输入拒绝理由
     String reason = JOptionPane.showInputDialog(
             this,
             "Please enter the reason for rejection:",
@@ -244,16 +282,12 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
             JOptionPane.PLAIN_MESSAGE
     );
 
-    if (reason == null) {  // 用户取消
-        return;
-    }
-
-    if (reason.trim().isEmpty()) {
+    if (reason == null || reason.trim().isEmpty()) {
         JOptionPane.showMessageDialog(this, "Rejection reason cannot be empty.");
         return;
     }
 
-    // Step 2: 再次确认
+    // ✅ 二次确认
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm rejection with reason:\n\n" + reason,
@@ -265,16 +299,19 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         return;
     }
 
-    // Step 3: 调用 Service（推荐做法）
-    UserManagementService service = new UserManagementService();
-    req.setReviewerDecisionReason(reason);
-    service.rejectUser(req);  // 你需要在 service 里写 rejectUser(req)
+    // ✅ 获取当前管理员
+    UserAccount admin = this.admin;
 
-    // Step 4: UI 提示 + 刷新
-    JOptionPane.showMessageDialog(this, "Request rejected.");
+    // ✅ 调用审计版 Service
+    UserManagementService service = new UserManagementService();
+    service.rejectUser(req, admin, reason);
+
+    // ✅ UI 提示 + 刷新
+    JOptionPane.showMessageDialog(this, "Request rejected successfully.");
+
     loadTable();
-            fieldID.setText("");
-        fieldUserName.setText("");
+    fieldID.setText("");
+    fieldUserName.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
