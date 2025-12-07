@@ -36,8 +36,8 @@ public class Enterprise1Initializer {
         // Get organizations
         ShoppingServicesOrganization shoppingOrg = 
             (ShoppingServicesOrganization) enterprise.getOrganizationByName("Shopping Services");
-        OrderManagementOrganization orderOrg = 
-            (OrderManagementOrganization) enterprise.getOrganizationByName("Order Management");
+        OrderSelfTrackerOrganization orderOrg = 
+            (OrderSelfTrackerOrganization) enterprise.getOrganizationByName("Order Management");
         
         // Log structure
         System.out.println("  Created Enterprise: " + enterprise.getName());
@@ -52,7 +52,7 @@ public class Enterprise1Initializer {
      */
     private static void createTestAccounts(EcoSystem system,
                                           ShoppingServicesOrganization shoppingOrg,
-                                          OrderManagementOrganization orderOrg) {
+                                          OrderSelfTrackerOrganization orderOrg) {
         System.out.println("  Creating test accounts...");
         
         // Account 1: BuyerRole
