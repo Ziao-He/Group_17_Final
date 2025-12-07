@@ -12,6 +12,7 @@ import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -33,6 +34,12 @@ public class AdminJPanel extends javax.swing.JPanel {
         this.adminUser=adminUser;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+        
+         if (userOrg == null && adminUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
+        this.userOrg = enterprise.getOrganizationByName("User Control");  // 也可以改成你想默认看的 org
+    } else {
+        this.userOrg = userOrg;
+    }
 
         System.out.println("====== AdminJPanel Debug ======");
     System.out.println("Username: " + adminUser.getUsername());
@@ -165,13 +172,23 @@ public class AdminJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAccountManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountManagementActionPerformed
-        UserControlOrganization org =
-        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+//        UserControlOrganization org =
+//        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+//
+//        AccountAdminWorkAreaPanel panel =
+//        new AccountAdminWorkAreaPanel(system, adminUser, org);
+//
+//        replaceWorkArea(panel); 
+    if (!(userOrg instanceof UserControlOrganization)) {
+        JOptionPane.showMessageDialog(this, "User Control organization not found.");
+        return;
+    }
 
-        AccountAdminWorkAreaPanel panel =
-        new AccountAdminWorkAreaPanel(system, adminUser, org);
+    AccountAdminWorkAreaPanel panel =
+        new AccountAdminWorkAreaPanel(system, adminUser,
+            (UserControlOrganization) userOrg);
 
-        replaceWorkArea(panel); 
+    replaceWorkArea(panel);
     }//GEN-LAST:event_btnAccountManagementActionPerformed
 
     private void btnRegistrationReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrationReviewActionPerformed

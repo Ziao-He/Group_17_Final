@@ -8,13 +8,15 @@ import UI.Enterprise3.SuperAdmin;
 import basement_class.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.Locale;
 
 /**
  *
  * @author bob-h
  */
 public class LoginPage extends javax.swing.JFrame {
-
+    
+    
     private EcoSystem system;
     /**
      * Creates new form LoginPage
@@ -417,10 +419,12 @@ public class LoginPage extends javax.swing.JFrame {
         // ✅ 确保拿到 Enterprise 3
         if (userEnterprise == null && loginUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
             for (Network n : system.getNetworks()) {
-                if (!n.getEnterprises().isEmpty()) {
-                    userEnterprise = n.getEnterprises().get(0);
-                    break;
-                }
+        for (Enterprise e : n.getEnterprises()) {
+        if ("Platform Management".equals(e.getName())) {
+            userEnterprise = e;
+            break;
+        }
+    }
             }
         }
 
@@ -483,6 +487,7 @@ public class LoginPage extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+        Locale.setDefault(Locale.US);
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
