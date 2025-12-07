@@ -6,6 +6,9 @@ package UI.main;
 
 import UI.Enterprise3.SuperAdmin;
 import basement_class.*;
+import basement_class.DAO.UserAccountDAO;
+import basement_class.DAO.UserAccountFileDAO;
+import basement_class.DAO.UserAccountService;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
@@ -23,6 +26,11 @@ public class LoginPage extends javax.swing.JFrame {
      */
     public LoginPage() {
         system = SystemInitializer.initialize();
+        UserAccountDAO dao = new UserAccountFileDAO();
+        UserAccountService userService = new UserAccountService(dao, system);
+    
+// ✅ 启动一次性加载
+userService.loadAllUsers();
         initComponents();
     }
     
