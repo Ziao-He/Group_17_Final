@@ -477,9 +477,29 @@ public class LoginPage extends javax.swing.JFrame {
     // ============================================================
     // ✅ ✅ ✅ Enterprise 4 — （✅ 预留）
     // ============================================================
-    // else if (loginUser instanceof basement_class.Enterprise_4.Account.XXXAccount) {
-    //     TODO: Enterprise 4 跳转逻辑
-    // }
+    if (loginUser instanceof basement_class.Enterprise_4.HelpCenterAccount) {
+
+        Role role = loginUser.getRole();
+
+        if (role instanceof basement_class.Enterprise_4.HelpCenterAdmin) {
+
+            workArea = new UI.Enterprise4.HelpCenterWorkAreaPanel(system, loginUser, userEnterprise, userOrg);
+            
+        } else if (role instanceof basement_class.Enterprise_4.MessageHandlerRole) {
+
+            workArea = new UI.Enterprise4.CommunicationServicesOrgPanel(system, loginUser, userEnterprise, userOrg);
+
+        } else if(role instanceof basement_class.Enterprise_4.ComplaintHandlerRole){
+            workArea = new UI.Enterprise4.IssueResolutionOrgPanel(system, loginUser, userEnterprise, userOrg);
+
+        }else {
+            JOptionPane.showMessageDialog(this,
+                    "Unknown role for Seller account.",
+                    "Role Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
 
     // ===============================
     // ✅ 9️⃣ 防止空跳转

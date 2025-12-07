@@ -11,6 +11,8 @@ import basement_class.Enterprise_4.CommunicationServiceOrganization;
 import basement_class.Enterprise_4.IssueResolutionOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import basement_class.UserAccountDirectory;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -160,11 +162,13 @@ public class HelpCenterWorkAreaPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-//        BuyerSellerMonitorPanel panel = new BuyerSellerMonitorPanel(buyers, sellers, system.getMessageDirectory());
-//
-//        java.awt.CardLayout layout = (java.awt.CardLayout) jPanel2.getLayout();
-//        jPanel2.add("BuyerSellerMonitorPanel", panel);
-//        layout.show(jPanel2, "BuyerSellerMonitorPanel");
+        ArrayList<UserAccount> buyers = system.getUserAccountDirectory().getAllBuyers();
+        ArrayList<UserAccount> sellers = system.getUserAccountDirectory().getAllSellers();     
+        BuyerSellerMonitorPanel panel = new BuyerSellerMonitorPanel(buyers, sellers, system.getMessageDirectory());
+
+        java.awt.CardLayout layout = (java.awt.CardLayout) jPanel2.getLayout();
+        jPanel2.add("BuyerSellerMonitorPanel", panel);
+        layout.show(jPanel2, "BuyerSellerMonitorPanel");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
