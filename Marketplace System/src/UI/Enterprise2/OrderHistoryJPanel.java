@@ -12,7 +12,7 @@ import basement_class.Enterprise_2.Organization.SellerOrganization;
  *
  * @author 心火牧神塞勒斯
  */
-public class ViewComplaintsJPanel extends javax.swing.JPanel {
+public class OrderHistoryJPanel extends javax.swing.JPanel {
 
     private EcoSystem system;
     private SellerAccount seller;
@@ -20,7 +20,7 @@ public class ViewComplaintsJPanel extends javax.swing.JPanel {
     /**
      * Creates new form ViewComplaintsJPanel
      */
-    public ViewComplaintsJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
+    public OrderHistoryJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
         initComponents();
         this.system=system;
         this.seller=seller;

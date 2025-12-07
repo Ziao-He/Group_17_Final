@@ -55,6 +55,8 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         btnReject = new javax.swing.JButton();
         btnDescpriton = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(255, 204, 204));
+
         tblOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -140,50 +142,6 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
                 .addContainerGap(830, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        // TODO add your handling code here:
-        String input = txtSearch.getText().trim();
-
-        if (input.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter Order ID.",
-                    "Input Required",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        java.util.List<OrderReviewRequest> result = new java.util.ArrayList<>();
-
-        for (WorkRequest wr : organization
-                .getWorkRequestDirectory()
-                .getRequestList()) {
-
-            if (wr instanceof OrderReviewRequest) {
-                OrderReviewRequest req = (OrderReviewRequest) wr;
-
-                Order order = req.getOrder();
-
-                if ("Pending".equalsIgnoreCase(req.getStatus())
-                        && order != null
-                        && input.equalsIgnoreCase(order.getOrderId())) {
-
-                    result.add(req);
-                    break;   // ✅ OrderID 唯一，找到就停
-                }
-            }
-        }
-
-        if (result.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "No matching Order ID found.",
-                    "Not Found",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-
-        refreshTable(result);   // ✅ 统一入口刷新表格
-        txtSearch.setText("");
-    }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
         int row = tblOrder.getSelectedRow();
@@ -430,6 +388,50 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         loadtable();
         txtSearch.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        String input = txtSearch.getText().trim();
+
+        if (input.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Please enter Order ID.",
+                "Input Required",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        java.util.List<OrderReviewRequest> result = new java.util.ArrayList<>();
+
+        for (WorkRequest wr : organization
+            .getWorkRequestDirectory()
+            .getRequestList()) {
+
+            if (wr instanceof OrderReviewRequest) {
+                OrderReviewRequest req = (OrderReviewRequest) wr;
+
+                Order order = req.getOrder();
+
+                if ("Pending".equalsIgnoreCase(req.getStatus())
+                    && order != null
+                    && input.equalsIgnoreCase(order.getOrderId())) {
+
+                    result.add(req);
+                    break;   // ✅ OrderID 唯一，找到就停
+                }
+            }
+        }
+
+        if (result.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "No matching Order ID found.",
+                "Not Found",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        refreshTable(result);   // ✅ 统一入口刷新表格
+
+    }//GEN-LAST:event_btnSearchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
