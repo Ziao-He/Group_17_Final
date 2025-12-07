@@ -8,8 +8,6 @@ import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
-import basement_class.Enterprise_2.Account.SellerAccount;
-import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Organization;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
@@ -138,7 +136,10 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOrderHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderHistoryActionPerformed
-        
+        OrderHistoryJPanel panel =
+        new OrderHistoryJPanel(orderProcessorAccount, organization, enterprise, system);
+
+        replaceWorkArea(panel);
     }//GEN-LAST:event_btnOrderHistoryActionPerformed
 
     private void btnOrderReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderReportsActionPerformed
