@@ -48,6 +48,9 @@ public class BuyerSellerChatPanel extends javax.swing.JPanel {
         if (partner == null) return;
 
         ArrayList<Message> list = messageDirectory.getMessagesBetween(currentUser, partner);
+        if (list == null || list.isEmpty()) {
+        return; 
+    }
         for (Message m : list) {
             appendMessageToConversation(m);
         }
@@ -61,6 +64,9 @@ public class BuyerSellerChatPanel extends javax.swing.JPanel {
         if (partner == null) return;
 
         ArrayList<Message> list = messageDirectory.getMessagesBetween(currentUser, partner);
+        if (list == null || list.isEmpty()) {
+        return;
+    }
         for (Message m : list) {
             // Only allow the current user to report the message "sent by the other party"
             if (!m.getSender().equals(currentUser)) {
