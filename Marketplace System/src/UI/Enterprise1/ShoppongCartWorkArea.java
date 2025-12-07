@@ -5,9 +5,13 @@
 package UI.Enterprise1;
 
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_2.Enterprise.MarketplaceEnterprise;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.WorkRequest.OrderReviewRequest;
+import basement_class.Network;
+import basement_class.Organization;
 import common_class.Order;
 import java.util.ArrayList;
 import java.util.List;
@@ -207,8 +211,29 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
                 listing.setStatus("Reserved");
                 
                 // Save WorkRequest to system
-                if (system.getWorkRequestDirectory() != null) {
-                    system.getWorkRequestDirectory().addWorkRequest(orderRequest);
+                system.getWorkRequestDirectory().addWorkRequest(orderRequest);
+
+                // ✅ 2. 同时投递到 OrderManagementOrganization
+                boolean sentToOrderOrg = false;
+
+                for (Network network : system.getNetworks()) {
+                    for (Enterprise enterprise : network.getEnterprises()) {
+                        if (enterprise instanceof MarketplaceEnterprise) {
+
+                            Organization orderOrg =
+                                enterprise.getOrganizationByName("Order Management Organization");
+
+                            if (orderOrg != null) {
+                                orderOrg.getWorkRequestDirectory().addWorkRequest(orderRequest);
+                                sentToOrderOrg = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!sentToOrderOrg) {
+                    System.err.println("WARNING: Order Management Organization not found. OrderReviewRequest only saved in system.");
                 }
                 
                 successCount++;
