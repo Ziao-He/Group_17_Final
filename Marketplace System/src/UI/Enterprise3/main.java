@@ -10,6 +10,7 @@ import basement_class.Enterprise;
 import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import java.util.Locale;
 import javax.swing.JFrame;
 
 /**
@@ -18,6 +19,7 @@ import javax.swing.JFrame;
  */
 public class main {
     public static void main(String[] args) {
+         Locale.setDefault(Locale.US);
 
         // A. 初始化系统
         EcoSystem system = EcoSystem.getInstance();

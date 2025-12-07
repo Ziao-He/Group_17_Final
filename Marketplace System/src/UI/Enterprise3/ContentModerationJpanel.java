@@ -211,46 +211,99 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-        int row = tblRequests.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a request.");
-            return;
-        }
+           int row = tblRequests.getSelectedRow();
+    if (row < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a request.");
+        return;
+    }
 
-        ListingReviewRequest req = (ListingReviewRequest) tblRequests.getValueAt(row, 4);
+    ListingReviewRequest req =
+            (ListingReviewRequest) tblRequests.getValueAt(row, 4);
 
-        service.approveListing(req);
-        JOptionPane.showMessageDialog(this, "Listing Approved.");
+    // ✅ 只能处理 PENDING
+    if (!req.getStatus().equalsIgnoreCase("PENDING")) {
+        JOptionPane.showMessageDialog(this, "This request is already processed.");
+        return;
+    }
 
-        loadTable();
-        fieldID.setText("");
-        fieldUserName.setText("");
+    // ✅ 当前管理员
+    UserAccount admin = this.moderator;
+
+    // ✅ 二次确认（无理由版）
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Confirm approve this listing?",
+            "Confirm Approval",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // ✅ 调用审计版 Service（reason 传固定说明）
+    service.approveListing(req, admin);
+
+    JOptionPane.showMessageDialog(this, "Listing approved successfully.");
+
+    loadTable();
+    fieldID.setText("");
+    fieldUserName.setText("");
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
-        int row = tblRequests.getSelectedRow();
-        if (row < 0) {
-            JOptionPane.showMessageDialog(this, "Please select a request.");
-            return;
-        }
+          int row = tblRequests.getSelectedRow();
+    if (row < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a request.");
+        return;
+    }
 
-        ListingReviewRequest req = (ListingReviewRequest) tblRequests.getValueAt(row, 4);
+    ListingReviewRequest req =
+            (ListingReviewRequest) tblRequests.getValueAt(row, 4);
 
-        String reason = JOptionPane.showInputDialog(this, "Enter rejection reason:");
+    // ✅ 只能处理 PENDING
+    if (!req.getStatus().equalsIgnoreCase("PENDING")) {
+        JOptionPane.showMessageDialog(this, "This request is already processed.");
+        return;
+    }
 
-        if (reason == null || reason.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Rejection reason required.");
-            return;
-        }
+    // ✅ 当前管理员
+    UserAccount admin = this.moderator;
 
-        req.setRejectionReason(reason);
-        service.rejectListing(req, reason);
+    // ✅ 输入拒绝理由
+    String reason = JOptionPane.showInputDialog(
+            this,
+            "Enter rejection reason:",
+            "Rejection Reason",
+            JOptionPane.PLAIN_MESSAGE
+    );
 
-        JOptionPane.showMessageDialog(this, "Listing Rejected.");
+    if (reason == null || reason.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Rejection reason required.");
+        return;
+    }
 
-        loadTable();
-        fieldID.setText("");
-        fieldUserName.setText("");
+    // ✅ 二次确认
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Confirm rejection?\n\nReason:\n" + reason,
+            "Confirm Rejection",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    // ✅ 审计版 Service
+    service.rejectListing(req, admin, reason);
+
+    JOptionPane.showMessageDialog(this, "Listing rejected successfully.");
+
+    loadTable();
+    fieldID.setText("");
+    fieldUserName.setText("");
+
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
