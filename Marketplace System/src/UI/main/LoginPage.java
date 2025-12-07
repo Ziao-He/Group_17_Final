@@ -390,7 +390,16 @@ public class LoginPage extends javax.swing.JFrame {
     // ✅ ✅ ✅ Enterprise 1 — Buyer（✅ 预留）
     // ============================================================
     if (loginUser instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
+        if (!loginUser.getUsername().equals(username)
+                || !loginUser.getPasswordHash().equals(password)) {
 
+            JOptionPane.showMessageDialog(this,
+                    "Username and password do not match the same account.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return; // stop entering Buyer panel
+        }
         workArea = new UI.Enterprise1.BuyerJPanel(
             (basement_class.Enterprise_1.Account.BuyerAccount) loginUser,
             userOrg,
@@ -424,7 +433,18 @@ public class LoginPage extends javax.swing.JFrame {
     }
             }
         }
+        
+        if (!loginUser.getUsername().equals(username)
+                || !loginUser.getPasswordHash().equals(password)) {
 
+            JOptionPane.showMessageDialog(this,
+                    "Username and password do not match the same account.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return; // stop entering Buyer panel
+        }
+        
         workArea = new UI.Enterprise3.AdminJPanel(
                 system,
                 loginUser,
