@@ -9,6 +9,7 @@ import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import java.awt.CardLayout;
 
 /**
  *
@@ -20,15 +21,30 @@ public class TrackJPanel extends javax.swing.JPanel {
     private Organization organization;
     private Enterprise enterprise;
     private EcoSystem system;
+    private TrackingOrderStatus trackingOrderStatusPanel;
     /**
      * Creates new form TrackJPanel
      */
-    public TrackJPanel(BuyerAccount buyerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
+    public TrackJPanel(BuyerAccount buyerAccount,
+                   Organization organization,
+                   Enterprise enterprise,
+                   EcoSystem system) {
+
         initComponents();
         this.buyerAccount = buyerAccount;
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;
+
+        initWorkAreaPanels();
+    }
+    
+    private void initWorkAreaPanels() {
+        trackingOrderStatusPanel = new TrackingOrderStatus(buyerAccount, system);
+        trackWorkArea.add("TRACK_STATUS", trackingOrderStatusPanel);
+
+        CardLayout layout = (CardLayout) trackWorkArea.getLayout();
+        layout.show(trackWorkArea, "TRACK_STATUS");
     }
 
     /**
@@ -80,6 +96,11 @@ public class TrackJPanel extends javax.swing.JPanel {
         });
 
         btnWorkRequestPending.setText("Order Pending");
+        btnWorkRequestPending.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnWorkRequestPendingActionPerformed(evt);
+            }
+        });
 
         btnSwitch.setText("Switch");
 
@@ -145,12 +166,23 @@ public class TrackJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-
+        if (trackingOrderStatusPanel != null) {
+            trackingOrderStatusPanel.refreshData();
+        }
     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnHistoryActionPerformed
+
+    private void btnWorkRequestPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWorkRequestPendingActionPerformed
+        // TODO add your handling code here:
+        if (trackingOrderStatusPanel != null) {
+            CardLayout layout = (CardLayout) trackWorkArea.getLayout();
+            layout.show(trackWorkArea, "TRACK_STATUS");
+            trackingOrderStatusPanel.applyFilter("All");
+        }
+    }//GEN-LAST:event_btnWorkRequestPendingActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

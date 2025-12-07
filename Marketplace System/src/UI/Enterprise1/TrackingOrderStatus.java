@@ -4,17 +4,42 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.WorkRequest;
+import basement_class.WorkRequestDirectory;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_1.WorkRequest.OrderProcessingResultRequest;
+import basement_class.Enterprise_2.Listing;
+import common_class.Order;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author bob-h
  */
 public class TrackingOrderStatus extends javax.swing.JPanel {
 
+    private BuyerAccount buyerAccount;
+    private EcoSystem system;
+
+    private List<OrderProcessingResultRequest> displayedRequests = new ArrayList<>();
+
+
+    private String currentFilter = "All";
     /**
      * Creates new form TrackingOrderStatus
      */
     public TrackingOrderStatus() {
         initComponents();
+    }
+    
+    public TrackingOrderStatus(BuyerAccount buyerAccount, EcoSystem system) {
+        this(); 
+        this.buyerAccount = buyerAccount;
+        this.system = system;
+        refreshData(); 
     }
 
     /**
@@ -175,4 +200,220 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
     private javax.swing.JTextField txtPending;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
+
+    public void refreshData() {
+        populateTable(currentFilter);
+    }
+    
+    public void applyFilter(String status) {
+        if (status == null || status.isEmpty()) {
+            status = "All";
+        }
+        currentFilter = status;
+        cmbFilters.setSelectedItem(status);
+        populateTable(status);
+    }
+    
+    private List<OrderProcessingResultRequest> loadRequestsForCurrentBuyer() {
+        List<OrderProcessingResultRequest> result = new ArrayList<>();
+
+        if (system == null || buyerAccount == null) {
+            return result;
+        }
+
+        WorkRequestDirectory dir = system.getWorkRequestDirectory();
+        if (dir == null) {
+            return result;
+        }
+
+        for (WorkRequest wr : dir.getRequestsForReceiver(buyerAccount)) {
+            if (wr instanceof OrderProcessingResultRequest) {
+                result.add((OrderProcessingResultRequest) wr);
+            }
+        }
+        return result;
+    }
+
+    /** Populate JTable based on filter */
+    private void populateTable(String filterStatus) {
+        DefaultTableModel model = (DefaultTableModel) tblRequest.getModel();
+        model.setRowCount(0);
+        displayedRequests.clear();
+
+        List<OrderProcessingResultRequest> all = loadRequestsForCurrentBuyer();
+
+        for (OrderProcessingResultRequest req : all) {
+
+            String status = req.getStatus();
+
+            // Filtering logic
+            if (!"All".equalsIgnoreCase(filterStatus)) {
+                if (status == null || !filterStatus.equalsIgnoreCase(status)) continue;
+            }
+
+            // Get order fields
+            Order order = req.getOrder();
+            String title = "(unknown)";
+            String sellerName = "(unknown)";
+            double paid = 0.0;
+
+            if (order != null) {
+                paid = order.getTotalPrice();
+
+                // Resolve listing information
+                if (system != null &&
+                    system.getListingDirectory() != null &&
+                    order.getListingId() != null) {
+
+                    Listing listing = system.getListingDirectory()
+                                            .findById(order.getListingId());
+                    if (listing != null) {
+                        if (listing.getTitle() != null)
+                            title = listing.getTitle();
+
+                        if (listing.getSeller() != null &&
+                            listing.getSeller().getUsername() != null)
+                            sellerName = listing.getSeller().getUsername();
+                    } else {
+                        title = order.getListingId();
+                    }
+                }
+            }
+
+            // Human-friendly result text
+            String resultText;
+            if (OrderProcessingResultRequest.OP_ACCEPT.equals(req.getOperationType()))
+                resultText = "Accepted";
+            else if (OrderProcessingResultRequest.OP_REJECT.equals(req.getOperationType()))
+                resultText = "Rejected";
+            else
+                resultText = req.getOperationType();
+
+            Object[] row = new Object[5];
+            row[0] = req.getId();
+            row[1] = title;
+            row[2] = sellerName;
+            row[3] = resultText;
+            row[4] = paid;
+
+            displayedRequests.add(req);
+            model.addRow(row);
+        }
+
+        updateSummaryCounts(all);
+    }
+
+    /** Update summary counters at the top */
+    private void updateSummaryCounts(List<OrderProcessingResultRequest> all) {
+        int total = all.size();
+        int pending = 0, completed = 0, canceled = 0;
+
+        for (OrderProcessingResultRequest req : all) {
+            String status = req.getStatus();
+            if (status == null) continue;
+
+            switch (status.toLowerCase()) {
+                case "pending": pending++; break;
+                case "completed": completed++; break;
+                case "canceled": canceled++; break;
+            }
+        }
+
+        txtTotal.setText(String.valueOf(total));
+        txtPending.setText(String.valueOf(pending));
+        txtCompleted.setText(String.valueOf(completed));
+        txtCancel.setText(String.valueOf(canceled));
+    }
+
+    /** Handle Complete button */
+    private void handleComplete() {
+        int row = tblRequest.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a row first.",
+                "No selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        OrderProcessingResultRequest req = displayedRequests.get(row);
+
+        // Invalid status checks
+        if ("Completed".equalsIgnoreCase(req.getStatus())) {
+            JOptionPane.showMessageDialog(this, "This order is already Completed.");
+            return;
+        }
+        if ("Canceled".equalsIgnoreCase(req.getStatus())) {
+            JOptionPane.showMessageDialog(this, "This order has been Canceled.");
+            return;
+        }
+        if (!OrderProcessingResultRequest.OP_ACCEPT.equals(req.getOperationType())) {
+            JOptionPane.showMessageDialog(this,
+                "Only Accepted requests can be marked as Completed.");
+            return;
+        }
+
+        // Confirm
+        int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Mark this order as Completed?",
+            "Confirm",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) return;
+
+        // Update states
+        req.setStatus("Completed");
+        Order order = req.getOrder();
+
+        if (order != null) {
+            order.setStatus(Order.STATUS_COMPLETED);
+            if (buyerAccount != null)
+                buyerAccount.recordOrder(order.getTotalPrice(), true);
+        }
+
+        refreshData();
+    }
+
+    /** Handle Cancel button */
+    private void handleCancel() {
+        int row = tblRequest.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a row first.",
+                "No selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        OrderProcessingResultRequest req = displayedRequests.get(row);
+
+        if ("Completed".equalsIgnoreCase(req.getStatus())) {
+            JOptionPane.showMessageDialog(this, "Completed orders cannot be canceled.");
+            return;
+        }
+        if ("Canceled".equalsIgnoreCase(req.getStatus())) {
+            JOptionPane.showMessageDialog(this, "This order is already Canceled.");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Cancel this order? (No points or spending will be counted)",
+            "Confirm Cancel",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) return;
+
+        req.setStatus("Canceled");
+
+        Order order = req.getOrder();
+        if (order != null) {
+            order.setStatus(Order.STATUS_CANCELLED);
+            if (buyerAccount != null)
+                buyerAccount.recordOrder(order.getTotalPrice(), false);
+        }
+
+        refreshData();
+    }
 }
