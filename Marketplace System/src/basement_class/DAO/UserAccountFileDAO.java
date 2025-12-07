@@ -4,6 +4,9 @@
  */
 package basement_class.DAO;
 
+<<<<<<< HEAD
+import basement_class.Enterprise_1.Account.BuyerProfile;
+=======
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Enterprise_1.Account.BuyerProfile;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
@@ -11,6 +14,7 @@ import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_3.Account.PlatformAdminAccount;
 import basement_class.Enterprise_3.Account.SystemAdminAccount;
 import basement_class.Enterprise_4.HelpCenterAdminAccount;
+>>>>>>> dfa561c28089b18694e7d3bfc5b8c33e850efa19
 import basement_class.UserAccount;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,6 +23,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 /**
  *
  * @author Administrator
@@ -26,6 +32,10 @@ import java.util.List;
 public class UserAccountFileDAO implements UserAccountDAO{
     private final String filePath = "data/user_accounts.csv";
 
+<<<<<<< HEAD
+@Override
+public List<UserAccount> loadAll() {
+=======
     @Override
     public List<UserAccount> loadAll() {
 //        List<UserAccount> list = new ArrayList<>();
@@ -99,6 +109,7 @@ public class UserAccountFileDAO implements UserAccountDAO{
 //        }
 //
 //        return list;
+>>>>>>> dfa561c28089b18694e7d3bfc5b8c33e850efa19
 
     List<UserAccount> list = new ArrayList<>();
 
@@ -204,6 +215,20 @@ public class UserAccountFileDAO implements UserAccountDAO{
 
     return list;
 }
+<<<<<<< HEAD
+
+
+    @Override
+public void saveAll(List<UserAccount> users) {
+
+    try (PrintWriter pw = new PrintWriter(new FileWriter(filePath))) {
+
+        pw.println(
+            "id,username,email,password,phone,orgId,status,role,warningCount," +
+            "buyerPreferredCategories,buyerMaxBudget,buyerLocation,buyerPayMethod"
+        );
+
+=======
 //    }
 
 //    @Override
@@ -241,6 +266,7 @@ public void saveAll(List<UserAccount> users) {
             "buyerPreferredCategories,buyerMaxBudget,buyerLocation,buyerPayMethod"
         );
 
+>>>>>>> dfa561c28089b18694e7d3bfc5b8c33e850efa19
         for (UserAccount ua : users) {
 
             String buyerPreferredCategories = "";
@@ -280,35 +306,52 @@ public void saveAll(List<UserAccount> users) {
                     buyerPayMethod
             );
         }
+<<<<<<< HEAD
+=======
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+>>>>>>> dfa561c28089b18694e7d3bfc5b8c33e850efa19
 
     } catch (Exception e) {
         e.printStackTrace();
     }
 }
 
-    // ✅ 核心工厂方法（你现在架构里最关键的一步）
 private UserAccount createByRole(String role) {
 
     return switch (role) {
 
-        // ✅ Enterprise 1
-        case "BuyerRole" -> new BuyerAccount();
-        case "ProductSearcherRole" -> new BuyerAccount();
-        case "OrderTrackerRole" -> new BuyerAccount();
+        // ✅ Enterprise 1 - Buyer
+        case "BuyerRole", 
+             "ProductSearcherRole", 
+             "OrderTrackerRole" 
+                -> new basement_class.Enterprise_1.Account.BuyerAccount();
 
-        // ✅ Enterprise 2
-        case "SellerRole" -> new SellerAccount();
-        case "ListingManagerRole" -> new SellerAccount();
-        case "OrderProcessorRole" -> new OrderProcessorAccount();
+        // ✅ Enterprise 2 - Seller
+        case "SellerRole", 
+             "ListingManagerRole" 
+                -> new basement_class.Enterprise_2.Account.SellerAccount();
 
-        // ✅ Enterprise 3
-        case "PlatformAdminRole" -> new PlatformAdminAccount();
-        case "SystemAdminRole" -> new SystemAdminAccount();
-        case "AccountAdminRole" -> new PlatformAdminAccount();
-        case "ContentModeratorRole" -> new PlatformAdminAccount();
+        case "OrderProcessorRole" 
+                -> new basement_class.Enterprise_2.Account.OrderProcessorAccount();
 
-        // ✅ Enterprise 4
-        case "HelpCenterAdminRole" -> new HelpCenterAdminAccount();
+        // ✅ Enterprise 3 - Platform Admin
+        case "PlatformAdminRole", 
+             "AccountAdminRole", 
+             "ContentModeratorRole", 
+             "PolicyEnforcerRole"
+                -> new basement_class.Enterprise_3.Account.PlatformAdminAccount();
+
+        // ✅ Enterprise 3 - System Admin
+        case "SystemAdminRole" 
+                -> new basement_class.Enterprise_3.Account.SystemAdminAccount();
+
+        // ✅ Enterprise 4 - Help Center（如果你有）
+        case "HelpCenterAdminRole" 
+                -> new basement_class.Enterprise_4.HelpCenterAdminAccount();
 
         default -> null;
     };
