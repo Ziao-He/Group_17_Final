@@ -4,22 +4,26 @@
  */
 package basement_class.Enterprise_3.Account;
 
-import basement_class.Enterprise_3.Role.PlatformAdminRole;
+import basement_class.Enterprise_3.Role.SystemAdminRole;
 import basement_class.UserAccount;
+
+
 
 /**
  *
  * @author Administrator
  */
-public class PlatformAdminAccount extends UserAccount {
-        public PlatformAdminAccount() {
+public class SystemAdminAccount extends UserAccount { 
+
+    public SystemAdminAccount() {
         super();
         this.setStatus("ACTIVE");
-        this.setRole(new PlatformAdminRole());
+        this.setRole(new SystemAdminRole());   // ✅ 这里是合法的
     }
 
     @Override
     public String toString() {
         return getUsername();
     }
+
 }
