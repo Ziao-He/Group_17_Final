@@ -15,7 +15,7 @@ import java.util.List;
  * @author Linyiyang
  */
 public class PolicyViolationRequest extends WorkRequest {
-
+    private static int counter=1;
     private UserAccount reporter;        // 举报人
     private UserAccount targetUser;      // 被举报的用户
     private Listing listing;             // 如果是物品相关，可以为空
@@ -40,6 +40,7 @@ public class PolicyViolationRequest extends WorkRequest {
         this.violationInfo = info;
         this.evidencePaths = new ArrayList<>();
         this.setStatus("Pending");
+        this.setId("PVRQ"+counter++);
     }
 
     /**
