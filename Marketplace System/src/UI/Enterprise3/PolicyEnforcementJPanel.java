@@ -200,19 +200,23 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-        PolicyViolationRequest req = getSelectedRequest();
-        if (req == null) return;
+            PolicyViolationRequest req = getSelectedRequest();
+             if (req == null) return;
 
-        int confirm = JOptionPane.showConfirmDialog(
-                this, 
-                "Approve this violation request?", 
-                "Confirm", 
+            // ✅ 当前登录管理员
+            UserAccount admin = this.admin;
+
+             int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Approve this violation request?",
+                "Confirm",
                 JOptionPane.YES_NO_OPTION
         );
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
-        service.approveViolation(system, req);
+        // ✅ 审计版 Service（必须传 admin）
+        service.approveViolation(system, req, admin);
 
         JOptionPane.showMessageDialog(this, "Request approved and processed.");
         loadTable();
@@ -220,16 +224,39 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
 
-        PolicyViolationRequest req = getSelectedRequest();
-        if (req == null) return;
+       PolicyViolationRequest req = getSelectedRequest();
+    if (req == null) return;
 
-        String reason = JOptionPane.showInputDialog("Enter rejection reason:");
-        if (reason == null || reason.trim().isEmpty()) return;
+    // ✅ 当前登录管理员
+    UserAccount admin = this.admin;
 
-        service.rejectViolation(req, reason);
+    String reason = JOptionPane.showInputDialog(
+            this,
+            "Enter rejection reason:",
+            "Rejection Reason",
+            JOptionPane.PLAIN_MESSAGE
+    );
 
-        JOptionPane.showMessageDialog(this, "Request rejected.");
-        loadTable();
+    if (reason == null || reason.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Rejection reason cannot be empty.");
+        return;
+    }
+
+    // ✅ 二次确认
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Confirm rejection with reason:\n\n" + reason,
+            "Confirm Rejection",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) return;
+
+    // ✅ 审计版 Service（必须传 admin + reason）
+    service.rejectViolation(req, admin, reason);
+
+    JOptionPane.showMessageDialog(this, "Request rejected.");
+    loadTable();
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed

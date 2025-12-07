@@ -13,17 +13,15 @@ import basement_class.UserAccount;
  */
 public class RegistrationService {
     
-       public void approve(RegistrationApprovalRequest req) {
-        UserAccount account = req.getNewUser();
-        account.setStatus("ACTIVE");
-        req.setStatus("APPROVED");
-        req.resolve();
-    }
+public void approve(RegistrationApprovalRequest req, UserAccount admin) {
+    req.getNewUser().setStatus("ACTIVE");
+    req.setStatus("APPROVED");
+    req.resolve(admin, "APPROVE", "Registration approved");
+}
 
-    public void reject(RegistrationApprovalRequest req, String reason) {
-        UserAccount account = req.getNewUser();
-        account.setStatus("REJECTED");
-        req.setStatus("REJECTED: " + reason);
-        req.resolve();
-    }
+public void reject(RegistrationApprovalRequest req, UserAccount admin, String reason) {
+    req.getNewUser().setStatus("REJECTED");
+    req.setStatus("REJECTED");
+    req.resolve(admin, "REJECT", reason);
+}
 }
