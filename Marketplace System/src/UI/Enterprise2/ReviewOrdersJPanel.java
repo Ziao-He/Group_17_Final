@@ -4,17 +4,37 @@
  */
 package UI.Enterprise2;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise;
+import basement_class.Enterprise_2.Account.OrderProcessorAccount;
+import basement_class.Enterprise_2.WorkRequest.OrderReviewRequest;
+import basement_class.Organization;
+import basement_class.WorkRequest;
+import common_class.Order;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author 心火牧神塞勒斯
  */
 public class ReviewOrdersJPanel extends javax.swing.JPanel {
 
+    private OrderProcessorAccount orderProcessorAccount;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
     /**
      * Creates new form ReviewOrdersJPanel
      */
-    public ReviewOrdersJPanel() {
+    public ReviewOrdersJPanel(OrderProcessorAccount orderProcessorAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.orderProcessorAccount = orderProcessorAccount;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.system = system;
+        loadtable();
     }
 
     /**
@@ -31,8 +51,9 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAccept = new javax.swing.JButton();
+        btnReject = new javax.swing.JButton();
+        btnDescpriton = new javax.swing.JButton();
 
         tblOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -51,10 +72,32 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         jLabel1.setText("Search By ID");
 
         btnSearch.setText("Search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Accept");
+        btnAccept.setText("Accept");
+        btnAccept.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAcceptActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Reject");
+        btnReject.setText("Reject");
+        btnReject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRejectActionPerformed(evt);
+            }
+        });
+
+        btnDescpriton.setText("Descpriton");
+        btnDescpriton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescpritonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -63,6 +106,7 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 821, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -71,13 +115,11 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
                         .addComponent(btnSearch))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(49, 49, 49)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(278, 278, 278)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 821, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAccept, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(108, 108, 108)
+                        .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(128, 128, 128)
+                        .addComponent(btnDescpriton, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(251, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -92,20 +134,352 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(61, 61, 61)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(171, Short.MAX_VALUE))
+                    .addComponent(btnAccept)
+                    .addComponent(btnReject)
+                    .addComponent(btnDescpriton))
+                .addContainerGap(830, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        String input = txtSearch.getText().trim();
+
+        if (input.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter Order ID.",
+                    "Input Required",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        java.util.List<OrderReviewRequest> result = new java.util.ArrayList<>();
+
+        for (WorkRequest wr : organization
+                .getWorkRequestDirectory()
+                .getRequestList()) {
+
+            if (wr instanceof OrderReviewRequest) {
+                OrderReviewRequest req = (OrderReviewRequest) wr;
+
+                Order order = req.getOrder();
+
+                if ("Pending".equalsIgnoreCase(req.getStatus())
+                        && order != null
+                        && input.equalsIgnoreCase(order.getOrderId())) {
+
+                    result.add(req);
+                    break;   // ✅ OrderID 唯一，找到就停
+                }
+            }
+        }
+
+        if (result.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "No matching Order ID found.",
+                    "Not Found",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        refreshTable(result);   // ✅ 统一入口刷新表格
+        txtSearch.setText("");
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
+        int row = tblOrder.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select an order.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // ✅ 从隐藏列 / WorkRequest 中取出 OrderReviewRequest
+        OrderReviewRequest req =
+                (OrderReviewRequest) organization
+                        .getWorkRequestDirectory()
+                        .getRequestList()
+                        .stream()
+                        .filter(wr -> wr instanceof OrderReviewRequest)
+                        .map(wr -> (OrderReviewRequest) wr)
+                        .filter(r -> r.getOrder().getOrderId()
+                                .equals(tblOrder.getValueAt(row, 0)))
+                        .findFirst()
+                        .orElse(null);
+
+        if (req == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Order request not found.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Order order = req.getOrder();
+
+        StringBuilder s = new StringBuilder();
+        s.append("Order ID: ").append(order.getOrderId()).append("\n");
+        s.append("Buyer ID: ").append(order.getBuyerId()).append("\n");
+        s.append("Seller ID: ").append(order.getSellerId()).append("\n");
+        s.append("Listing ID: ").append(order.getListingId()).append("\n\n");
+
+        s.append("Quantity: ").append(order.getQuantity()).append("\n");
+        s.append("Total Price: $")
+                .append(String.format("%.2f", order.getTotalPrice())).append("\n\n");
+
+        s.append("Delivery Method: ")
+                .append(order.getDeliveryMethod() == null
+                        ? "N/A" : order.getDeliveryMethod())
+                .append("\n");
+
+        s.append("Meeting Location: ")
+                .append(order.getMeetingLocation() == null
+                        ? "N/A" : order.getMeetingLocation())
+                .append("\n\n");
+
+        s.append("Order Status: ").append(order.getStatus()).append("\n");
+        s.append("Request Status: ").append(req.getStatus()).append("\n");
+
+        JOptionPane.showMessageDialog(this,
+                s.toString(),
+                "Order Detail",
+                JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnDescpritonActionPerformed
+
+    private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+        // TODO add your handling code here:
+        int row = tblOrder.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select an order first.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // ✅ 从 WorkRequestDirectory 中拿 OrderReviewRequest
+        OrderReviewRequest req = null;
+        String orderId = (String) tblOrder.getValueAt(row, 0);
+
+        for (WorkRequest wr : organization.getWorkRequestDirectory().getRequestList()) {
+            if (wr instanceof OrderReviewRequest orr) {
+                if (orr.getOrder().getOrderId().equals(orderId)) {
+                    req = orr;
+                    break;
+                }
+            }
+        }
+
+        if (req == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Order request not found.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ 防止重复处理
+        if (!"PENDING".equalsIgnoreCase(req.getStatus())) {
+            JOptionPane.showMessageDialog(this,
+                    "This order has already been processed.",
+                    "Already Processed",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Order order = req.getOrder();
+
+        // ✅ 输入处理理由
+        String reason = JOptionPane.showInputDialog(
+                this,
+                "Please enter the reason for accepting this order:",
+                "Accept Order",
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (reason == null || reason.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Reason cannot be empty.",
+                    "Input Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // ✅ 二次确认
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Confirm ACCEPT this order?\n\nOrder ID: " + order.getOrderId()
+                        + "\nBuyer ID: " + order.getBuyerId()
+                        + "\nQuantity: " + order.getQuantity()
+                        + "\n\nReason:\n" + reason,
+                "Confirm Accept",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        // ✅ 执行订单逻辑
+        order.accept();                  // Order 状态 → ACCEPTED
+        req.setStatus("Accepted");       // WorkRequest 状态
+        req.setProcessor(orderProcessorAccount);
+        req.setProcessReason(reason);
+
+        // ✅ （可选）同步回 Buyer 的 WorkQueue
+        // sendResultBackToBuyer(req);
+
+        JOptionPane.showMessageDialog(this,
+                "Order accepted successfully.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        // ✅ 刷新表格
+        loadtable();
+        txtSearch.setText("");
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
+    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+        // TODO add your handling code here:
+        int row = tblOrder.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select an order first.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // ✅ 根据 OrderID 找到 OrderReviewRequest
+        String orderId = (String) tblOrder.getValueAt(row, 0);
+        OrderReviewRequest req = null;
+
+        for (WorkRequest wr : organization.getWorkRequestDirectory().getRequestList()) {
+            if (wr instanceof OrderReviewRequest orr) {
+                if (orr.getOrder().getOrderId().equals(orderId)) {
+                    req = orr;
+                    break;
+                }
+            }
+        }
+
+        if (req == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Order request not found.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ 只能处理 PENDING
+        if (!"PENDING".equalsIgnoreCase(req.getStatus())) {
+            JOptionPane.showMessageDialog(this,
+                    "This order has already been processed.",
+                    "Already Processed",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Order order = req.getOrder();
+
+        // ✅ 输入拒绝理由
+        String reason = JOptionPane.showInputDialog(
+                this,
+                "Enter rejection reason:",
+                "Reject Order",
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (reason == null || reason.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Rejection reason is required.",
+                    "Input Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // ✅ 二次确认
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Confirm REJECT this order?\n\n"
+                        + "Order ID: " + order.getOrderId()
+                        + "\nBuyer ID: " + order.getBuyerId()
+                        + "\nQuantity: " + order.getQuantity()
+                        + "\n\nReason:\n" + reason,
+                "Confirm Rejection",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        // ✅ 执行订单拒绝逻辑
+        order.reject();   // Order 状态 → REJECTED
+        req.setProcessor(orderProcessorAccount);
+        req.setProcessingResult(reason);
+        req.setStatus("Completed");
+
+        JOptionPane.showMessageDialog(this,
+                "Order rejected successfully.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        // ✅ 刷新表格
+        loadtable();
+        txtSearch.setText("");
+    }//GEN-LAST:event_btnRejectActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccept;
+    private javax.swing.JButton btnDescpriton;
+    private javax.swing.JButton btnReject;
     private javax.swing.JButton btnSearch;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblOrder;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
+
+    private void loadtable() {
+        java.util.List<OrderReviewRequest> list = new java.util.ArrayList<>();
+
+        for (WorkRequest wr : organization
+                .getWorkRequestDirectory()
+                .getRequestList()) {
+
+            if (wr instanceof OrderReviewRequest) {
+                list.add((OrderReviewRequest) wr);
+            }
+        }
+
+        refreshTable(list);   // ✅ 统一交给 refreshTable 画表
+    }
+
+    private void refreshTable(List<OrderReviewRequest> list) {
+        DefaultTableModel model = (DefaultTableModel) tblOrder.getModel();
+        model.setRowCount(0);
+
+        for (OrderReviewRequest req : list) {
+
+            // ✅ 只显示仍在处理中的订单请求（和 ListingReview 一致）
+            if (!"Pending".equalsIgnoreCase(req.getStatus())) {
+                continue;
+            }
+
+            Order order = req.getOrder();
+
+            Object[] row = new Object[5];
+            row[0] = order.getOrderId();          // Order ID
+            row[1] = order.getBuyerId();          // Buyer ID
+            row[2] = order.getListingId();        // Listing Title（如需 title，下方说明）
+            row[3] = order.getStatus();           // Order status
+            row[4] = order.getQuantity();         // Quantity
+
+            model.addRow(row);
+        }
+    }
+    
 }

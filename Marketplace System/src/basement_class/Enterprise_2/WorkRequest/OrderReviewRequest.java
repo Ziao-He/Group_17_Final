@@ -16,15 +16,26 @@ public class OrderReviewRequest extends WorkRequest {
 
     private Order order;
 
-    // 操作类型（方便扩展）
-    // buyer_place_order / seller_accept / seller_reject / system_cancel
+    // ======================
+    // Operation Types
+    // ======================
+    public static final String OP_BUYER_PLACE = "buyer_place_order";
+    public static final String OP_SELLER_ACCEPT = "seller_accept";
+    public static final String OP_SELLER_REJECT = "seller_reject";
+    public static final String OP_SYSTEM_CANCEL = "system_cancel";
+
+    // 操作类型
     private String operationType;
 
-    // Buyer / Processor 备注
+    // Buyer / Processor 提交时的备注
     private String message;
 
-    // OrderProcessor 的处理结果说明
+    // ✅ OrderProcessor 的处理结果说明（Accept / Reject 理由）
     private String processingResult;
+
+    // ✅ 谁处理了这个订单（OrderProcessor）
+    private UserAccount processor;
+    private String processReason;
 
     /**
      * Buyer creates a new order request
@@ -36,7 +47,7 @@ public class OrderReviewRequest extends WorkRequest {
 
         super();
         this.order = order;
-        this.operationType = "buyer_place_order";
+        this.operationType = OP_BUYER_PLACE;
         this.message = message;
         this.setSender(buyer);
         this.setStatus("Pending");
@@ -65,24 +76,20 @@ public class OrderReviewRequest extends WorkRequest {
         return order;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
-    }
-
     public String getOperationType() {
         return operationType;
-    }
-
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public UserAccount getProcessor() {
+        return processor;
+    }
+
+    public void setProcessor(UserAccount processor) {
+        this.processor = processor;
     }
 
     public String getProcessingResult() {
@@ -91,6 +98,10 @@ public class OrderReviewRequest extends WorkRequest {
 
     public void setProcessingResult(String processingResult) {
         this.processingResult = processingResult;
+    }
+    
+    public void setProcessReason(String processReason) {
+        this.processReason = processReason;
     }
 
     @Override
