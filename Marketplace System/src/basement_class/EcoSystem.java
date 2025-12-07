@@ -17,14 +17,6 @@ public class EcoSystem {
     private ArrayList<Network> networks;
     private UserAccountDirectory userAccountDirectory;
     private WorkRequestDirectory workRequestDirectory;
-
-    public MessageDirectory getMessageDirectory() {
-        return messageDirectory;
-    }
-
-    public void setMessageDirectory(MessageDirectory messageDirectory) {
-        this.messageDirectory = messageDirectory;
-    }
     private ListingDirectory listingDirectory;
     private MessageDirectory messageDirectory;
 
@@ -65,7 +57,13 @@ public class EcoSystem {
     public ArrayList<Network> getNetworks() {
         return networks;
     }
-    
+        public MessageDirectory getMessageDirectory() {
+        return messageDirectory;
+    }
+
+    public void setMessageDirectory(MessageDirectory messageDirectory) {
+        this.messageDirectory = messageDirectory;
+    }
     public void setNetworks(ArrayList<Network> networks) {
         this.networks = networks;
     }
@@ -90,6 +88,7 @@ public class EcoSystem {
         this.workRequestDirectory = workRequestDirectory;
     }
 
+    
 //    public Listing findListingById(String id) {
 //    for (Network n : networks) {
 //        for (Enterprise e : n.getEnterprises()) {
