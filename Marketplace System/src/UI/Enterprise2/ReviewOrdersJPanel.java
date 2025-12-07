@@ -6,9 +6,13 @@ package UI.Enterprise2;
 
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
+import basement_class.Enterprise_1.Organization.OrderSelfTrackerOrganization;
+import basement_class.Enterprise_1.WorkRequest.OrderProcessingResultRequest;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.WorkRequest.OrderReviewRequest;
+import basement_class.Network;
 import basement_class.Organization;
+import basement_class.UserAccount;
 import basement_class.WorkRequest;
 import common_class.Order;
 import java.util.List;
@@ -216,9 +220,9 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 从 WorkRequestDirectory 中拿 OrderReviewRequest
-        OrderReviewRequest req = null;
+        // ✅ 根据 OrderID 找到 OrderReviewRequest
         String orderId = (String) tblOrder.getValueAt(row, 0);
+        OrderReviewRequest req = null;
 
         for (WorkRequest wr : organization.getWorkRequestDirectory().getRequestList()) {
             if (wr instanceof OrderReviewRequest orr) {
@@ -237,7 +241,7 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 防止重复处理
+        // ✅ 只能处理 PENDING
         if (!"PENDING".equalsIgnoreCase(req.getStatus())) {
             JOptionPane.showMessageDialog(this,
                     "This order has already been processed.",
@@ -248,7 +252,7 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
 
         Order order = req.getOrder();
 
-        // ✅ 输入处理理由
+        // ✅ 输入接受理由
         String reason = JOptionPane.showInputDialog(
                 this,
                 "Please enter the reason for accepting this order:",
@@ -267,7 +271,8 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         // ✅ 二次确认
         int confirm = JOptionPane.showConfirmDialog(
                 this,
-                "Confirm ACCEPT this order?\n\nOrder ID: " + order.getOrderId()
+                "Confirm ACCEPT this order?\n\n"
+                        + "Order ID: " + order.getOrderId()
                         + "\nBuyer ID: " + order.getBuyerId()
                         + "\nQuantity: " + order.getQuantity()
                         + "\n\nReason:\n" + reason,
@@ -279,23 +284,63 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 执行订单逻辑
-        order.accept();                  // Order 状态 → ACCEPTED
-        req.setStatus("Accepted");       // WorkRequest 状态
-        req.setProcessor(orderProcessorAccount);
-        req.setProcessReason(reason);
-        system.getOrderDirectory().updateOrder(order);
-        // ✅ （可选）同步回 Buyer 的 WorkQueue
-        // sendResultBackToBuyer(req);
+        // =========================================================
+        // ✅ ✅ ✅ 正式执行业务逻辑
+        // =========================================================
 
+        // 1️⃣ 更新 Order 状态（全局）
+        order.accept();   // → ACCEPTED
+        system.getOrderDirectory().updateOrder(order);
+
+        // 2️⃣ 更新 OrderReviewRequest
+        req.setStatus("Completed");
+        req.setProcessor(orderProcessorAccount);
+        req.setProcessingResult(reason);
+
+        // 3️⃣ ✅ 创建处理结果回传给 Buyer
+        OrderProcessingResultRequest resultRequest =
+                new OrderProcessingResultRequest(
+                        orderProcessorAccount,
+                        order,
+                        OrderProcessingResultRequest.OP_ACCEPT,
+                        reason
+                );
+
+        // 4️⃣ ✅ 找到 OrderSelfTrackerOrganization
+        OrderSelfTrackerOrganization trackerOrg = null;
+        for (Network n : system.getNetworks()) {
+            for (Enterprise e : n.getEnterprises()) {
+                for (Organization org : e.getOrganizations()) {
+                    if (org instanceof OrderSelfTrackerOrganization) {
+                        trackerOrg = (OrderSelfTrackerOrganization) org;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (trackerOrg != null) {
+            UserAccount buyer =
+                    system.getUserAccountDirectory()
+                            .findByUserId(order.getBuyerId());
+
+            resultRequest.setReceiver(buyer);
+            trackerOrg.getWorkRequestDirectory().addWorkRequest(resultRequest);
+        } else {
+            System.err.println("⚠ OrderSelfTrackerOrganization not found!");
+        }
+
+        // =========================================================
+        // ✅ 完成提示 + 刷新
+        // =========================================================
         JOptionPane.showMessageDialog(this,
                 "Order accepted successfully.",
                 "Success",
                 JOptionPane.INFORMATION_MESSAGE);
 
-        // ✅ 刷新表格
         loadtable();
         txtSearch.setText("");
+
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
@@ -373,18 +418,61 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 执行订单拒绝逻辑
-        order.reject();   // Order 状态 → REJECTED
+        // =========================================================
+        // ✅ ✅ ✅ 正式执行业务逻辑
+        // =========================================================
+
+        // 1️⃣ 更新 Order 状态（全局）
+        order.reject();   // → REJECTED
+        system.getOrderDirectory().updateOrder(order);
+
+        // 2️⃣ 更新 OrderReviewRequest
+        req.setStatus("Completed");
         req.setProcessor(orderProcessorAccount);
         req.setProcessingResult(reason);
-        req.setStatus("Completed");
-        system.getOrderDirectory().updateOrder(order);
+
+        // 3️⃣ ✅ 创建处理结果回传给 Buyer
+        OrderProcessingResultRequest resultRequest =
+                new OrderProcessingResultRequest(
+                        orderProcessorAccount,
+                        order,
+                        OrderProcessingResultRequest.OP_REJECT,
+                        reason
+                );
+
+        // 4️⃣ ✅ 找到 OrderSelfTrackerOrganization
+        OrderSelfTrackerOrganization trackerOrg = null;
+
+        for (Network n : system.getNetworks()) {
+            for (Enterprise e : n.getEnterprises()) {
+                for (Organization org : e.getOrganizations()) {
+                    if (org instanceof OrderSelfTrackerOrganization) {
+                        trackerOrg = (OrderSelfTrackerOrganization) org;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (trackerOrg != null) {
+            UserAccount buyer =
+                    system.getUserAccountDirectory()
+                            .findByUserId(order.getBuyerId());
+
+            resultRequest.setReceiver(buyer);
+            trackerOrg.getWorkRequestDirectory().addWorkRequest(resultRequest);
+        } else {
+            System.err.println("⚠ OrderSelfTrackerOrganization not found!");
+        }
+
+        // =========================================================
+        // ✅ 完成提示 + 刷新
+        // =========================================================
         JOptionPane.showMessageDialog(this,
                 "Order rejected successfully.",
                 "Success",
                 JOptionPane.INFORMATION_MESSAGE);
 
-        // ✅ 刷新表格
         loadtable();
         txtSearch.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
