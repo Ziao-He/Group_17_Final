@@ -4,13 +4,16 @@
  */
 package UI.Enterprise3;
 
+import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_3.Organization.ContentControlOrganization;
 import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -208,7 +211,15 @@ public class AdminJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPolicyEnforcementActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
+
+    JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+    // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
+    mainFrame.dispose();
+
+    // ✅ 3️⃣ 用【同一个 system】重新打开 Login
+    LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
+    loginPage.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
