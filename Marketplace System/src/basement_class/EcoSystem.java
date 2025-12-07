@@ -94,9 +94,6 @@ public class EcoSystem {
 //    return null;
 //}
 
-    public ListingDirectory getListingDirectory() {
-        return listingDirectory;
-    }
 
     public void setListingDirectory(ListingDirectory listingDirectory) {
         this.listingDirectory = listingDirectory;

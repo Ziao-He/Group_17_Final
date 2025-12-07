@@ -9,8 +9,8 @@ import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.ListingDirectory;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author bob-h
@@ -19,17 +19,30 @@ public class BrowseWorkArea extends javax.swing.JPanel {
 
     private BuyerAccount buyerAccount;
     private EcoSystem system;
-    private BuyerJPanel parentPanel;  // Reference to parent
+    private BuyerJPanel parentPanel;
     /**
      * Creates new form BrowseWorkArea
      */
     public BrowseWorkArea(BuyerAccount buyerAccount, EcoSystem system, BuyerJPanel parent) {
-        initComponents();
         this.buyerAccount = buyerAccount;
         this.system = system;
         this.parentPanel = parent;
         
         initComponents();
+        
+        // Add listener for combo box
+        cmbCategoryForListing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCategoryForListingActionPerformed(evt);
+            }
+        });
+        
+        // Add listener for detail button
+        btnDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailActionPerformed(evt);
+            }
+        });
         
         // Load listings on creation
         refreshListings();
@@ -49,6 +62,7 @@ public class BrowseWorkArea extends javax.swing.JPanel {
         btnCheck = new javax.swing.JButton();
         btnDetail = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
+        cmbCategoryForListing = new javax.swing.JComboBox<>();
 
         tblListing.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -71,11 +85,23 @@ public class BrowseWorkArea extends javax.swing.JPanel {
         });
 
         btnDetail.setText("Detailed");
+        btnDetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailActionPerformed(evt);
+            }
+        });
 
         btnAdd.setText("Add");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
+            }
+        });
+
+        cmbCategoryForListing.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Normal", "Favorites" }));
+        cmbCategoryForListing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCategoryForListingActionPerformed(evt);
             }
         });
 
@@ -86,67 +112,176 @@ public class BrowseWorkArea extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1094, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(325, 325, 325)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(btnAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 397, Short.MAX_VALUE)
-                        .addComponent(btnDetail, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cmbCategoryForListing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAdd)
+                    .addComponent(cmbCategoryForListing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCheck, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDetail)
-                    .addComponent(btnAdd))
+                    .addComponent(btnDetail))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckActionPerformed
-        // TODO add your handling code here:
+        // Add selected listing to cart
+        if (parentPanel != null) {
+            parentPanel.showShoppingCart();
+        }
     }//GEN-LAST:event_btnCheckActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
+        Listing selected = getSelectedListing();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a product first",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Check if it's user's own listing
+        if (selected.getSeller().getUserId().equals(buyerAccount.getUserId())) {
+            JOptionPane.showMessageDialog(this,
+                "Cannot add your own product to cart",
+                "Invalid Operation",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Check if listing is available
+        if (!"Approved".equals(selected.getStatus())) {
+            JOptionPane.showMessageDialog(this,
+                "This product is not available for purchase",
+                "Unavailable",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Add to cart through parent panel
+        parentPanel.addToCart(selected);
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void cmbCategoryForListingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoryForListingActionPerformed
+        // TODO add your handling code here:
+        int selectedIndex = cmbCategoryForListing.getSelectedIndex();
+        if (selectedIndex == 0) {
+            // Normal view - show all products
+            refreshListings();
+        } else if (selectedIndex == 1) {
+            // Favorites view
+            showFavorites();
+        }
+    }//GEN-LAST:event_cmbCategoryForListingActionPerformed
+
+    private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
+        // TODO add your handling code here:
+        // Show detailed view
+        Listing selected = getSelectedListing();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a product first",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Create and show detail panel
+        ListingDetailWorkArea detailPanel = new ListingDetailWorkArea(
+            selected, buyerAccount, system, parentPanel
+        );
+        
+        // Add to parent's card layout and show
+        parentPanel.showDetailPanel(detailPanel);
+    }//GEN-LAST:event_btnDetailActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnCheck;
     private javax.swing.JButton btnDetail;
+    private javax.swing.JComboBox<String> cmbCategoryForListing;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblListing;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Refresh all approved listings
+     */
     public void refreshListings() {
         ListingDirectory listingDir = system.getListingDirectory();
         List<Listing> listings = listingDir.findByStatus("Approved");
         
+        displayListings(listings);
+    }
+    
+    /**
+     * Show only favorite listings
+     */
+    private void showFavorites() {
+        ListingDirectory listingDir = system.getListingDirectory();
+        List<String> favoriteIds = buyerAccount.getFavoriteListingIds();
+        
+        DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
+        model.setRowCount(0);
+        
+        for (String listingId : favoriteIds) {
+            Listing listing = listingDir.findById(listingId);
+            if (listing != null && "Approved".equals(listing.getStatus())) {
+                addListingToTable(listing, model);
+            }
+        }
+    }
+    
+    /**
+     * Display a list of listings in the table
+     */
+    private void displayListings(List<Listing> listings) {
         DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
         model.setRowCount(0);
         
         for (Listing listing : listings) {
-            Object[] row = {
-                listing.getId(),
-                listing.getTitle(),
-                "Unknown",  // Category - if Listing doesn't have category
-                listing.getPrice(),
-                "Unknown",  // Condition - if Listing doesn't have condition
-                listing.getStatus(),
-                listing.getSeller().getUsername()
-            };
-            model.addRow(row);
+            addListingToTable(listing, model);
         }
     }
     
+    /**
+     * Add a single listing to the table
+     */
+    private void addListingToTable(Listing listing, DefaultTableModel model) {
+        Object[] row = {
+            listing.getId(),
+            listing.getTitle(),
+            "General",  // Category - placeholder
+            String.format("$%.2f", listing.getPrice()),
+            "Good",  // Condition - placeholder
+            listing.getStatus(),
+            listing.getSeller().getUsername()
+        };
+        model.addRow(row);
+    }
+    
+    /**
+     * Get the currently selected listing
+     */
     public Listing getSelectedListing() {
         int selectedRow = tblListing.getSelectedRow();
         if (selectedRow == -1) {
@@ -156,5 +291,4 @@ public class BrowseWorkArea extends javax.swing.JPanel {
         String listingId = (String) tblListing.getValueAt(selectedRow, 0);
         return system.getListingDirectory().findById(listingId);
     }
-    
 }

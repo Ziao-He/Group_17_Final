@@ -129,4 +129,19 @@ public class BuyerAccount extends UserAccount {
     public void setOrderIds(List<String> orderIds) {
         this.orderIds = orderIds;
     }
+
+    public List<String> getFavoriteListingIds() {
+        return favoriteListingIds;
+    }
+
+    public void setFavoriteListingIds(List<String> favoriteListingIds) {
+        this.favoriteListingIds = favoriteListingIds;
+    }
+    
+    public boolean isFavorite(String listingId) {
+        if (favoriteListingIds == null) {
+            return false;
+        }
+        return favoriteListingIds.contains(listingId);
+    }
 }

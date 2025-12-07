@@ -4,17 +4,37 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_2.Listing;
+import java.awt.Image;
+import java.io.File;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author bob-h
  */
 public class ListingDetailWorkArea extends javax.swing.JPanel {
 
+    private Listing listing;
+    private BuyerAccount buyerAccount;
+    private EcoSystem system;
+    private BuyerJPanel parentPanel;
     /**
      * Creates new form ListingDetailWorkArea
      */
-    public ListingDetailWorkArea() {
+    public ListingDetailWorkArea(Listing listing, BuyerAccount buyerAccount,EcoSystem system, BuyerJPanel parentPanel) {
+        this.listing = listing;
+        this.buyerAccount = buyerAccount;
+        this.system = system;
+        this.parentPanel = parentPanel;
+        
         initComponents();
+        
+        // Load listing details
+        loadListingDetails();
     }
 
     /**
@@ -55,8 +75,9 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         txtPostedDate = new javax.swing.JTextField();
         btnTalkWithUser = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
+        btnAddfavorite = new javax.swing.JButton();
         PhotoJpanel = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
+        Picture = new javax.swing.JLabel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -104,11 +125,23 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         lblPostedDate.setText("Posted Date:");
 
         btnTalkWithUser.setText("Talk with Seller");
+        btnTalkWithUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTalkWithUserActionPerformed(evt);
+            }
+        });
 
         btnBack.setText("Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBackActionPerformed(evt);
+            }
+        });
+
+        btnAddfavorite.setText("Add");
+        btnAddfavorite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddfavoriteActionPerformed(evt);
             }
         });
 
@@ -147,11 +180,6 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                             .addComponent(txtPostedDate, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(ListingJpanelLayout.createSequentialGroup()
                         .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnTalkWithUser)
-                            .addComponent(btnBack))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(ListingJpanelLayout.createSequentialGroup()
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblCategory)
                             .addComponent(lblCondition)
                             .addComponent(lblListingID))
@@ -159,14 +187,24 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                         .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtListingID)
                             .addComponent(txtCategory)
-                            .addComponent(txtCondition))))
+                            .addComponent(txtCondition)))
+                    .addGroup(ListingJpanelLayout.createSequentialGroup()
+                        .addComponent(btnTalkWithUser)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(ListingJpanelLayout.createSequentialGroup()
+                        .addComponent(btnBack)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAddfavorite)))
                 .addContainerGap())
         );
         ListingJpanelLayout.setVerticalGroup(
             ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ListingJpanelLayout.createSequentialGroup()
-                .addComponent(btnBack)
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
+                .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBack)
+                    .addComponent(btnAddfavorite))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblListingID)
                     .addComponent(txtListingID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -210,15 +248,15 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(btnTalkWithUser))
                     .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
 
         jSplitPane2.setLeftComponent(ListingJpanel);
 
         PhotoJpanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel12.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 36)); // NOI18N
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        Picture.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 36)); // NOI18N
+        Picture.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout PhotoJpanelLayout = new javax.swing.GroupLayout(PhotoJpanel);
         PhotoJpanel.setLayout(PhotoJpanelLayout);
@@ -226,14 +264,14 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
             PhotoJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PhotoJpanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+                .addComponent(Picture, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
                 .addContainerGap())
         );
         PhotoJpanelLayout.setVerticalGroup(
             PhotoJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PhotoJpanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
+                .addComponent(Picture, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -245,17 +283,54 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
+        // Go back to browse view
+        if (parentPanel != null) {
+            parentPanel.hideDetailPanel();
+        }
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnTalkWithUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTalkWithUserActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTalkWithUserActionPerformed
+
+    private void btnAddfavoriteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddfavoriteActionPerformed
+        // TODO add your handling code here:
+        // Add or remove from favorites
+        if (listing == null) {
+            return;
+        }
+        
+        String listingId = listing.getId();
+        
+        // Check if already in favorites
+        if (buyerAccount.isFavorite(listingId)) {
+            // Remove from favorites
+            buyerAccount.removeFromFavorites(listingId);
+            btnAddfavorite.setText("Add to Favorites");
+            JOptionPane.showMessageDialog(this,
+                "Removed from favorites",
+                "Favorites Updated",
+                JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Add to favorites
+            buyerAccount.addToFavorites(listingId);
+            btnAddfavorite.setText("Remove from Favorites");
+            JOptionPane.showMessageDialog(this,
+                "Added to favorites",
+                "Favorites Updated",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnAddfavoriteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane DescriJpanel;
     private javax.swing.JPanel ListingJpanel;
     private javax.swing.JPanel PhotoJpanel;
+    private javax.swing.JLabel Picture;
+    private javax.swing.JButton btnAddfavorite;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnTalkWithUser;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
@@ -282,4 +357,87 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
     private javax.swing.JTextField txtRating;
     private javax.swing.JTextField txtSellerUser;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Load listing details into UI components
+     */
+    private void loadListingDetails() {
+        if (listing == null) {
+            return;
+        }
+        
+        // Set title
+        lblTitle.setText(listing.getTitle());
+        
+        // Basic information
+        txtListingID.setText(listing.getId());
+        txtCategory.setText("General"); // Placeholder - second-hand items
+        txtCondition.setText("Used"); // Placeholder - since it's second-hand
+        txtPrice.setText(String.format("$%.2f", listing.getPrice()));
+        
+        // Quantity is always 1 for second-hand items (no need to display)
+        
+        // Negotiable (placeholder - assume yes for second-hand)
+        rbnYes.setSelected(true);
+        rbnNo.setSelected(false);
+        
+        // Description
+        txtAreaDescri.setText(listing.getDescription());
+        
+        // Seller information
+        if (listing.getSeller() != null) {
+            txtSellerUser.setText(listing.getSeller().getUsername());
+        }
+        txtRating.setText("4.5/5.0"); // Placeholder rating
+        
+        // Check if in favorites and update button text
+        if (buyerAccount.isFavorite(listing.getId())) {
+            btnAddfavorite.setText("Remove from Favorites");
+        } else {
+            btnAddfavorite.setText("Add to Favorites");
+        }
+        
+        txtFavoriteCount.setText("N/A"); // Placeholder
+        
+        // Posted date
+        if (listing.getSubmitTime() != null) {
+            txtPostedDate.setText(listing.getSubmitTime().toString());
+        } else {
+            txtPostedDate.setText("N/A");
+        }
+        
+        // Load image
+        loadImage();
+    }
+    
+    /**
+     * Load product image
+     */
+    private void loadImage() {
+        if (listing == null) {
+            Picture.setText("No Image Available");
+            return;
+        }
+        
+        String imagePath = listing.getImagePath();
+        if (imagePath != null && !imagePath.isEmpty()) {
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                try {
+                    ImageIcon icon = new ImageIcon(imagePath);
+                    Image img = icon.getImage();
+                    // Scale image to fit label (600x600)
+                    Image scaledImg = img.getScaledInstance(600, 600, Image.SCALE_SMOOTH);
+                    Picture.setIcon(new ImageIcon(scaledImg));
+                    Picture.setText("");
+                } catch (Exception e) {
+                    Picture.setText("Image Load Error");
+                }
+            } else {
+                Picture.setText("No Image Available");
+            }
+        } else {
+            Picture.setText("No Image Available");
+        }
+    }
 }
