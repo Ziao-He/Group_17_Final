@@ -4,17 +4,35 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_2.ListingDirectory;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author bob-h
  */
 public class BrowseWorkArea extends javax.swing.JPanel {
 
+    private BuyerAccount buyerAccount;
+    private EcoSystem system;
+    private BuyerJPanel parentPanel;  // Reference to parent
     /**
      * Creates new form BrowseWorkArea
      */
-    public BrowseWorkArea() {
+    public BrowseWorkArea(BuyerAccount buyerAccount, EcoSystem system, BuyerJPanel parent) {
         initComponents();
+        this.buyerAccount = buyerAccount;
+        this.system = system;
+        this.parentPanel = parent;
+        
+        initComponents();
+        
+        // Load listings on creation
+        refreshListings();
     }
 
     /**
@@ -107,4 +125,36 @@ public class BrowseWorkArea extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblListing;
     // End of variables declaration//GEN-END:variables
+
+    public void refreshListings() {
+        ListingDirectory listingDir = system.getListingDirectory();
+        List<Listing> listings = listingDir.findByStatus("Approved");
+        
+        DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
+        model.setRowCount(0);
+        
+        for (Listing listing : listings) {
+            Object[] row = {
+                listing.getId(),
+                listing.getTitle(),
+                "Unknown",  // Category - if Listing doesn't have category
+                listing.getPrice(),
+                "Unknown",  // Condition - if Listing doesn't have condition
+                listing.getStatus(),
+                listing.getSeller().getUsername()
+            };
+            model.addRow(row);
+        }
+    }
+    
+    public Listing getSelectedListing() {
+        int selectedRow = tblListing.getSelectedRow();
+        if (selectedRow == -1) {
+            return null;
+        }
+        
+        String listingId = (String) tblListing.getValueAt(selectedRow, 0);
+        return system.getListingDirectory().findById(listingId);
+    }
+    
 }

@@ -4,11 +4,27 @@
  */
 package UI.Enterprise1;
 
+import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import basement_class.*;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_1.Account.BuyerProfile;
+import basement_class.Enterprise_1.Role.*;
+import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_2.ListingDirectory;
+import basement_class.DAO.OrderDao;
+import javax.swing.table.DefaultTableModel;
+import java.awt.CardLayout;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -20,16 +36,35 @@ public class BuyerJPanel extends javax.swing.JPanel {
     private Organization organization;
     private Enterprise enterprise;
     private EcoSystem system;
+    
+    // Shopping cart - stores selected listings
+    private List<Listing> shoppingCart;
+    
+    // References to work area panels
+    private BrowseWorkArea browsePanel;
+    private ShoppongCartWorkArea cartPanel;
+    private PersonalJPanel personalPanel;
+    
+    // Current active panel (to know which panel is showing)
+    private String currentPanel;
     /**
      * Creates new form BuyerJPanel
      */
     public BuyerJPanel(BuyerAccount buyerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
-        initComponents();
         this.buyerAccount = buyerAccount;
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;
-    
+        this.shoppingCart = new ArrayList<>();
+        this.currentPanel = "";
+        
+        initComponents();
+        
+        // Initialize work area panels
+        initializeWorkAreaPanels();
+        
+        // Show browse panel by default
+        showBrowsePanel();
     }
 
     /**
@@ -45,11 +80,11 @@ public class BuyerJPanel extends javax.swing.JPanel {
         controlJPanel = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
         btnBrowse = new javax.swing.JButton();
-        btnAddOrder = new javax.swing.JButton();
+        btnShoppingCart = new javax.swing.JButton();
         btnPersonal = new javax.swing.JButton();
         cmbRole = new javax.swing.JComboBox<>();
         btnSwitch = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnAddFavorites = new javax.swing.JButton();
         workArea = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -72,10 +107,10 @@ public class BuyerJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnAddOrder.setText("Shopping Cart");
-        btnAddOrder.addActionListener(new java.awt.event.ActionListener() {
+        btnShoppingCart.setText("Shopping Cart");
+        btnShoppingCart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddOrderActionPerformed(evt);
+                btnShoppingCartActionPerformed(evt);
             }
         });
 
@@ -89,8 +124,18 @@ public class BuyerJPanel extends javax.swing.JPanel {
         cmbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buyer", "Advanced Search", "Order History" }));
 
         btnSwitch.setText("Switch");
+        btnSwitch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSwitchActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("Add to favorites");
+        btnAddFavorites.setText("Add to favorites");
+        btnAddFavorites.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddFavoritesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
         controlJPanel.setLayout(controlJPanelLayout);
@@ -100,14 +145,14 @@ public class BuyerJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAddOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnShoppingCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPersonal, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout))
                     .addComponent(cmbRole, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnAddFavorites, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         controlJPanelLayout.setVerticalGroup(
@@ -116,11 +161,11 @@ public class BuyerJPanel extends javax.swing.JPanel {
                 .addGap(24, 24, 24)
                 .addComponent(btnBrowse)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAddOrder)
+                .addComponent(btnShoppingCart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnPersonal)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(btnAddFavorites)
                 .addGap(138, 138, 138)
                 .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -139,32 +184,188 @@ public class BuyerJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseActionPerformed
-
+        showBrowsePanel();
+        browsePanel.refreshListings();  // Reload listings
     }//GEN-LAST:event_btnBrowseActionPerformed
 
-    private void btnAddOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOrderActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAddOrderActionPerformed
+    private void btnShoppingCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShoppingCartActionPerformed
+        CardLayout cl = (CardLayout) workArea.getLayout();
+        cl.show(workArea, "CartCard");
+        currentPanel = "CartCard";
+        updateButtonStates();
+
+        // Refresh cart display
+        cartPanel.refreshCart();
+    }//GEN-LAST:event_btnShoppingCartActionPerformed
 
     private void btnPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonalActionPerformed
         // TODO add your handling code here:
+        CardLayout cl = (CardLayout) workArea.getLayout();
+        cl.show(workArea, "PersonalCard");
+        currentPanel = "PersonalCard";
+        updateButtonStates();
+
+        // Refresh personal info
+        personalPanel.loadPersonalInfo();
     }//GEN-LAST:event_btnPersonalActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Are you sure you want to logout?",
+            "Confirm Logout",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            if (frame != null) {
+                // Don't create new LoginPage - use CardLayout to go back
+                // Or save the original LoginPage reference
+
+                // For now, recreate but don't re-initialize
+                LoginPage loginPage = new LoginPage();
+                frame.setContentPane(loginPage.getContentPane());
+                frame.revalidate();
+                frame.repaint();
+            }
+        }
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnAddFavoritesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddFavoritesActionPerformed
+        // TODO add your handling code here:
+        if (!isOnBrowsePanel()) {
+            JOptionPane.showMessageDialog(this,
+                "Please go to Browse Products to add favorites",
+                "Not Available",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Get selected listing from browse panel
+        Listing selected = browsePanel.getSelectedListing();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a listing first",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Add to buyer's favorites
+        buyerAccount.addToFavorites(selected.getId());
+
+        JOptionPane.showMessageDialog(this,
+            "Added to favorites: " + selected.getTitle(),
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnAddFavoritesActionPerformed
+
+    private void btnSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchActionPerformed
+        // TODO add your handling code here:
+        String selectedRole = (String) cmbRole.getSelectedItem();
+    
+        if (selectedRole == null) {
+            return;
+        }
+
+        Role newRole = null;
+
+        if (selectedRole.equals("Advanced Search")) {
+            newRole = new ProductSearcherRole();
+        } else if (selectedRole.equals("Order History")) {
+            newRole = new OrderTrackerRole();
+        } else {
+            // Already in Buyer role
+            return;
+        }
+
+        // Update account role
+        buyerAccount.setRole(newRole);
+
+        // Create new work area
+        JPanel newWorkArea = newRole.createWorkArea(
+            buyerAccount, organization, enterprise, system
+        );
+
+        // Switch content
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (frame != null) {
+            frame.setContentPane(newWorkArea);
+            frame.revalidate();
+            frame.repaint();
+        }
+    }//GEN-LAST:event_btnSwitchActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddOrder;
+    private javax.swing.JButton btnAddFavorites;
     private javax.swing.JButton btnBrowse;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnPersonal;
+    private javax.swing.JButton btnShoppingCart;
     private javax.swing.JButton btnSwitch;
     private javax.swing.JComboBox<String> cmbRole;
     private javax.swing.JPanel controlJPanel;
     private javax.swing.JSplitPane functionJPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel workArea;
     // End of variables declaration//GEN-END:variables
+
+    private void initializeWorkAreaPanels() {
+        // Create panels
+        browsePanel = new BrowseWorkArea(buyerAccount, system, this);
+        cartPanel = new ShoppongCartWorkArea(buyerAccount, system, shoppingCart);
+        personalPanel = new PersonalJPanel(buyerAccount, system);
+        
+        // Add to workArea with CardLayout
+        workArea.removeAll();
+        workArea.setLayout(new CardLayout());
+        workArea.add(browsePanel, "BrowseCard");
+        workArea.add(cartPanel, "CartCard");
+        workArea.add(personalPanel, "PersonalCard");
+    }
+    
+        /**
+     * Get shopping cart
+     */
+    public List<Listing> getShoppingCart() {
+        return shoppingCart;
+    }
+    
+    /**
+     * Add listing to shopping cart
+     */
+    public void addToCart(Listing listing) {
+        if (!shoppingCart.contains(listing)) {
+            shoppingCart.add(listing);
+            JOptionPane.showMessageDialog(this, 
+                "Added to cart: " + listing.getTitle(),
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    
+        /**
+     * Check if currently on browse panel
+     */
+    public boolean isOnBrowsePanel() {
+        return "BrowseCard".equals(currentPanel);
+    }
+    
+    /**
+     * Show browse panel
+     */
+    private void showBrowsePanel() {
+        CardLayout cl = (CardLayout) workArea.getLayout();
+        cl.show(workArea, "BrowseCard");
+        currentPanel = "BrowseCard";
+        updateButtonStates();
+    }
+    
+    /**
+     * Update button states based on current panel
+     */
+    private void updateButtonStates() {
+        // Enable/disable "Add to favorites" based on current panel
+        btnAddFavorites.setEnabled(isOnBrowsePanel());
+    }
 }

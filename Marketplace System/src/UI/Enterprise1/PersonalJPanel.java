@@ -4,17 +4,28 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_1.Account.BuyerProfile;
+
 /**
  *
  * @author bob-h
  */
 public class PersonalJPanel extends javax.swing.JPanel {
-
+    
+    private BuyerAccount buyerAccount;
+    private EcoSystem system;
     /**
      * Creates new form PersonalJPanel
      */
-    public PersonalJPanel() {
+    public PersonalJPanel(BuyerAccount buyerAccount, EcoSystem system) {
+        this.buyerAccount = buyerAccount;
+        this.system = system;
         initComponents();
+        
+        // Load profile data
+        loadPersonalInfo();
     }
 
     /**
@@ -264,4 +275,20 @@ public class PersonalJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtTime;
     private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
+
+    public void loadPersonalInfo() {
+        BuyerProfile profile = buyerAccount.getProfile();
+        
+        // Set profile fields (你需要添加这些 text field components)
+        // txtFullName.setText(profile.getFullName());
+        // txtEmail.setText(profile.getEmail());
+        // txtPhone.setText(profile.getPhoneNumber());
+        // txtAddress.setText(profile.getAddress());
+        
+        // Set account statistics
+        // lblTotalOrders.setText("Total Orders: " + buyerAccount.getTotalPurchases());
+        // lblCompleted.setText("Completed: " + buyerAccount.getCompletedPurchases());
+        // lblPoints.setText("Points: " + buyerAccount.getPoints());
+    }
+    
 }
