@@ -5,11 +5,15 @@
 package UI.Enterprise1;
 
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import basement_class.WorkRequest;
 import basement_class.WorkRequestDirectory;
 import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_1.Organization.OrderSelfTrackerOrganization;
 import basement_class.Enterprise_1.WorkRequest.OrderProcessingResultRequest;
 import basement_class.Enterprise_2.Listing;
+import basement_class.Network;
+import basement_class.Organization;
 import common_class.Order;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,22 +28,23 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
     private BuyerAccount buyerAccount;
     private EcoSystem system;
 
+    // Requests currently displayed in the JTable (one-to-one with rows)
     private List<OrderProcessingResultRequest> displayedRequests = new ArrayList<>();
-
-
+    
     private String currentFilter = "All";
-    /**
-     * Creates new form TrackingOrderStatus
-     */
+
+    /** Constructor used by GUI builder (preview only) */
     public TrackingOrderStatus() {
         initComponents();
+        initCustomComponents();
     }
-    
+
+    /** Constructor used at runtime */
     public TrackingOrderStatus(BuyerAccount buyerAccount, EcoSystem system) {
-        this(); 
+        this();
         this.buyerAccount = buyerAccount;
         this.system = system;
-        refreshData(); 
+        refreshData();
     }
 
     /**
@@ -78,7 +83,18 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
 
         lblFilters.setText("Filters:");
 
+        cmbFilters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbFiltersActionPerformed(evt);
+            }
+        });
+
         btnApply.setText("Apply");
+        btnApply.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApplyActionPerformed(evt);
+            }
+        });
 
         tblRequest.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -94,6 +110,11 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         jScrollPane1.setViewportView(tblRequest);
 
         btnComplete.setText("Complete");
+        btnComplete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompleteActionPerformed(evt);
+            }
+        });
 
         btnCancel.setText("Cancel");
 
@@ -181,6 +202,19 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cmbFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFiltersActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbFiltersActionPerformed
+
+    private void btnCompleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnCompleteActionPerformed
+
+    private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnApplyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
@@ -201,30 +235,78 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 
+    /** Initialize UI logic after Swing components are created */
+    private void initCustomComponents() {
+        // Summary fields should not be editable
+        txtTotal.setEditable(false);
+        txtPending.setEditable(false);
+        txtCompleted.setEditable(false);
+        txtCancel.setEditable(false);
+
+        // Initialize filter combo box
+        cmbFilters.removeAllItems();
+        cmbFilters.addItem("All");
+        cmbFilters.addItem("Pending");
+        cmbFilters.addItem("Completed");
+        cmbFilters.addItem("Canceled");
+
+        // Button actions
+        btnApply.addActionListener(e -> {
+            String selected = (String) cmbFilters.getSelectedItem();
+            if (selected == null) selected = "All";
+            currentFilter = selected;
+            populateTable(currentFilter);
+        });
+
+        btnComplete.addActionListener(e -> handleComplete());
+        btnCancel.addActionListener(e -> handleCancel());
+    }
+
+    /** Public API: refresh using current filter */
     public void refreshData() {
         populateTable(currentFilter);
     }
-    
+
+    /** Public API: set filter then refresh */
     public void applyFilter(String status) {
-        if (status == null || status.isEmpty()) {
-            status = "All";
-        }
+        if (status == null || status.isEmpty()) status = "All";
         currentFilter = status;
         cmbFilters.setSelectedItem(status);
         populateTable(status);
     }
-    
+
+    /** Get current filter (for outer panels such as TrackJPanel) */
+    public String getCurrentFilter() {
+        return currentFilter;
+    }
+
+    /**
+     * Find OrderSelfTrackerOrganization in the ecosystem
+     * and return its work request directory.
+     */
+    private WorkRequestDirectory findTrackerWorkRequestDirectory() {
+        if (system == null) return null;
+
+        for (Network n : system.getNetworks()) {
+            for (Enterprise e : n.getEnterprises()) {
+                for (Organization org : e.getOrganizations()) {
+                    if (org instanceof OrderSelfTrackerOrganization) {
+                        return org.getWorkRequestDirectory();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Load all result requests where receiver == current buyer */
     private List<OrderProcessingResultRequest> loadRequestsForCurrentBuyer() {
         List<OrderProcessingResultRequest> result = new ArrayList<>();
 
-        if (system == null || buyerAccount == null) {
-            return result;
-        }
+        if (buyerAccount == null) return result;
 
-        WorkRequestDirectory dir = system.getWorkRequestDirectory();
-        if (dir == null) {
-            return result;
-        }
+        WorkRequestDirectory dir = findTrackerWorkRequestDirectory();
+        if (dir == null) return result;
 
         for (WorkRequest wr : dir.getRequestsForReceiver(buyerAccount)) {
             if (wr instanceof OrderProcessingResultRequest) {
@@ -234,7 +316,7 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         return result;
     }
 
-    /** Populate JTable based on filter */
+    /** Populate JTable according to filter */
     private void populateTable(String filterStatus) {
         DefaultTableModel model = (DefaultTableModel) tblRequest.getModel();
         model.setRowCount(0);
@@ -243,15 +325,15 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         List<OrderProcessingResultRequest> all = loadRequestsForCurrentBuyer();
 
         for (OrderProcessingResultRequest req : all) {
-
             String status = req.getStatus();
 
-            // Filtering logic
+            // Filter by status if needed
             if (!"All".equalsIgnoreCase(filterStatus)) {
-                if (status == null || !filterStatus.equalsIgnoreCase(status)) continue;
+                if (status == null || !filterStatus.equalsIgnoreCase(status)) {
+                    continue;
+                }
             }
 
-            // Get order fields
             Order order = req.getOrder();
             String title = "(unknown)";
             String sellerName = "(unknown)";
@@ -260,41 +342,42 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
             if (order != null) {
                 paid = order.getTotalPrice();
 
-                // Resolve listing information
                 if (system != null &&
                     system.getListingDirectory() != null &&
                     order.getListingId() != null) {
 
                     Listing listing = system.getListingDirectory()
-                                            .findById(order.getListingId());
+                                           .findById(order.getListingId());
                     if (listing != null) {
-                        if (listing.getTitle() != null)
+                        if (listing.getTitle() != null) {
                             title = listing.getTitle();
-
+                        }
                         if (listing.getSeller() != null &&
-                            listing.getSeller().getUsername() != null)
+                            listing.getSeller().getUsername() != null) {
                             sellerName = listing.getSeller().getUsername();
+                        }
                     } else {
+                        // fallback: show listingId if listing cannot be found
                         title = order.getListingId();
                     }
                 }
             }
 
-            // Human-friendly result text
             String resultText;
-            if (OrderProcessingResultRequest.OP_ACCEPT.equals(req.getOperationType()))
+            if (OrderProcessingResultRequest.OP_ACCEPT.equals(req.getOperationType())) {
                 resultText = "Accepted";
-            else if (OrderProcessingResultRequest.OP_REJECT.equals(req.getOperationType()))
+            } else if (OrderProcessingResultRequest.OP_REJECT.equals(req.getOperationType())) {
                 resultText = "Rejected";
-            else
+            } else {
                 resultText = req.getOperationType();
+            }
 
             Object[] row = new Object[5];
-            row[0] = req.getId();
-            row[1] = title;
-            row[2] = sellerName;
-            row[3] = resultText;
-            row[4] = paid;
+            row[0] = req.getId();      // ID
+            row[1] = title;            // Title
+            row[2] = sellerName;       // Seller
+            row[3] = resultText;       // Result (accepted/rejected)
+            row[4] = paid;             // Paid amount
 
             displayedRequests.add(req);
             model.addRow(row);
@@ -303,19 +386,29 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         updateSummaryCounts(all);
     }
 
-    /** Update summary counters at the top */
+    /** Update Total / Pending / Completed / Canceled fields */
     private void updateSummaryCounts(List<OrderProcessingResultRequest> all) {
         int total = all.size();
-        int pending = 0, completed = 0, canceled = 0;
+        int pending = 0;
+        int completed = 0;
+        int canceled = 0;
 
         for (OrderProcessingResultRequest req : all) {
             String status = req.getStatus();
             if (status == null) continue;
 
             switch (status.toLowerCase()) {
-                case "pending": pending++; break;
-                case "completed": completed++; break;
-                case "canceled": canceled++; break;
+                case "pending":
+                    pending++;
+                    break;
+                case "completed":
+                    completed++;
+                    break;
+                case "canceled":
+                    canceled++;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -325,83 +418,90 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         txtCancel.setText(String.valueOf(canceled));
     }
 
-    /** Handle Complete button */
+    /** Handle Complete button click */
     private void handleComplete() {
         int row = tblRequest.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(this,
-                "Please select a row first.",
-                "No selection",
-                JOptionPane.WARNING_MESSAGE);
+                    "Please select a row first.",
+                    "No selection",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         OrderProcessingResultRequest req = displayedRequests.get(row);
+        if (req == null) return;
 
-        // Invalid status checks
+        // Status checks
         if ("Completed".equalsIgnoreCase(req.getStatus())) {
-            JOptionPane.showMessageDialog(this, "This order is already Completed.");
+            JOptionPane.showMessageDialog(this,
+                    "This order has already been completed.");
             return;
         }
         if ("Canceled".equalsIgnoreCase(req.getStatus())) {
-            JOptionPane.showMessageDialog(this, "This order has been Canceled.");
-            return;
-        }
-        if (!OrderProcessingResultRequest.OP_ACCEPT.equals(req.getOperationType())) {
             JOptionPane.showMessageDialog(this,
-                "Only Accepted requests can be marked as Completed.");
+                    "This order has been canceled and cannot be completed.");
             return;
         }
 
-        // Confirm
-        int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Mark this order as Completed?",
-            "Confirm",
-            JOptionPane.YES_NO_OPTION);
+        // Only accepted requests can be completed
+        if (!OrderProcessingResultRequest.OP_ACCEPT.equals(req.getOperationType())) {
+            JOptionPane.showMessageDialog(this,
+                    "Only accepted requests can be marked as completed.");
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Mark this order as Completed?",
+                "Confirm",
+                JOptionPane.YES_NO_OPTION);
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
-        // Update states
+        // Update request status
         req.setStatus("Completed");
-        Order order = req.getOrder();
 
+        // Update order and buyer statistics
+        Order order = req.getOrder();
         if (order != null) {
             order.setStatus(Order.STATUS_COMPLETED);
-            if (buyerAccount != null)
+            if (buyerAccount != null) {
                 buyerAccount.recordOrder(order.getTotalPrice(), true);
+            }
         }
 
         refreshData();
     }
 
-    /** Handle Cancel button */
+    /** Handle Cancel button click */
     private void handleCancel() {
         int row = tblRequest.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(this,
-                "Please select a row first.",
-                "No selection",
-                JOptionPane.WARNING_MESSAGE);
+                    "Please select a row first.",
+                    "No selection",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         OrderProcessingResultRequest req = displayedRequests.get(row);
+        if (req == null) return;
 
         if ("Completed".equalsIgnoreCase(req.getStatus())) {
-            JOptionPane.showMessageDialog(this, "Completed orders cannot be canceled.");
+            JOptionPane.showMessageDialog(this,
+                    "Completed orders cannot be canceled.");
             return;
         }
         if ("Canceled".equalsIgnoreCase(req.getStatus())) {
-            JOptionPane.showMessageDialog(this, "This order is already Canceled.");
+            JOptionPane.showMessageDialog(this,
+                    "This order is already canceled.");
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Cancel this order? (No points or spending will be counted)",
-            "Confirm Cancel",
-            JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Cancel this order?\nNo points or spending will be counted.",
+                "Confirm cancel",
+                JOptionPane.YES_NO_OPTION);
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
@@ -409,11 +509,28 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
 
         Order order = req.getOrder();
         if (order != null) {
-            order.setStatus(Order.STATUS_CANCELLED);
-            if (buyerAccount != null)
-                buyerAccount.recordOrder(order.getTotalPrice(), false);
+        order.setStatus(Order.STATUS_CANCELLED);
+
+        // Restore listing so that it can be purchased again
+        if (system != null &&
+            system.getListingDirectory() != null &&
+            order.getListingId() != null) {
+
+            Listing listing = system.getListingDirectory()
+                                    .findById(order.getListingId());
+            if (listing != null) {
+                // Make the listing available again for purchase
+                listing.setStatus("Approved");
+            }
         }
 
-        refreshData();
+        if (buyerAccount != null) {
+            // decide if you still want to count canceled orders:
+            buyerAccount.recordOrder(order.getTotalPrice(), false);
+        }
+
+    refreshData();
     }
+    
+}
 }

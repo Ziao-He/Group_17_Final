@@ -21,6 +21,8 @@ public class OrderProcessingResultRequest extends WorkRequest {
     // ======================
     public static final String OP_ACCEPT = "seller_accept";
     public static final String OP_REJECT = "seller_reject";
+    
+    private static int counter=1;
 
     // Operation type: seller_accept / seller_reject
     private String operationType;
@@ -56,6 +58,7 @@ public class OrderProcessingResultRequest extends WorkRequest {
         this.operationType = operationType;
         this.processReason = processReason;
         this.processor = processor;
+        this.setId("OPR"+counter++);
         
         // Seller is the sender
         this.setSender(processor);

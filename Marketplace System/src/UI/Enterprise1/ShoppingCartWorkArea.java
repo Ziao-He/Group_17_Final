@@ -211,7 +211,6 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
                 // Save WorkRequest to system
                 system.getWorkRequestDirectory().addWorkRequest(orderRequest);
 
-                // ✅ 2. 同时投递到 OrderManagementOrganization
                 boolean sentToOrderOrg = false;
 
                 for (Network network : system.getNetworks()) {
