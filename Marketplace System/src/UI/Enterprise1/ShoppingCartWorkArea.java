@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author bob-h
  */
-public class ShoppongCartWorkArea extends javax.swing.JPanel {
+public class ShoppingCartWorkArea extends javax.swing.JPanel {
 
     private BuyerAccount buyerAccount;
     private EcoSystem system;
@@ -32,7 +32,7 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
     /**
      * Creates new form ShoppongCartWorkArea
      */
-    public ShoppongCartWorkArea(BuyerAccount buyerAccount,
+    public ShoppingCartWorkArea(BuyerAccount buyerAccount,
                                 EcoSystem system,
                                 List<Listing> shoppingCart) {
         this.buyerAccount = buyerAccount;
@@ -125,7 +125,6 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinishActionPerformed
-        // Check if cart is empty
         if (shoppingCart == null || shoppingCart.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "Your cart is empty.",
@@ -144,11 +143,10 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
         double maxBudget = buyerAccount.getProfile().getMaxBudget();
         
         // If budget is set (> 0), enforce budget check
-        if (maxBudget > 0 && totalPrice > maxBudget) {
+        if (totalPrice > maxBudget) {
             JOptionPane.showMessageDialog(this,
-                String.format("Total price ($%.2f) exceeds your budget ($%.2f).\n" +
-                             "Please remove some items or increase your budget in Personal Info.",
-                             totalPrice, maxBudget),
+                String.format("Total price ($%.2f) exceeds your budget ($%.2f).",
+                              totalPrice, maxBudget),
                 "Over Budget",
                 JOptionPane.WARNING_MESSAGE);
             return;

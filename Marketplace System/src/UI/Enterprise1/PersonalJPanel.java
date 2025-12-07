@@ -515,6 +515,10 @@ public class PersonalJPanel extends javax.swing.JPanel {
         }
     }
     
+    public void refreshProfile() {
+        populateFields();
+    }
+    
     private void setEditing(boolean editing) {
         txtName.setEditable(editing);
         txtEmail.setEditable(editing);

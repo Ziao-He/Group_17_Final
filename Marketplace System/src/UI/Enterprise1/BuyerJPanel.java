@@ -34,7 +34,7 @@ public class BuyerJPanel extends javax.swing.JPanel {
     
     // Work area panels
     private BrowseWorkArea browsePanel;
-    private ShoppongCartWorkArea cartPanel;
+    private ShoppingCartWorkArea cartPanel;
     private PersonalJPanel personalPanel;
     
     // Track current panel
@@ -190,6 +190,10 @@ public class BuyerJPanel extends javax.swing.JPanel {
     private void btnPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPersonalActionPerformed
         // TODO add your handling code here:
         // Switch to personal information panel
+        if (personalPanel != null) {
+            personalPanel.refreshProfile();
+        }
+
         CardLayout cl = (CardLayout) workArea.getLayout();
         cl.show(workArea, "PersonalCard");
         currentPanel = "PersonalCard";
@@ -245,7 +249,7 @@ public class BuyerJPanel extends javax.swing.JPanel {
     private void initializeWorkAreaPanels() {
         // Create panels - pass 'this' as parent reference
         browsePanel = new BrowseWorkArea(buyerAccount, system, this);
-        cartPanel = new ShoppongCartWorkArea(buyerAccount, system, shoppingCart);
+        cartPanel = new ShoppingCartWorkArea(buyerAccount, system, shoppingCart);
         personalPanel = new PersonalJPanel(buyerAccount, system);
         ProductSearchJPanel searchPanel = new ProductSearchJPanel(
             buyerAccount, organization, enterprise, system, this
@@ -383,4 +387,9 @@ public class BuyerJPanel extends javax.swing.JPanel {
         currentPanel = "ChatCard";
     }
     
+    public void refreshPersonalPanel() {
+        if (personalPanel != null) {
+            personalPanel.refreshProfile();
+        }
+    }
 }
