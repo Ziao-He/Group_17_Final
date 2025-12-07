@@ -334,23 +334,23 @@ userService.loadAllUsers();
     // ============================================================
     loginUser = system.getUserAccountDirectory().findByUsername(username);
 
-    if (loginUser != null
-            && loginUser.authenticate(password)
-            && loginUser.getRole().getClass().getSimpleName().equals("SystemAdminRole")) {
+    // if (loginUser != null
+            //&& loginUser.authenticate(password)
+            //&& loginUser.getRole().getClass().getSimpleName().equals("SystemAdminRole")) {
 
-        loginUser.recordLogin();
+        //loginUser.recordLogin();
 
-        JPanel workArea = new SuperAdmin(system, loginUser);
-        this.setContentPane(workArea);
-        this.revalidate();
-        this.repaint();
+        //JPanel workArea = new SuperAdmin(system, loginUser);
+        //this.setContentPane(workArea);
+        //this.revalidate();
+        //this.repaint();
 
-        JOptionPane.showMessageDialog(workArea,
-                "Welcome System Admin: " + loginUser.getUsername(),
-                "Login Successful",
-                JOptionPane.INFORMATION_MESSAGE);
-        return;   // ✅ System Admin 登录结束
-    }
+        //JOptionPane.showMessageDialog(workArea,
+                //"Welcome System Admin: " + loginUser.getUsername(),
+                //"Login Successful",
+                //JOptionPane.INFORMATION_MESSAGE);
+        //return;   // ✅ System Admin 登录结束
+    //}
 
     // ============================================================
     // ✅ 5️⃣ 普通用户 / Enterprise 管理员登录（按 Organization 查找）
