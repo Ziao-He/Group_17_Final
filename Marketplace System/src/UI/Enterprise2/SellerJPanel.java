@@ -52,7 +52,6 @@ public class SellerJPanel extends javax.swing.JPanel {
         controlJPanel = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
         btnListingMangement = new javax.swing.JButton();
-        btnViewComplaints = new javax.swing.JButton();
         btnCreateNewListing = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
@@ -75,13 +74,6 @@ public class SellerJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnViewComplaints.setText("View Complaints");
-        btnViewComplaints.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewComplaintsActionPerformed(evt);
-            }
-        });
-
         btnCreateNewListing.setText("Create New Listing");
         btnCreateNewListing.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,7 +88,6 @@ public class SellerJPanel extends javax.swing.JPanel {
             .addGroup(controlJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnViewComplaints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                     .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
@@ -111,9 +102,7 @@ public class SellerJPanel extends javax.swing.JPanel {
                 .addComponent(btnCreateNewListing)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnListingMangement)
-                .addGap(18, 18, 18)
-                .addComponent(btnViewComplaints)
-                .addGap(38, 38, 38)
+                .addGap(79, 79, 79)
                 .addComponent(btnLogout)
                 .addContainerGap(482, Short.MAX_VALUE))
         );
@@ -143,14 +132,6 @@ public class SellerJPanel extends javax.swing.JPanel {
         replaceWorkArea(panel);
     }//GEN-LAST:event_btnListingMangementActionPerformed
 
-    private void btnViewComplaintsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewComplaintsActionPerformed
-        // TODO add your handling code here:
-        ViewComplaintsJPanel panel =
-        new ViewComplaintsJPanel(system, sellerAccount, (SellerOrganization) organization);
-
-        replaceWorkArea(panel);
-    }//GEN-LAST:event_btnViewComplaintsActionPerformed
-
     private void btnCreateNewListingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewListingActionPerformed
         // TODO add your handling code here:
         CreateNewListingJPanel panel =
@@ -176,7 +157,6 @@ public class SellerJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnCreateNewListing;
     private javax.swing.JButton btnListingMangement;
     private javax.swing.JButton btnLogout;
-    private javax.swing.JButton btnViewComplaints;
     private javax.swing.JPanel controlJPanel;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel workProcessJPanel;

@@ -7,9 +7,7 @@ package UI.Enterprise2;
 import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
-import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
-import basement_class.Enterprise_2.Organization.OrderManagementOrganization;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Organization;
 import java.awt.BorderLayout;
@@ -19,10 +17,9 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author 心火牧神塞勒斯
+ * @author Administrator
  */
 public class ListingManagerJPanel extends javax.swing.JPanel {
-
     private SellerAccount sellerAccount;
     private Organization organization;
     private Enterprise enterprise;
@@ -47,61 +44,65 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        controlJPanel1 = new javax.swing.JPanel();
-        btnLogout1 = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        controlJPanel = new javax.swing.JPanel();
+        btnLogout = new javax.swing.JButton();
         btnListingMangement = new javax.swing.JButton();
         btnCreateNewListing = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
-        controlJPanel1.setBackground(new java.awt.Color(255, 255, 153));
-        controlJPanel1.setForeground(new java.awt.Color(102, 255, 255));
+        setLayout(new java.awt.BorderLayout());
 
-        btnLogout1.setText("Log out");
-        btnLogout1.addActionListener(new java.awt.event.ActionListener() {
+        controlJPanel.setBackground(new java.awt.Color(255, 255, 204));
+        controlJPanel.setForeground(new java.awt.Color(102, 255, 255));
+
+        btnLogout.setText("Log out");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogout1ActionPerformed(evt);
+                btnLogoutActionPerformed(evt);
             }
         });
 
-        btnListingMangement.setText("Manage All Listings");
+        btnListingMangement.setText("Listing All  Management");
         btnListingMangement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnListingMangementActionPerformed(evt);
             }
         });
 
-        btnCreateNewListing.setText("Create Bulk Listings");
+        btnCreateNewListing.setText("Create Bulk Listing");
         btnCreateNewListing.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateNewListingActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout controlJPanel1Layout = new javax.swing.GroupLayout(controlJPanel1);
-        controlJPanel1.setLayout(controlJPanel1Layout);
-        controlJPanel1Layout.setHorizontalGroup(
-            controlJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(controlJPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(controlJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(controlJPanel1Layout.createSequentialGroup()
-                        .addComponent(btnLogout1)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+        javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
+        controlJPanel.setLayout(controlJPanelLayout);
+        controlJPanelLayout.setHorizontalGroup(
+            controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlJPanelLayout.createSequentialGroup()
+                .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(controlJPanelLayout.createSequentialGroup()
+                .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnListingMangement)
+                    .addComponent(btnLogout))
+                .addGap(0, 2, Short.MAX_VALUE))
         );
-        controlJPanel1Layout.setVerticalGroup(
-            controlJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlJPanel1Layout.createSequentialGroup()
+        controlJPanelLayout.setVerticalGroup(
+            controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlJPanelLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(btnCreateNewListing)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnListingMangement)
-                .addGap(29, 29, 29)
-                .addComponent(btnLogout1)
-                .addContainerGap(542, Short.MAX_VALUE))
+                .addGap(32, 32, 32)
+                .addComponent(btnLogout)
+                .addContainerGap(523, Short.MAX_VALUE))
         );
+
+        jSplitPane1.setLeftComponent(controlJPanel);
 
         javax.swing.GroupLayout workProcessJPanelLayout = new javax.swing.GroupLayout(workProcessJPanel);
         workProcessJPanel.setLayout(workProcessJPanelLayout);
@@ -111,41 +112,13 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         );
         workProcessJPanelLayout.setVerticalGroup(
             workProcessJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 672, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(controlJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(workProcessJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(controlJPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(workProcessJPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        jSplitPane1.setRightComponent(workProcessJPanel);
+
+        add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnLogout1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogout1ActionPerformed
-        // TODO add your handling code here:
-        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-
-        // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
-        mainFrame.dispose();
-
-        // ✅ 3️⃣ 用【同一个 system】重新打开 Login
-        LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
-        loginPage.setVisible(true);
-    }//GEN-LAST:event_btnLogout1ActionPerformed
 
     private void btnListingMangementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListingMangementActionPerformed
         ManageAllListingJPanel panel =
@@ -162,12 +135,25 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         replaceWorkArea(panel);
     }//GEN-LAST:event_btnCreateNewListingActionPerformed
 
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
+        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
+        mainFrame.dispose();
+
+        // ✅ 3️⃣ 用【同一个 system】重新打开 Login
+        LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
+        loginPage.setVisible(true);
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateNewListing;
     private javax.swing.JButton btnListingMangement;
-    private javax.swing.JButton btnLogout1;
-    private javax.swing.JPanel controlJPanel1;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JPanel controlJPanel;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel workProcessJPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -183,5 +169,5 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         // 确保父容器也更新
         workProcessJPanel.getParent().revalidate();
         workProcessJPanel.getParent().repaint();
-    }
+    } 
 }

@@ -8,8 +8,6 @@ package basement_class.Enterprise_2.Role;
 import UI.Enterprise2.ListingManagerJPanel;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
-import basement_class.Enterprise_1.Account.BuyerAccount;
-import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Organization;
 import basement_class.Role;
