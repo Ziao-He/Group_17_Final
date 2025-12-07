@@ -4,6 +4,7 @@
  */
 package UI.Enterprise1;
 
+import UI.Enterprise4.BuyerSellerChatPanel;
 import basement_class.EcoSystem;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Enterprise_2.Listing;
@@ -316,6 +317,36 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
 
     private void btnTalkWithUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTalkWithUserActionPerformed
         // TODO add your handling code here:
+            if (listing == null || buyerAccount == null) {
+            JOptionPane.showMessageDialog(this,
+                "Buyer or listing information is missing.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        UserAccount seller = listing.getSeller();   
+        if (seller == null) {
+            JOptionPane.showMessageDialog(this,
+                "This listing has no seller assigned.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+
+        BuyerJPanel parentPanel = this.parentPanel;
+
+
+        BuyerSellerChatPanel chatPanel = new BuyerSellerChatPanel(
+                buyerAccount,
+                seller,
+                system,
+                parentPanel
+        );
+
+
+        parentPanel.showChatPanel(chatPanel);
     }//GEN-LAST:event_btnTalkWithUserActionPerformed
 
     private void btnAddfavoriteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddfavoriteActionPerformed
