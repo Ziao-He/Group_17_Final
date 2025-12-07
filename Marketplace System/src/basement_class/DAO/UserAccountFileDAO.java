@@ -48,6 +48,36 @@ public class UserAccountFileDAO implements UserAccountDAO{
 
                 UserAccount ua = createByRole(role);
 
+if (ua == null) {
+    System.out.println("❌ Unknown role in CSV: " + role);
+    continue;
+}
+
+// ✅ ✅ ✅ 核心修复：给 UserAccount 正式绑定 Role 对象
+switch (role) {
+
+    // ===== Enterprise 1 =====
+    case "BuyerRole" -> ua.setRole(new basement_class.Enterprise_1.Role.BuyerRole());
+    case "ProductSearcherRole" -> ua.setRole(new basement_class.Enterprise_1.Role.ProductSearcherRole());
+    case "OrderTrackerRole" -> ua.setRole(new basement_class.Enterprise_1.Role.OrderTrackerRole());
+
+    // ===== Enterprise 2 =====
+    case "SellerRole" -> ua.setRole(new basement_class.Enterprise_2.Role.SellerRole());
+    case "ListingManagerRole" -> ua.setRole(new basement_class.Enterprise_2.Role.ListingManagerRole());
+    case "OrderProcessorRole" -> ua.setRole(new basement_class.Enterprise_2.Role.OrderProcessorRole());
+
+    // ===== Enterprise 3 =====
+    case "PlatformAdminRole" -> ua.setRole(new basement_class.Enterprise_3.Role.PlatformAdminRole());
+    case "SystemAdminRole" -> ua.setRole(new basement_class.Enterprise_3.Role.SystemAdminRole());
+    case "AccountAdminRole" -> ua.setRole(new basement_class.Enterprise_3.Role.AccountAdminRole());
+    case "ContentModeratorRole" -> ua.setRole(new basement_class.Enterprise_3.Role.ContentModeratorRole());
+    case "PolicyEnforcerRole" -> ua.setRole(new basement_class.Enterprise_3.Role.PolicyEnforcerRole());
+
+    // ===== Enterprise 4 =====
+//    case "HelpCenterAdminRole" -> ua.setRole(new basement_class.Enterprise_4.Role.HelpCenterAdminRole());
+
+    default -> System.out.println("❌ Unhandled role in CSV: " + role);
+}
                 ua.setUserId(id);
                 ua.setUsername(username);
                 ua.setEmail(email);
