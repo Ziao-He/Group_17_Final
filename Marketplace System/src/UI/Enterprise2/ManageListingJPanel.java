@@ -5,9 +5,26 @@
 package UI.Enterprise2;
 
 import basement_class.EcoSystem;
-import basement_class.Enterprise;
+import java.awt.Image;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import basement_class.Enterprise_2.Account.SellerAccount;
+import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
+import java.awt.MediaTracker;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.util.Date;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +35,8 @@ public class ManageListingJPanel extends javax.swing.JPanel {
     private EcoSystem system;
     private SellerAccount seller;
     private SellerOrganization sellerOrg;
+    private final JFileChooser fileChooser = new JFileChooser();
+    ImageIcon logoImage;
     /**
      * Creates new form SellerJPanel
      */
@@ -26,6 +45,15 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         this.system=system;
         this.seller=seller;
         this.sellerOrg = org;
+        FileFilter jpegFilter = new FileNameExtensionFilter("JPEG file", "jpg", "jpeg");
+        FileFilter pngFilter = new FileNameExtensionFilter("PNG file", "png");
+        
+        fileChooser.addChoosableFileFilter(jpegFilter);
+        fileChooser.addChoosableFileFilter(pngFilter);
+        fileChooser.setFileFilter(pngFilter);
+        fileChooser.setFileFilter(jpegFilter);
+        
+        loadSellerListings();
     }
 
     /**
@@ -38,42 +66,359 @@ public class ManageListingJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblListing = new javax.swing.JTable();
+        lblDescription = new javax.swing.JLabel();
+        txtDescription = new javax.swing.JTextField();
+        txtPrice = new javax.swing.JTextField();
+        txtTitle = new javax.swing.JTextField();
+        btnSelectImage = new javax.swing.JButton();
+        imgLogo = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        lblImagePath = new javax.swing.JLabel();
+        lblPrice = new javax.swing.JLabel();
+        btnView = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        lblStatus = new javax.swing.JLabel();
+        lblSubmitTime = new javax.swing.JLabel();
+        txtStatus = new javax.swing.JTextField();
+        txtSubmitTime = new javax.swing.JTextField();
+        txtID = new javax.swing.JTextField();
+        lblListingID = new javax.swing.JLabel();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblListing.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Title", "Listing ID", "Price", "Status", "SubmitTime"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblListing);
+
+        lblDescription.setText("Description");
+
+        btnSelectImage.setText("Select Image");
+        btnSelectImage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectImageActionPerformed(evt);
+            }
+        });
+
+        imgLogo.setText("<No Image>");
+        imgLogo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        imgLogo.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        lblTitle.setText("Title");
+
+        lblImagePath.setText("ImagePath");
+
+        lblPrice.setText("Price");
+
+        btnView.setText("View Details");
+        btnView.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewActionPerformed(evt);
+            }
+        });
+
+        btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        btnUpdate.setText("Update");
+
+        lblStatus.setText("Status");
+
+        lblSubmitTime.setText("Submit Time");
+
+        lblListingID.setText("Listing ID");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(149, 149, 149)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(210, 210, 210)
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(lblPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblImagePath, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblStatus)
+                            .addComponent(lblSubmitTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblListingID, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(139, 139, 139)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(103, 103, 103)
+                                .addComponent(lblDescription)
+                                .addGap(55, 55, 55))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnSelectImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                                    .addComponent(txtStatus)
+                                    .addComponent(txtSubmitTime)
+                                    .addComponent(txtID))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                                .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)))
+                        .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(248, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(20, 20, 20)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(436, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnView)
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTitle)
+                            .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDescription))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblListingID))
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnSelectImage)
+                                    .addComponent(lblImagePath))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblPrice)
+                                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblStatus)
+                                    .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtSubmitTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblSubmitTime)))))
+                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSave)
+                    .addComponent(btnUpdate))
+                .addGap(99, 99, 99))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSelectImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectImageActionPerformed
+        // TODO add your handling code here:
+        int returnVal = fileChooser.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            URL url;
+            try {
+                url = file.toURI().toURL();
+                logoImage = new ImageIcon(url);
+                logoImage = new ImageIcon(logoImage.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+                imgLogo.setIcon(logoImage);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(this.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnSelectImageActionPerformed
+
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblListing.getSelectedRow();
+
+        // 2. 检查是否有选中的行
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                "Please select a listing from the table first.",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // 3. 从选中的行获取 Listing ID
+            String listingId = (String) tblListing.getValueAt(selectedRow, 1); // 第二列是ID
+
+            // 4. 根据ID查找Listing对象
+            Listing selectedListing = null;
+            for (Listing listing : seller.getListings()) {
+                if (listing.getId().equals(listingId)) {
+                    selectedListing = listing;
+                    break;
+                }
+            }
+
+            if (selectedListing == null) {
+                JOptionPane.showMessageDialog(this,
+                    "Selected listing not found in seller's list.",
+                    "Listing Not Found",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 5. 将Listing信息填充到文本框中
+            txtID.setText(selectedListing.getId());
+            txtTitle.setText(selectedListing.getTitle());
+            txtDescription.setText(selectedListing.getDescription());
+            txtPrice.setText(String.format("%.2f", selectedListing.getPrice()));
+            txtStatus.setText(selectedListing.getStatus());
+
+            // 格式化提交时间
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String submitTime = dateFormat.format(
+                Date.from(selectedListing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())
+            );
+            txtSubmitTime.setText(submitTime);
+
+            // 6. 显示图片
+            String imagePath = selectedListing.getImagePath();
+            System.out.println("Loading image from path: " + imagePath);
+
+            // 清除之前的显示
+            imgLogo.setIcon(null);
+
+            if (imagePath != null && !imagePath.trim().isEmpty()) {
+                try {
+                    File imageFile = new File(imagePath);
+
+                    // 调试信息
+                    System.out.println("Image file absolute path: " + imageFile.getAbsolutePath());
+                    System.out.println("Image file exists: " + imageFile.exists());
+
+                    if (imageFile.exists()) {
+                        // 加载图片
+                        ImageIcon listingImage = new ImageIcon(imageFile.getAbsolutePath());
+
+                        // 检查图片是否有效加载
+                        if (listingImage.getIconWidth() > 0 && listingImage.getIconHeight() > 0) {
+                            // 调整大小以适应显示区域
+                            int width = imgLogo.getWidth() > 0 ? imgLogo.getWidth() : 150;
+                            int height = imgLogo.getHeight() > 0 ? imgLogo.getHeight() : 150;
+
+                            Image scaledImage = listingImage.getImage().getScaledInstance(
+                                width, height, Image.SCALE_SMOOTH);
+
+                            imgLogo.setIcon(new ImageIcon(scaledImage));
+                            System.out.println("Image loaded and displayed successfully");
+                        } else {
+                            System.out.println("Image loaded but has zero dimensions");
+                        }
+                    } else {
+                        System.out.println("Image file does not exist: " + imageFile.getAbsolutePath());
+                    }
+
+                } catch (Exception e) {
+                    System.err.println("Error loading image: " + e.getMessage());
+                }
+            } else {
+                System.out.println("No image path specified for this listing");
+            }
+
+            // 7.在控制台输出调试信息
+            System.out.println("Viewing listing: " + selectedListing.getId() + " - " + selectedListing.getTitle());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error loading listing details: " + e.getMessage(),
+                "System Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnViewActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnSaveActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSelectImage;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnView;
+    private javax.swing.JLabel imgLogo;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblDescription;
+    private javax.swing.JLabel lblImagePath;
+    private javax.swing.JLabel lblListingID;
+    private javax.swing.JLabel lblPrice;
+    private javax.swing.JLabel lblStatus;
+    private javax.swing.JLabel lblSubmitTime;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblListing;
+    private javax.swing.JTextField txtDescription;
+    private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtStatus;
+    private javax.swing.JTextField txtSubmitTime;
+    private javax.swing.JTextField txtTitle;
     // End of variables declaration//GEN-END:variables
+
+
+
+    private void loadSellerListings() {
+        // 1. 获取当前卖家的所有Listing
+        List<Listing> sellerListings = seller.getListings();
+
+        // 2. 获取表格模型
+        DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
+
+        // 3. 清空表格现有数据
+        model.setRowCount(0);
+
+        // 4. 添加数据到表格
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+        for (Listing listing : sellerListings) {
+            Object[] rowData = new Object[5];
+
+            rowData[0] = listing.getTitle();                // Title
+            rowData[1] = listing.getId();                   // ID
+            rowData[2] = String.format("$%.2f", listing.getPrice()); // Price
+            rowData[3] = listing.getStatus();               // Status
+            rowData[4] = dateFormat.format(Date.from(listing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())); // Submit Date
+
+            model.addRow(rowData);
+        }
+
+        // 5. 更新表格显示
+        tblListing.revalidate();
+        tblListing.repaint();
+
+        // 6. 显示记录数
+        System.out.println("Loaded " + sellerListings.size() + " listings for seller: " + seller.getUsername());
+    }
+
+    
 }
