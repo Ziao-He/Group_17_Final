@@ -44,27 +44,33 @@ public class BuyerAccount extends UserAccount {
     /**
      * Add product to favorites
      */
-    public void addToFavorites(String productId) {
-        if (!favoriteListingIds.contains(productId)) {
-            favoriteListingIds.add(productId);
+    public void addToFavorites(String listingId) {
+        if (favoriteListingIds == null) {
+            favoriteListingIds = new ArrayList<>();
+        }
+        if (!favoriteListingIds.contains(listingId)) {
+            favoriteListingIds.add(listingId);
         }
     }
     
     /**
      * Remove from favorites
      */
-    public void removeFromFavorites(String productId) {
-        favoriteListingIds.remove(productId);
+    public void removeFromFavorites(String listingId) {
+        if (favoriteListingIds != null) {
+            favoriteListingIds.remove(listingId);
+        }
     }
     
     /**
      * Add order
      */
     public void addOrder(String orderId) {
-        if (!orderIds.contains(orderId)) {
-            orderIds.add(orderId);
-            totalPurchases++;
+        if (orderIds == null) {
+            orderIds = new ArrayList<>();
         }
+        orderIds.add(orderId);
+        totalPurchases++;  
     }
     
     /**
@@ -132,6 +138,9 @@ public class BuyerAccount extends UserAccount {
     }
 
     public List<String> getFavoriteListingIds() {
+        if (favoriteListingIds == null) {
+            favoriteListingIds = new ArrayList<>();
+        }
         return favoriteListingIds;
     }
 
@@ -169,4 +178,6 @@ public class BuyerAccount extends UserAccount {
             this.points += earnedPoints;
         }
     }
+    
+    
 }
