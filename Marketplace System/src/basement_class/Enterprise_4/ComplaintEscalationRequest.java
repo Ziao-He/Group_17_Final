@@ -13,6 +13,8 @@ import basement_class.WorkRequest;
  */
 public class ComplaintEscalationRequest extends WorkRequest {
 
+    private static int counter = 1;
+    private static final String PREFIX = "CER"; 
     private Complaint complaint;
     private String escalationReason;
 
@@ -20,10 +22,15 @@ public class ComplaintEscalationRequest extends WorkRequest {
                                       UserAccount currentHandler,
                                       String escalationReason) {
         super();
+        this.id = generateId();
         this.complaint = complaint;
         this.sender = currentHandler; //me
         this.escalationReason = escalationReason;
-        this.setStatus("Pending");
+        this.status = this.complaint.getStatus();
+    }
+    
+    private static synchronized String generateId() {
+        return String.format("%s%03d", PREFIX, counter++);
     }
 
     public Complaint getComplaint() {

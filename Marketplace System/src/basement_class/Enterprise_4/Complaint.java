@@ -30,7 +30,7 @@ public class Complaint extends BaseEntity{
         this.description = description;
         this.category = category;
         this.IsSeverity = isSeverity;
-        this.status = "Open";
+        this.status = "Pending";
     }
     
         public void markInProgress() {

@@ -37,6 +37,7 @@ public class HelpCenterWorkAreaPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
+        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
         jPanel1.setSize(new java.awt.Dimension(150, 100));
 
         jLabel1.setText("Communication Services");
