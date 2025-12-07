@@ -9,8 +9,11 @@ import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Organization;
+import common_class.Order;
 import java.awt.BorderLayout;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -144,7 +147,63 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
 
     private void btnOrderReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderReportsActionPerformed
         // TODO add your handling code here:
-        
+        List<Order> allOrders = system.getOrderDirectory().getAllOrders();
+
+        if (allOrders == null || allOrders.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "No orders found in the system.",
+                    "Order Report",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        int total = allOrders.size();
+
+        int pending = 0;
+        int accepted = 0;
+        int rejected = 0;
+        int completed = 0;
+        int cancelled = 0;
+
+        // ✅ Count statuses
+        for (Order order : allOrders) {
+            switch (order.getStatus()) {
+                case Order.STATUS_PENDING -> pending++;
+                case Order.STATUS_ACCEPTED -> accepted++;
+                case Order.STATUS_REJECTED -> rejected++;
+                case Order.STATUS_COMPLETED -> completed++;
+                case Order.STATUS_CANCELLED -> cancelled++;
+            }
+        }
+
+        // ✅ Percentage helper
+        java.text.DecimalFormat df = new java.text.DecimalFormat("0.00");
+
+        String report =
+                "===== ORDER REPORT =====\n\n" +
+                "Total Orders: " + total + "\n\n" +
+
+                "PENDING: " + pending +
+                " (" + df.format(pending * 100.0 / total) + "%)\n" +
+
+                "ACCEPTED: " + accepted +
+                " (" + df.format(accepted * 100.0 / total) + "%)\n" +
+
+                "REJECTED: " + rejected +
+                " (" + df.format(rejected * 100.0 / total) + "%)\n" +
+
+                "COMPLETED: " + completed +
+                " (" + df.format(completed * 100.0 / total) + "%)\n" +
+
+                "CANCELLED: " + cancelled +
+                " (" + df.format(cancelled * 100.0 / total) + "%)\n\n" +
+
+                "========================";
+
+        JOptionPane.showMessageDialog(this,
+                report,
+                "Order Report Summary",
+                JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnOrderReportsActionPerformed
 
     private void btnReviewOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReviewOrdersActionPerformed

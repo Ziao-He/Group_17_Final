@@ -192,7 +192,7 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
                 );
                 order.setQuantity(1);  // Always 1 for second-hand
                 order.setStatus(Order.STATUS_PENDING);
-                
+                system.getOrderDirectory().addOrder(order);
                 // Create OrderReviewRequest (WorkRequest)
                 OrderReviewRequest orderRequest = new OrderReviewRequest(
                     buyerAccount,

@@ -284,7 +284,7 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         req.setStatus("Accepted");       // WorkRequest 状态
         req.setProcessor(orderProcessorAccount);
         req.setProcessReason(reason);
-
+        system.getOrderDirectory().updateOrder(order);
         // ✅ （可选）同步回 Buyer 的 WorkQueue
         // sendResultBackToBuyer(req);
 
@@ -378,7 +378,7 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         req.setProcessor(orderProcessorAccount);
         req.setProcessingResult(reason);
         req.setStatus("Completed");
-
+        system.getOrderDirectory().updateOrder(order);
         JOptionPane.showMessageDialog(this,
                 "Order rejected successfully.",
                 "Success",
