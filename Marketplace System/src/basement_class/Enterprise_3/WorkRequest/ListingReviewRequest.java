@@ -14,7 +14,7 @@ import java.util.List;
  * @author Linyiyang
  */
 public class ListingReviewRequest extends WorkRequest{
-
+    private static int counter=1;
     private Listing listing;
     private String operationType;   // "seller_request_up", "seller_request_down", "policy_force_down"
     private String reason;          // 卖家理由 或 平台违规理由
@@ -28,6 +28,7 @@ public class ListingReviewRequest extends WorkRequest{
         this.reason = reason;
         this.evidence = new ArrayList<>();
         this.setStatus("Pending");
+        this.setId("LRRQ"+counter++);
     }
 
     public Listing getListing() { return listing; }

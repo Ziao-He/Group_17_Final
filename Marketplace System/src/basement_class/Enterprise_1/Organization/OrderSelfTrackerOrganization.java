@@ -11,9 +11,9 @@ import basement_class.Enterprise_1.Role.OrderTrackerRole;
  *
  * @author bob-h
  */
-public class OrderManagementOrganization extends Organization {
+public class OrderSelfTrackerOrganization extends Organization {
     
-    public OrderManagementOrganization(String name) {
+    public OrderSelfTrackerOrganization(String name) {
         super(name);
         
         // Add role

@@ -20,6 +20,8 @@ public class BuyerProfile extends Profile {
     private String preferredLocation;
     private String preferredPaymentMethod;
     
+    
+    
     /**
      * Constructor
      */

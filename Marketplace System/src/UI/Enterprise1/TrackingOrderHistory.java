@@ -2,21 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package UI.Enterprise3;
-
-import basement_class.EcoSystem;
-import basement_class.UserAccount;
+package UI.Enterprise1;
 
 /**
  *
- * @author Administrator
+ * @author bob-h
  */
-public class SuperAdmin extends javax.swing.JPanel {
+public class TrackingOrderHistory extends javax.swing.JPanel {
 
     /**
-     * Creates new form SuperAdmin
+     * Creates new form TrackingOrderHistory
      */
-    public SuperAdmin(EcoSystem system, UserAccount admin) {
+    public TrackingOrderHistory() {
         initComponents();
     }
 
@@ -33,11 +30,11 @@ public class SuperAdmin extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 1106, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 635, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

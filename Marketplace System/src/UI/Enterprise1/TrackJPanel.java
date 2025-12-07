@@ -9,6 +9,7 @@ import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import java.awt.CardLayout;
 
 /**
  *
@@ -20,15 +21,30 @@ public class TrackJPanel extends javax.swing.JPanel {
     private Organization organization;
     private Enterprise enterprise;
     private EcoSystem system;
+    private TrackingOrderStatus trackingOrderStatusPanel;
     /**
      * Creates new form TrackJPanel
      */
-    public TrackJPanel(BuyerAccount buyerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
+    public TrackJPanel(BuyerAccount buyerAccount,
+                   Organization organization,
+                   Enterprise enterprise,
+                   EcoSystem system) {
+
         initComponents();
         this.buyerAccount = buyerAccount;
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;
+
+        initWorkAreaPanels();
+    }
+    
+    private void initWorkAreaPanels() {
+        trackingOrderStatusPanel = new TrackingOrderStatus(buyerAccount, system);
+        trackWorkArea.add("TRACK_STATUS", trackingOrderStatusPanel);
+
+        CardLayout layout = (CardLayout) trackWorkArea.getLayout();
+        layout.show(trackWorkArea, "TRACK_STATUS");
     }
 
     /**
@@ -44,28 +60,14 @@ public class TrackJPanel extends javax.swing.JPanel {
         controlJPanel = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
-        btnExport = new javax.swing.JButton();
-        cmbRole = new javax.swing.JComboBox<>();
+        btnHistory = new javax.swing.JButton();
+        btnWorkRequestPending = new javax.swing.JButton();
         btnSwitch = new javax.swing.JButton();
-        btnReport = new javax.swing.JButton();
         workArea = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        trackWorkArea = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -86,18 +88,21 @@ public class TrackJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnExport.setText("Export");
-        btnExport.addActionListener(new java.awt.event.ActionListener() {
+        btnHistory.setText("Order History");
+        btnHistory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExportActionPerformed(evt);
+                btnHistoryActionPerformed(evt);
             }
         });
 
-        cmbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buyer", "Advanced Search", "Order History" }));
+        btnWorkRequestPending.setText("Order Pending");
+        btnWorkRequestPending.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnWorkRequestPendingActionPerformed(evt);
+            }
+        });
 
         btnSwitch.setText("Switch");
-
-        btnReport.setText("Report");
 
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
         controlJPanel.setLayout(controlJPanelLayout);
@@ -106,14 +111,13 @@ public class TrackJPanel extends javax.swing.JPanel {
             .addGroup(controlJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
+                    .addComponent(btnHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout))
-                    .addComponent(cmbRole, 0, 151, Short.MAX_VALUE)
-                    .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnWorkRequestPending, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         controlJPanelLayout.setVerticalGroup(
@@ -122,14 +126,12 @@ public class TrackJPanel extends javax.swing.JPanel {
                 .addGap(24, 24, 24)
                 .addComponent(btnRefresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnExport)
+                .addComponent(btnHistory)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnReport)
-                .addGap(173, 173, 173)
-                .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnWorkRequestPending)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 464, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
         );
@@ -149,86 +151,8 @@ public class TrackJPanel extends javax.swing.JPanel {
 
         jSplitPane2.setTopComponent(jPanel1);
 
-        jLabel2.setText("Total:");
-
-        jLabel3.setText("Pending:");
-
-        jLabel4.setText("Completed:");
-
-        jLabel5.setText("Spending:");
-
-        jLabel6.setText("Filters:");
-
-        jButton1.setText("Apply");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "ID ", "Title ", "Seller ", "Price ", "Status "
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField3)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addContainerGap(643, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 513, Short.MAX_VALUE))
-        );
-
-        jSplitPane2.setRightComponent(jPanel2);
+        trackWorkArea.setLayout(new java.awt.CardLayout());
+        jSplitPane2.setRightComponent(trackWorkArea);
 
         workArea.add(jSplitPane2, "card2");
 
@@ -242,40 +166,37 @@ public class TrackJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-
+        if (trackingOrderStatusPanel != null) {
+            trackingOrderStatusPanel.refreshData();
+        }
     }//GEN-LAST:event_btnRefreshActionPerformed
 
-    private void btnExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportActionPerformed
+    private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnExportActionPerformed
+    }//GEN-LAST:event_btnHistoryActionPerformed
+
+    private void btnWorkRequestPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWorkRequestPendingActionPerformed
+        // TODO add your handling code here:
+        if (trackingOrderStatusPanel != null) {
+            CardLayout layout = (CardLayout) trackWorkArea.getLayout();
+            layout.show(trackWorkArea, "TRACK_STATUS");
+            trackingOrderStatusPanel.applyFilter("All");
+        }
+    }//GEN-LAST:event_btnWorkRequestPendingActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnExport;
+    private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnReport;
     private javax.swing.JButton btnSwitch;
-    private javax.swing.JComboBox<String> cmbRole;
+    private javax.swing.JButton btnWorkRequestPending;
     private javax.swing.JPanel controlJPanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JPanel trackWorkArea;
     private javax.swing.JPanel workArea;
     // End of variables declaration//GEN-END:variables
 }

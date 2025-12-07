@@ -4,7 +4,6 @@
  */
 package UI.main;
 
-import UI.Enterprise3.SuperAdmin;
 import basement_class.*;
 import basement_class.DAO.UserAccountDAO;
 import basement_class.DAO.UserAccountFileDAO;
@@ -338,24 +337,6 @@ public class LoginPage extends javax.swing.JFrame {
     // ============================================================
     loginUser = system.getUserAccountDirectory().findByUsername(username);
 
-    if (loginUser != null
-            && loginUser.authenticate(password)
-            && loginUser.getRole().getClass().getSimpleName().equals("SystemAdminRole")) {
-
-        loginUser.recordLogin();
-
-        JPanel workArea = new SuperAdmin(system, loginUser);
-        this.setContentPane(workArea);
-        this.revalidate();
-        this.repaint();
-
-        JOptionPane.showMessageDialog(workArea,
-                "Welcome System Admin: " + loginUser.getUsername(),
-                "Login Successful",
-                JOptionPane.INFORMATION_MESSAGE);
-        return;   // ✅ System Admin 登录结束
-    }
-
     // ============================================================
     // ✅ 5️⃣ 普通用户 / Enterprise 管理员登录（按 Organization 查找）
     // ============================================================
@@ -409,7 +390,16 @@ public class LoginPage extends javax.swing.JFrame {
     // ✅ ✅ ✅ Enterprise 1 — Buyer（✅ 预留）
     // ============================================================
     if (loginUser instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
+        if (!loginUser.getUsername().equals(username)
+                || !loginUser.getPasswordHash().equals(password)) {
 
+            JOptionPane.showMessageDialog(this,
+                    "Username and password do not match the same account.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return; // stop entering Buyer panel
+        }
         workArea = new UI.Enterprise1.BuyerJPanel(
             (basement_class.Enterprise_1.Account.BuyerAccount) loginUser,
             userOrg,
@@ -421,10 +411,31 @@ public class LoginPage extends javax.swing.JFrame {
     // ============================================================
     // ✅ ✅ ✅ Enterprise 2 — Seller（✅ 预留）
     // ============================================================
-    else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount) {
+    else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount sellerAccount) {
 
-        // TODO: Enterprise 2 卖家界面跳转逻辑
-        // workArea = new UI.Enterprise2.SellerJPanel(...);
+        Role role = sellerAccount.getRole();
+
+        if (role instanceof basement_class.Enterprise_2.Role.SellerRole) {
+
+            workArea = new UI.Enterprise2.SellerJPanel(sellerAccount, userOrg, userEnterprise, system);
+
+        } else if (role instanceof basement_class.Enterprise_2.Role.ListingManagerRole) {
+
+            workArea = new UI.Enterprise2.ListingManagerJPanel(
+                    sellerAccount, userOrg, userEnterprise, system);
+
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Unknown role for Seller account.",
+                    "Role Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+    else if (loginUser instanceof basement_class.Enterprise_2.Account.OrderProcessorAccount orderProcessorAccount) {
+
+        workArea = new UI.Enterprise2.OrderProcessorJPanel(
+                orderProcessorAccount, userOrg, userEnterprise, system);
     }
 
     // ============================================================
@@ -443,7 +454,18 @@ public class LoginPage extends javax.swing.JFrame {
     }
             }
         }
+        
+        if (!loginUser.getUsername().equals(username)
+                || !loginUser.getPasswordHash().equals(password)) {
 
+            JOptionPane.showMessageDialog(this,
+                    "Username and password do not match the same account.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+
+            return; // stop entering Buyer panel
+        }
+        
         workArea = new UI.Enterprise3.AdminJPanel(
                 system,
                 loginUser,

@@ -66,13 +66,13 @@ public class BrowseWorkArea extends javax.swing.JPanel {
 
         tblListing.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Listing ID", "Name", "Category", "Price", "Condition", "Status", "Seller"
+                "Listing ID", "Name", "Price", "Status", "Seller"
             }
         ));
         jScrollPane1.setViewportView(tblListing);
@@ -268,13 +268,11 @@ public class BrowseWorkArea extends javax.swing.JPanel {
      */
     private void addListingToTable(Listing listing, DefaultTableModel model) {
         Object[] row = {
-            listing.getId(),
-            listing.getTitle(),
-            "General",  // Category - placeholder
-            String.format("$%.2f", listing.getPrice()),
-            "Good",  // Condition - placeholder
-            listing.getStatus(),
-            listing.getSeller().getUsername()
+            listing.getId(),                           // Listing ID
+            listing.getTitle(),                        // Title
+            String.format("$%.2f", listing.getPrice()), // Price
+            listing.getStatus(),                       // Status
+            listing.getSeller().getUsername()          // Seller
         };
         model.addRow(row);
     }

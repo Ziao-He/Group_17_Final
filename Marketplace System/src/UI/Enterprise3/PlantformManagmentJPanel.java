@@ -509,7 +509,7 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         }
 
         PlatformAdminAccount ua = new PlatformAdminAccount();
-        ua.setUserId("PM-" + UUID.randomUUID().toString().substring(0, 8));
+//        ua.setUserId("PM-" + UUID.randomUUID().toString().substring(0, 8));
         ua.setUsername(username);
         ua.setPasswordHash(password);
         ua.setEmail(username + "@platform.com");

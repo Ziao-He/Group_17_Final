@@ -11,7 +11,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
-    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,-96,0,0,3,-47"/>
+    <AuxValue name="designerSize" type="java.awt.Dimension" value="-84,-19,0,5,115,114,0,18,106,97,118,97,46,97,119,116,46,68,105,109,101,110,115,105,111,110,65,-114,-39,-41,-84,95,68,20,2,0,2,73,0,6,104,101,105,103,104,116,73,0,5,119,105,100,116,104,120,112,0,0,2,-84,0,0,3,-93"/>
   </AuxValues>
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
@@ -120,17 +120,9 @@
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lblCategory" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblCondition" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblListingID" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txtListingID" max="32767" attributes="0"/>
-                                      <Component id="txtCategory" max="32767" attributes="0"/>
-                                      <Component id="txtCondition" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="lblListingID" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                                  <Component id="txtListingID" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="btnBack" min="-2" max="-2" attributes="0"/>
@@ -164,56 +156,44 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblCategory" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtCategory" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPrice" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblPrice" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="lblCondition" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="txtPrice" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblPrice" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="rbnYes" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="rbnNo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblNego" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lblDescri" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="DescriJpanel" min="-2" pref="150" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lblSellerUser" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtSellerUser" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lblRating" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtRating" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lblFavoriteCount" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtFavoriteCount" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="lblPostedDate" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="txtPostedDate" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="btnTalkWithUser" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="txtCondition" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbnYes" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="rbnNo" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblNego" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblDescri" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="DescriJpanel" min="-2" pref="150" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblSellerUser" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtSellerUser" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblRating" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtRating" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblFavoriteCount" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtFavoriteCount" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblPostedDate" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPostedDate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="btnTalkWithUser" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnReport" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="86" max="32767" attributes="0"/>
+                          <EmptySpace pref="150" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -225,20 +205,6 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtListingID">
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblCategory">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Category&#xff1a;"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtCategory">
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblCondition">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Condition&#xff1a;"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtCondition">
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblPrice">
                   <Properties>

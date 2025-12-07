@@ -31,6 +31,8 @@ public class Enterprise4Initializer {
         // ✅ 3️⃣ 注册 Role 到 Organization
         irOrg.addRole(new ComplaintHandlerRole());
         csOrg.addRole(new MessageHandlerRole());
+        
+        
 
     }
     

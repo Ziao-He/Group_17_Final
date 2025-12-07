@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
  */
 public abstract class UserAccount {
     // Basic account information
+    private static int counter=1;
+            
     private String userId;
     private String username;
     private String email;
@@ -27,6 +29,7 @@ public abstract class UserAccount {
     public UserAccount() {
         this.createdAt = LocalDateTime.now();
         this.status = "PENDING";  // Default status
+        this.userId="U"+counter++;
     }
     
     /**

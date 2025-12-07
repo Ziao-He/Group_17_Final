@@ -1,0 +1,10 @@
+=== COMPLAINT REPORT ===
+ID: null
+Date: Sun Dec 07 11:12:25 EST 2025
+Reporter: listingmanager1
+Target: seller1
+Listing ID: LIST-SELLER-001-0001
+Listing Title: 222
+Category: listing_issue
+Reason: 1
+Status: Pending
