@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+package basement_class.Enterprise_3.Role;
+
 import UI.Enterprise3.SuperAdmin;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
@@ -11,11 +13,7 @@ import basement_class.Role;
 import basement_class.UserAccount;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Administrator
- */
-public class SystemAdminRole extends Role  {
+public class SystemAdminRole extends Role {
 
     @Override
     public String getRoleName() {
@@ -23,14 +21,11 @@ public class SystemAdminRole extends Role  {
     }
 
     @Override
-    public JPanel createWorkArea(UserAccount userAccount, 
-        Organization organization, 
-        Enterprise enterprise, 
-        EcoSystem system) {
-        
+    public JPanel createWorkArea(UserAccount userAccount,
+                                 Organization organization,
+                                 Enterprise enterprise,
+                                 EcoSystem system) {
+
         return new SuperAdmin(system, userAccount);
-        
     }
-
-
 }
