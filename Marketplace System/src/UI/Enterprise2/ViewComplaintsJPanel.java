@@ -5,30 +5,27 @@
 package UI.Enterprise2;
 
 import basement_class.EcoSystem;
-import basement_class.Enterprise;
-import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
-import basement_class.Organization;
+import basement_class.Enterprise_2.Organization.SellerOrganization;
 
 /**
  *
  * @author 心火牧神塞勒斯
  */
-public class OrderProcessorJPanel extends javax.swing.JPanel {
+public class ViewComplaintsJPanel extends javax.swing.JPanel {
 
-    private OrderProcessorAccount orderProcessorAccount;
-    private Organization organization;
-    private Enterprise enterprise;
     private EcoSystem system;
+    private SellerAccount seller;
+    private SellerOrganization sellerOrg;
     /**
-     * Creates new form OrderProcessorJPanel
+     * Creates new form ViewComplaintsJPanel
      */
-    public OrderProcessorJPanel(OrderProcessorAccount orderProcessorAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
+    public ViewComplaintsJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
         initComponents();
-        this.orderProcessorAccount = orderProcessorAccount;
-        this.organization = organization;
-        this.enterprise = enterprise;
-        this.system = system;
+        this.system=system;
+        this.seller=seller;
+        this.sellerOrg = org;
+        
     }
 
     /**
@@ -44,11 +41,11 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 582, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 434, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -20,7 +20,7 @@ public class Listing extends BaseEntity {
     private double price;           // 商品价格（可选，但课程里常用）
     private String status;          // Pending / Approved / Rejected
     private LocalDateTime submitTime; // 提交时间戳
-    
+    private int quantity = 1;
     public Listing(String id, UserAccount seller, String title, String description, String imagePath, double price) {
         this.id = id;
         this.seller = seller;
@@ -29,6 +29,7 @@ public class Listing extends BaseEntity {
         this.imagePath = imagePath;
         this.price = price;
         this.status = "Pending";
+        this.quantity = 1;
         this.submitTime = LocalDateTime.now();
     }
 
@@ -44,6 +45,14 @@ public class Listing extends BaseEntity {
 
     public String getTitle() { 
         return title; 
+    }
+    
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public void setTitle(String title) { 

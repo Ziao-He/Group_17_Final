@@ -17,7 +17,7 @@ public class EcoSystem {
     private UserAccountDirectory userAccountDirectory;
     private WorkRequestDirectory workRequestDirectory;
     private ListingDirectory listingDirectory; 
-    
+
     // Singleton instance
     private static EcoSystem instance;
     
@@ -71,7 +71,11 @@ public class EcoSystem {
     public WorkRequestDirectory getWorkRequestDirectory() {
         return workRequestDirectory;
     }
-    
+
+    public ListingDirectory getListingDirectory() {
+        return listingDirectory;
+    }
+        
     public void setWorkRequestDirectory(WorkRequestDirectory workRequestDirectory) {
         this.workRequestDirectory = workRequestDirectory;
     }

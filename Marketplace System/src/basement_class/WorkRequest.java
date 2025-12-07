@@ -18,6 +18,22 @@ public abstract class WorkRequest{
     protected LocalDateTime requestDate;    // When request was created
     protected LocalDateTime resolveDate;    // When request was resolved
     
+    protected UserAccount reviewer;
+    protected String reviewAction;
+    protected String reviewComment;
+
+    public UserAccount getReviewer() {
+        return reviewer;
+    }
+
+    public String getReviewAction() {
+        return reviewAction;
+    }
+
+    public String getReviewComment() {
+        return reviewComment;
+    }
+    
     public WorkRequest() {
         this.requestDate = LocalDateTime.now();
     }
@@ -92,6 +108,13 @@ public abstract class WorkRequest{
     
     public void setResolveDate(LocalDateTime resolveDate) {
         this.resolveDate = resolveDate;
+    }
+    
+        public void resolve(UserAccount reviewer, String action, String comment) {
+        this.reviewer = reviewer;
+        this.reviewAction = action;
+        this.reviewComment = comment;
+        this.resolveDate = LocalDateTime.now();
     }
 }
 

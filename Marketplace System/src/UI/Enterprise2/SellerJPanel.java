@@ -49,7 +49,7 @@ public class SellerJPanel extends javax.swing.JPanel {
         controlJPanel = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
         btnListingMangement = new javax.swing.JButton();
-        btnOrderProcessing = new javax.swing.JButton();
+        btnViewComplaints = new javax.swing.JButton();
         btnCreateNewListing = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
@@ -72,10 +72,10 @@ public class SellerJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnOrderProcessing.setText("View Notices");
-        btnOrderProcessing.addActionListener(new java.awt.event.ActionListener() {
+        btnViewComplaints.setText("View Complaints");
+        btnViewComplaints.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOrderProcessingActionPerformed(evt);
+                btnViewComplaintsActionPerformed(evt);
             }
         });
 
@@ -97,7 +97,7 @@ public class SellerJPanel extends javax.swing.JPanel {
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(btnOrderProcessing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnViewComplaints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                     .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -110,7 +110,7 @@ public class SellerJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnListingMangement)
                 .addGap(18, 18, 18)
-                .addComponent(btnOrderProcessing)
+                .addComponent(btnViewComplaints)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 487, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
@@ -118,7 +118,17 @@ public class SellerJPanel extends javax.swing.JPanel {
 
         jSplitPane1.setLeftComponent(controlJPanel);
 
-        workProcessJPanel.setLayout(new java.awt.CardLayout());
+        javax.swing.GroupLayout workProcessJPanelLayout = new javax.swing.GroupLayout(workProcessJPanel);
+        workProcessJPanel.setLayout(workProcessJPanelLayout);
+        workProcessJPanelLayout.setHorizontalGroup(
+            workProcessJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1104, Short.MAX_VALUE)
+        );
+        workProcessJPanelLayout.setVerticalGroup(
+            workProcessJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 672, Short.MAX_VALUE)
+        );
+
         jSplitPane1.setRightComponent(workProcessJPanel);
 
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
@@ -131,9 +141,13 @@ public class SellerJPanel extends javax.swing.JPanel {
         replaceWorkArea(panel);
     }//GEN-LAST:event_btnListingMangementActionPerformed
 
-    private void btnOrderProcessingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderProcessingActionPerformed
+    private void btnViewComplaintsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewComplaintsActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnOrderProcessingActionPerformed
+        ViewComplaintsJPanel panel =
+        new ViewComplaintsJPanel(system, sellerAccount, (SellerOrganization) organization);
+
+        replaceWorkArea(panel);
+    }//GEN-LAST:event_btnViewComplaintsActionPerformed
 
     private void btnCreateNewListingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewListingActionPerformed
         // TODO add your handling code here:
@@ -152,7 +166,7 @@ public class SellerJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnCreateNewListing;
     private javax.swing.JButton btnListingMangement;
     private javax.swing.JButton btnLogout;
-    private javax.swing.JButton btnOrderProcessing;
+    private javax.swing.JButton btnViewComplaints;
     private javax.swing.JPanel controlJPanel;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel workProcessJPanel;

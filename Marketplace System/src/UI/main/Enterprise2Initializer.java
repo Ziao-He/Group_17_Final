@@ -6,10 +6,10 @@ package UI.main;
 
 import basement_class.EcoSystem;
 import basement_class.Network;
-import basement_class.Enterprise_2.Account.ListingManagerAccount;
+import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_2.Enterprise.MarketplaceEnterprise;
-import basement_class.Enterprise_2.Organization.ListingManagementOrganization;
+import basement_class.Enterprise_2.Organization.OrderManagementOrganization;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Enterprise_2.Role.ListingManagerRole;
 import basement_class.Enterprise_2.Role.OrderProcessorRole;
@@ -38,8 +38,8 @@ public class Enterprise2Initializer {
         SellerOrganization sellerOrg =
                 (SellerOrganization) enterprise.getOrganizationByName("Seller Organization");
 
-        ListingManagementOrganization listingOrg =
-        (ListingManagementOrganization) enterprise.getOrganizationByName("Listing Management Organization");
+        OrderManagementOrganization listingOrg =
+        (OrderManagementOrganization) enterprise.getOrganizationByName("Listing Management Organization");
 
         System.out.println("  Created Enterprise: " + enterprise.getName());
         System.out.println("  Organizations: " + enterprise.getOrganizations().size());
@@ -53,7 +53,7 @@ public class Enterprise2Initializer {
      */
     private static void createTestAccounts(EcoSystem system,
                                            SellerOrganization sellerOrg,
-                                           ListingManagementOrganization listingOrg) {
+                                           OrderManagementOrganization OrderOrg) {
 
         System.out.println("  Creating test accounts...");
 
@@ -71,26 +71,26 @@ public class Enterprise2Initializer {
         System.out.println("    • seller1 / password123");
 
         // ===== 2. Listing Manager Account =====
-        ListingManagerAccount manager1 = new ListingManagerAccount();
+        SellerAccount manager1 = new SellerAccount();
         manager1.setUserId("LM-001");
         manager1.setUsername("listingmanager1");
         manager1.setPasswordHash("1234");
         manager1.setStatus("ACTIVE");
         manager1.setRole(new ListingManagerRole());
 
-        listingOrg.getUserAccountDirectory().addUserAccount(manager1);
+        sellerOrg.getUserAccountDirectory().addUserAccount(manager1);
         system.getUserAccountDirectory().addUserAccount(manager1);
 
         System.out.println("    • listingmanager1 / 1234");
         
-        SellerAccount orderProcessor = new SellerAccount();
+        OrderProcessorAccount orderProcessor = new OrderProcessorAccount();
         orderProcessor.setUserId("OP-001");
         orderProcessor.setUsername("order1");
         orderProcessor.setPasswordHash("12345");
         orderProcessor.setStatus("ACTIVE");
         orderProcessor.setRole(new OrderProcessorRole());
 
-        sellerOrg.getUserAccountDirectory().addUserAccount(orderProcessor);
+        OrderOrg.getUserAccountDirectory().addUserAccount(orderProcessor);
         system.getUserAccountDirectory().addUserAccount(orderProcessor);
 
         System.out.println("    • order1 / 12345");

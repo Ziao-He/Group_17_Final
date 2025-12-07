@@ -6,13 +6,19 @@ package UI.Enterprise2;
 
 import basement_class.DAO.ListingDao;
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
+import basement_class.Enterprise_3.WorkRequest.PolicyViolationRequest;
+import basement_class.Network;
+import basement_class.Organization;
+import basement_class.UserAccount;
 import java.io.File;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -31,7 +37,7 @@ import javax.swing.JOptionPane;
  *
  * @author 心火牧神塞勒斯
  */
-public class ManageListingJPanel extends javax.swing.JPanel {
+public class ManageAllListingJPanel extends javax.swing.JPanel {
 
     private EcoSystem system;
     private SellerAccount seller;
@@ -41,7 +47,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
     /**
      * Creates new form SellerJPanel
      */
-    public ManageListingJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
+    public ManageAllListingJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
         initComponents();
         this.system=system;
         this.seller=seller;
@@ -90,8 +96,11 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         lblListingID = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtQuantity = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        txtSellerID = new javax.swing.JTextField();
+        btnComplaint = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(102, 255, 255));
+        setBackground(new java.awt.Color(255, 255, 204));
 
         tblListing.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -154,24 +163,23 @@ public class ManageListingJPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Quantity");
 
+        jLabel2.setText("Seller ID ");
+
+        btnComplaint.setText("Start A Complaint");
+        btnComplaint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComplaintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(149, 149, 149)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(210, 210, 210)
-                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -184,25 +192,37 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(103, 103, 103)
-                                        .addComponent(lblDescription)
-                                        .addGap(55, 55, 55))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(btnSelectImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                                            .addComponent(txtStatus)
-                                            .addComponent(txtSubmitTime)
-                                            .addComponent(txtID))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
-                                        .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(20, 20, 20)))
-                                .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(btnSelectImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                                        .addComponent(txtStatus)
+                                        .addComponent(txtSubmitTime)
+                                        .addComponent(txtID))
+                                    .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(20, 20, 20)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtSellerID, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 840, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(114, 114, 114)
+                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(140, 140, 140)
+                                .addComponent(btnComplaint, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 6, Short.MAX_VALUE)))
                 .addContainerGap(245, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -211,8 +231,15 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnView)
-                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnView)
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtSellerID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -252,7 +279,8 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
-                    .addComponent(btnUpdate))
+                    .addComponent(btnUpdate)
+                    .addComponent(btnComplaint))
                 .addGap(99, 99, 99))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -279,7 +307,6 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRow = tblListing.getSelectedRow();
 
-        // 2. 检查是否有选中的行
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                 "Please select a listing from the table first.",
@@ -289,27 +316,21 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         }
 
         try {
-            // 3. 从选中的行获取 Listing ID
-            String listingId = (String) tblListing.getValueAt(selectedRow, 1); // 第二列是ID
+            // 1. 获取 Listing ID（第 1 列）
+            String listingId = (String) tblListing.getValueAt(selectedRow, 1);
 
-            // 4. 根据ID查找Listing对象
-            Listing selectedListing = null;
-            for (Listing listing : seller.getListings()) {
-                if (listing.getId().equals(listingId)) {
-                    selectedListing = listing;
-                    break;
-                }
-            }
+            // 2. 从系统查找对应 listing（不再从 seller.getListings() 取）
+            Listing selectedListing = system.getListingDirectory().findById(listingId);
 
             if (selectedListing == null) {
                 JOptionPane.showMessageDialog(this,
-                    "Selected listing not found in seller's list.",
+                    "Selected listing not found in system.",
                     "Listing Not Found",
                     JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // 5. 将Listing信息填充到文本框中
+            // 3. 填充 Listing 基本信息
             txtID.setText(selectedListing.getId());
             txtTitle.setText(selectedListing.getTitle());
             txtDescription.setText(selectedListing.getDescription());
@@ -317,59 +338,42 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             txtStatus.setText(selectedListing.getStatus());
             txtQuantity.setText(String.valueOf(selectedListing.getQuantity()));
 
-            // 格式化提交时间
+            // 4. ⭐ 显示 SellerID（新增功能）
+            txtSellerID.setText(selectedListing.getSellerId());
+
+            // 5. 显示提交时间
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String submitTime = dateFormat.format(
-                Date.from(selectedListing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())
+                Date.from(selectedListing.getSubmitTime()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant())
             );
             txtSubmitTime.setText(submitTime);
 
             // 6. 显示图片
             String imagePath = selectedListing.getImagePath();
-            System.out.println("Loading image from path: " + imagePath);
-
-            // 清除之前的显示
             imgLogo.setIcon(null);
 
             if (imagePath != null && !imagePath.trim().isEmpty()) {
-                try {
-                    File imageFile = new File(imagePath);
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    ImageIcon listingImage = new ImageIcon(imageFile.getAbsolutePath());
+                    if (listingImage.getIconWidth() > 0 && listingImage.getIconHeight() > 0) {
 
-                    // 调试信息
-                    System.out.println("Image file absolute path: " + imageFile.getAbsolutePath());
-                    System.out.println("Image file exists: " + imageFile.exists());
+                        int width = imgLogo.getWidth() > 0 ? imgLogo.getWidth() : 150;
+                        int height = imgLogo.getHeight() > 0 ? imgLogo.getHeight() : 150;
 
-                    if (imageFile.exists()) {
-                        // 加载图片
-                        ImageIcon listingImage = new ImageIcon(imageFile.getAbsolutePath());
+                        Image scaledImage = listingImage.getImage()
+                            .getScaledInstance(width, height, Image.SCALE_SMOOTH);
 
-                        // 检查图片是否有效加载
-                        if (listingImage.getIconWidth() > 0 && listingImage.getIconHeight() > 0) {
-                            // 调整大小以适应显示区域
-                            int width = imgLogo.getWidth() > 0 ? imgLogo.getWidth() : 150;
-                            int height = imgLogo.getHeight() > 0 ? imgLogo.getHeight() : 150;
-
-                            Image scaledImage = listingImage.getImage().getScaledInstance(
-                                width, height, Image.SCALE_SMOOTH);
-
-                            imgLogo.setIcon(new ImageIcon(scaledImage));
-                            System.out.println("Image loaded and displayed successfully");
-                        } else {
-                            System.out.println("Image loaded but has zero dimensions");
-                        }
-                    } else {
-                        System.out.println("Image file does not exist: " + imageFile.getAbsolutePath());
+                        imgLogo.setIcon(new ImageIcon(scaledImage));
                     }
-
-                } catch (Exception e) {
-                    System.err.println("Error loading image: " + e.getMessage());
                 }
-            } else {
-                System.out.println("No image path specified for this listing");
             }
 
-            // 7.在控制台输出调试信息
-            System.out.println("Viewing listing: " + selectedListing.getId() + " - " + selectedListing.getTitle());
+            // 7. 调试输出
+            System.out.println("Viewing listing: " + selectedListing.getId()
+                + " | seller = " + selectedListing.getSellerId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -396,18 +400,12 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             // 1. Get listing ID from table
             String listingId = (String) tblListing.getValueAt(selectedRow, 1);
 
-            // 2. Find listing object from seller
-            Listing selectedListing = null;
-            for (Listing listing : seller.getListings()) {
-                if (listing.getId().equals(listingId)) {
-                    selectedListing = listing;
-                    break;
-                }
-            }
+            
+            Listing selectedListing = system.getListingDirectory().findById(listingId);
 
             if (selectedListing == null) {
                 JOptionPane.showMessageDialog(this,
-                    "Listing not found.",
+                    "Listing not found in system.",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
                 return;
@@ -425,10 +423,10 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             selectedListing.setPrice(newPrice);
             selectedListing.setQuantity(newQuantity);
 
-            // 5. Update submit time to "now" (optional but realistic)
+            // 5. Update submit time
             selectedListing.setSubmitTime(LocalDateTime.now());
 
-            // 6. Update table row to reflect changes
+            // 6. Update table
             DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
             model.setValueAt(newTitle, selectedRow, 0);
             model.setValueAt(String.format("$%.2f", newPrice), selectedRow, 2);
@@ -440,9 +438,8 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                             .toInstant()));
 
             model.setValueAt(updatedTime, selectedRow, 4);
-            model.setValueAt(newQuantity, selectedRow, 5);  // Quantity column
+            model.setValueAt(newQuantity, selectedRow, 5);
 
-            // 7. Notify user
             JOptionPane.showMessageDialog(this,
                 "Listing updated successfully!",
                 "Success",
@@ -460,7 +457,8 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 "System Error",
                 JOptionPane.ERROR_MESSAGE);
         }
-        clearForm(); 
+
+        clearForm();
         setViewMode();
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -469,14 +467,140 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         setUpdateMode();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+    private void btnComplaintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComplaintActionPerformed
+        // TODO add your handling code here:
+        System.out.println("=== COMPLAINT PROCESS START ===");
+    
+        int selectedRow = tblListing.getSelectedRow();
+        if (selectedRow == -1) {
+            System.out.println("ERROR: No row selected");
+            JOptionPane.showMessageDialog(this,
+                "Please select a listing first.",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        System.out.println("Step 1: Row selected: " + selectedRow);
+
+        // 1. Get listing ID from table
+        String listingId = (String) tblListing.getValueAt(selectedRow, 1);
+        System.out.println("Step 2: Listing ID from table: " + listingId);
+
+        // 2. Get the listing object from global directory
+        Listing selectedListing = system.getListingDirectory().findById(listingId);
+
+        if (selectedListing == null) {
+            System.out.println("ERROR: Listing not found in system directory");
+            JOptionPane.showMessageDialog(this,
+                "Listing not found in system.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        System.out.println("Step 3: Listing found: " + selectedListing.getTitle());
+
+        // 3. Get seller account from system
+        String sellerId = selectedListing.getSellerId();
+        System.out.println("Step 4: Seller ID from listing: " + sellerId);
+
+        UserAccount targetSeller = system.getUserAccountDirectory().findByUserId(sellerId);
+
+        if (targetSeller == null) {
+            System.out.println("ERROR: Cannot find seller account for ID: " + sellerId);
+            JOptionPane.showMessageDialog(this,
+                "Cannot find seller account for this listing.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        System.out.println("Step 5: Target seller found: " + targetSeller.getUsername());
+
+        // 4. Ask for complaint reason
+        String reason = JOptionPane.showInputDialog(
+                this,
+                "Enter complaint reason:",
+                "Complaint",
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (reason == null) {
+            System.out.println("INFO: User cancelled complaint (clicked Cancel)");
+            return;
+        }
+
+        if (reason.trim().isEmpty()) {
+            System.out.println("INFO: User provided empty reason");
+            JOptionPane.showMessageDialog(this,
+                "Complaint cancelled (no reason provided).",
+                "Cancelled",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        System.out.println("Step 6: Reason provided: " + reason);
+
+        // 5. Create the PolicyViolationRequest
+        System.out.println("Step 7: Creating PolicyViolationRequest...");
+        System.out.println("  Reporter: " + seller.getUsername());
+        System.out.println("  Target: " + targetSeller.getUsername());
+        System.out.println("  Listing: " + selectedListing.getId());
+
+        try {
+            PolicyViolationRequest request = new PolicyViolationRequest(
+                seller,                     // reporter
+                targetSeller,               // target user
+                selectedListing,            // listing
+                "listing_issue",            // category
+                reason                      // info
+            );
+
+            System.out.println("Step 8: Request created successfully");
+            System.out.println("  Request ID: " + request.getId());
+            System.out.println("  Request listing: " + (request.getListing() != null ? request.getListing().getId() : "NULL"));
+
+            // 6. Submit to Policy Management Organization
+            System.out.println("Step 9: Submitting complaint...");
+            boolean sent = submitComplaintToPolicyManagement(request);
+
+            if (sent) {
+                System.out.println("SUCCESS: Complaint submitted!");
+                JOptionPane.showMessageDialog(this,
+                    "Complaint submitted successfully!",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                System.out.println("FAILED: submitComplaintToPolicyManagement returned false");
+                JOptionPane.showMessageDialog(this,
+                    "Failed to submit complaint.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            System.err.println("ERROR: Exception creating request: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error creating complaint: " + e.getMessage(),
+                "System Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+
+        System.out.println("=== COMPLAINT PROCESS END ===");
+    }//GEN-LAST:event_btnComplaintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnComplaint;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSelectImage;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnView;
     private javax.swing.JLabel imgLogo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblDescription;
     private javax.swing.JLabel lblImagePath;
@@ -490,6 +614,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtPrice;
     private javax.swing.JTextField txtQuantity;
+    private javax.swing.JTextField txtSellerID;
     private javax.swing.JTextField txtStatus;
     private javax.swing.JTextField txtSubmitTime;
     private javax.swing.JTextField txtTitle;
@@ -499,7 +624,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
 
     private void loadSellerListings() {
         // 1. 获取当前卖家的所有Listing
-        List<Listing> sellerListings = seller.getListings();
+        List<Listing> allListings = system.getListingDirectory().getAllListings();
 
         // 2. 获取表格模型
         DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
@@ -510,7 +635,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         // 4. 添加数据到表格
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        for (Listing listing : sellerListings) {
+        for (Listing listing : allListings) {
             Object[] rowData = new Object[6];
 
             rowData[0] = listing.getTitle();                // Title
@@ -527,7 +652,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         tblListing.repaint();
 
         // 6. 显示记录数
-        System.out.println("Loaded " + sellerListings.size() + " listings for seller: " + seller.getUsername());
+        System.out.println("Loaded " + allListings.size() + " listings for seller: " + seller.getUsername());
     }
 
     private void clearForm() {
@@ -571,6 +696,90 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         txtSubmitTime.setEnabled(true);
         txtTitle.setEnabled(true);
         btnSelectImage.setEnabled(true);
+    }
+
+    private boolean submitComplaintToPolicyManagement(PolicyViolationRequest request) {
+        System.out.println("Step 9.1: Starting submission...");
+    
+        try {
+            // Set sender
+            request.setSender(seller);
+            System.out.println("Step 9.2: Sender set to: " + seller.getUsername());
+
+            // 方案A: 尝试添加到系统目录
+            System.out.println("Step 9.3: Trying to add to system work directory...");
+            system.getWorkRequestDirectory().addWorkRequest(request);
+            System.out.println("Step 9.4: Added to system directory");
+
+            // 方案B: 尝试找到Content Control组织
+            System.out.println("Step 9.5: Looking for Content Control organization...");
+            boolean foundOrg = false;
+
+            for (Network network : system.getNetworks()) {
+                System.out.println("  Network: " + network.getName());
+
+                for (Enterprise enterprise : network.getEnterprises()) {
+                    System.out.println("    Enterprise: " + enterprise.getName());
+
+                    for (Organization org : enterprise.getOrganizations()) {
+                        System.out.println("      Organization: " + org.getName());
+
+                        if (org.getName().equals("Content Control")) {
+                            System.out.println("      FOUND Content Control!");
+                            org.getWorkRequestDirectory().addWorkRequest(request);
+                            foundOrg = true;
+                            System.out.println("      Added to organization queue");
+                        }
+                    }
+                }
+            }
+
+            if (!foundOrg) {
+                System.out.println("WARNING: Content Control organization not found, but complaint saved to system directory");
+            }
+
+            // 方案C: 保存到文件
+            System.out.println("Step 9.6: Saving complaint to file...");
+            saveComplaintToFile(request);
+
+            System.out.println("Step 9.7: All submission methods completed");
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("ERROR in submission: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private void saveComplaintToFile(PolicyViolationRequest request) {
+        try {
+            File dir = new File("data/complaints");
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            String filename = "complaint_" + request.getId() + "_" + System.currentTimeMillis() + ".txt";
+            File file = new File(dir, filename);
+
+            try (PrintWriter pw = new PrintWriter(file)) {
+                pw.println("=== COMPLAINT REPORT ===");
+                pw.println("ID: " + request.getId());
+                pw.println("Date: " + new Date());
+                pw.println("Reporter: " + request.getReporter().getUsername());
+                pw.println("Target: " + request.getTargetUser().getUsername());
+                pw.println("Listing ID: " + request.getListing().getId());
+                pw.println("Listing Title: " + request.getListing().getTitle());
+                pw.println("Category: " + request.getViolationCategory());
+                pw.println("Reason: " + request.getViolationInfo());
+                pw.println("Status: " + request.getStatus());
+            }
+
+            System.out.println("Complaint saved to file: " + file.getAbsolutePath());
+
+        } catch (Exception e) {
+            System.err.println("WARNING: Could not save to file: " + e.getMessage());
+        }
     }
     
 
