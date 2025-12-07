@@ -32,7 +32,7 @@ public class AdminJPanel extends javax.swing.JPanel {
         this.userOrg=userOrg;
         
 //        FakeDataGenerator.generate(system, enterprise);
-        configureButtonByRole();
+        configureButtonByOrganization();
     }
 
     /**
@@ -51,6 +51,7 @@ public class AdminJPanel extends javax.swing.JPanel {
         btnRegistrationReview = new javax.swing.JButton();
         btnContentModeration = new javax.swing.JButton();
         btnPolicyEnforcement = new javax.swing.JButton();
+        btnHistory = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -93,6 +94,13 @@ public class AdminJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnHistory.setText("History");
+        btnHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
         controlJPanel.setLayout(controlJPanelLayout);
         controlJPanelLayout.setHorizontalGroup(
@@ -106,7 +114,8 @@ public class AdminJPanel extends javax.swing.JPanel {
                     .addComponent(btnPolicyEnforcement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(btnLogout)))
+                        .addComponent(btnLogout))
+                    .addComponent(btnHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         controlJPanelLayout.setVerticalGroup(
@@ -120,7 +129,9 @@ public class AdminJPanel extends javax.swing.JPanel {
                 .addComponent(btnContentModeration)
                 .addGap(18, 18, 18)
                 .addComponent(btnPolicyEnforcement)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 446, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnHistory)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 405, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
         );
@@ -193,10 +204,23 @@ public class AdminJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnLogoutActionPerformed
 
+    private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
+        // TODO add your handling code here:
+     
+        UserControlOrganization org =
+        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+
+
+        HistoryPanel panel = new HistoryPanel(system, adminUser, org);
+
+        replaceWorkArea(panel);
+    }//GEN-LAST:event_btnHistoryActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccountManagement;
     private javax.swing.JButton btnContentModeration;
+    private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnPolicyEnforcement;
     private javax.swing.JButton btnRegistrationReview;
@@ -211,35 +235,39 @@ public class AdminJPanel extends javax.swing.JPanel {
         workProcessJPanel.revalidate();
         workProcessJPanel.repaint();
     }
+private void configureButtonByOrganization() {
 
-    private void configureButtonByRole() {
-        String role = adminUser.getRole().getRoleName();
+    // ✅ 默认全部隐藏
+    btnAccountManagement.setVisible(false);
+    btnRegistrationReview.setVisible(false);
+    btnContentModeration.setVisible(false);
+    btnPolicyEnforcement.setVisible(false);
+    btnHistory.setVisible(false);
 
-    // ✅ 总管理员 → 4 个按钮全部可见
-    if (role.equals("PlatformAdmin")) {
+    // ✅ 超级管理员（SystemAdmin） → 不绑定 organization → 全开
+    if (adminUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
         btnAccountManagement.setVisible(true);
         btnRegistrationReview.setVisible(true);
         btnContentModeration.setVisible(true);
         btnPolicyEnforcement.setVisible(true);
+        btnHistory.setVisible(true);
         return;
     }
 
-    // ✅ 账号管理员 → 只能看账号相关
-    if (role.equals("AccountAdmin") || role.equals("RegistrationReviewer")) {
+    // ✅ 账号管理组织
+    if (userOrg instanceof UserControlOrganization) {
         btnAccountManagement.setVisible(true);
         btnRegistrationReview.setVisible(true);
-        btnContentModeration.setVisible(false);
-        btnPolicyEnforcement.setVisible(false);
+        btnHistory.setVisible(true);
         return;
     }
 
-    // ✅ 内容管理员 → 只能看内容相关
-    if (role.equals("ContentModerator") || role.equals("PolicyEnforcer")) {
-        btnAccountManagement.setVisible(false);
-        btnRegistrationReview.setVisible(false);
+    // ✅ 内容 + 违规组织
+    if (userOrg instanceof ContentControlOrganization) {
         btnContentModeration.setVisible(true);
         btnPolicyEnforcement.setVisible(true);
+        btnHistory.setVisible(true);
+        return;
     }
-
-    }
+}
 }

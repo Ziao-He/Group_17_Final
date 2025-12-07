@@ -25,7 +25,7 @@ public class main {
         EcoSystem system = EcoSystem.getInstance();
 
         // B. 初始化 Enterprise3（创建 User Control / Content Control 组织等）
-        Enterprise3Initializer.initialize(system);
+//        Enterprise3Initializer.initialize(system);
 
         // ✅ C. 生成 Fake 用户（关键：必须在取用户之前）
         FakeDataGenerator.generate(system,
