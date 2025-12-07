@@ -9,6 +9,8 @@ import basement_class.*;
 import basement_class.DAO.UserAccountDAO;
 import basement_class.DAO.UserAccountFileDAO;
 import basement_class.DAO.UserAccountService;
+import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_2.ListingDirectory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
@@ -26,11 +28,12 @@ public class LoginPage extends javax.swing.JFrame {
      */
     public LoginPage() {
         system = SystemInitializer.initialize();
-        UserAccountDAO dao = new UserAccountFileDAO();
-        UserAccountService userService = new UserAccountService(dao, system);
+        initDemoListings();
+        //UserAccountDAO dao = new UserAccountFileDAO();
+        //UserAccountService userService = new UserAccountService(dao, system);
     
 // ✅ 启动一次性加载
-userService.loadAllUsers();
+//userService.loadAllUsers();
         initComponents();
     }
     
@@ -153,228 +156,74 @@ userService.loadAllUsers();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-//
-//    String username = txtUser.getText().trim();
-//    String password = txtPass.getText().trim();
-//
-//    // ===== 1️⃣ 基础校验 =====
-//    if (username.isEmpty() || password.isEmpty()) {
-//        JOptionPane.showMessageDialog(this, "Please enter username and password");
-//        return;
-//    }
-//
-//    UserAccount loginUser = null;
-//    Organization userOrg = null;
-//    Enterprise userEnterprise = null;
-//    
-//    
-//
-//    // =====================================================
-//    // ✅ 2️⃣ 超级管理员登录（SystemAdmin → 不走 Organization）
-//    // =====================================================
-//    loginUser = system.getUserAccountDirectory().findByUsername(username);
-//
-//    if (loginUser != null 
-//        && loginUser.authenticate(password)
-//        && loginUser.getRole().getClass().getSimpleName().equals("SystemAdminRole")) {
-//
-//        loginUser.recordLogin();
-//
-//        JPanel workArea = new SuperAdmin(system, loginUser);
-//
-//        this.setContentPane(workArea);
-//        this.revalidate();
-//        this.repaint();
-//
-//        JOptionPane.showMessageDialog(workArea,
-//            "Welcome System Admin: " + loginUser.getUsername(),
-//            "Login Successful",
-//            JOptionPane.INFORMATION_MESSAGE);
-//        return;
-//    }
-//
-//    // =====================================================
-//    // ✅ 3️⃣ 普通用户 & Enterprise 3 管理员（按 Organization 查找）
-//    // =====================================================
-//    for (Network network : system.getNetworks()) {
-//        for (Enterprise enterprise : network.getEnterprises()) {
-//            for (Organization org : enterprise.getOrganizations()) {
-//
-//                UserAccount ua =
-//                    org.getUserAccountDirectory().findByUsername(username);
-//
-//                if (ua != null && ua.authenticate(password)) {
-//                    loginUser = ua;
-//                    userOrg = org;
-//                    userEnterprise = enterprise;
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//    // ===== 4️⃣ 登录失败 =====
-//    if (loginUser == null) {
-//        JOptionPane.showMessageDialog(this,
-//            "Invalid username or password",
-//            "Login Failed",
-//            JOptionPane.ERROR_MESSAGE);
-//        return;
-//    }
-//
-//    // ===== 5️⃣ 状态校验 =====
-//    if (!loginUser.isActive()) {
-//        JOptionPane.showMessageDialog(this,
-//            "Your account is currently: " + loginUser.getStatus(),
-//            "Account Disabled",
-//            JOptionPane.WARNING_MESSAGE);
-//        return;
-//    }
-//
-//    // ===== 6️⃣ 记录登录时间 =====
-//    loginUser.recordLogin();
-//
-//    JPanel workArea = null;
-//
-//    // =====================================================
-//    // ✅ Enterprise 1 — Buyer
-//    // =====================================================
-//    if (loginUser instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
-//
-//        workArea = new UI.Enterprise1.BuyerJPanel(
-//            (basement_class.Enterprise_1.Account.BuyerAccount) loginUser,
-//            userOrg,
-//            userEnterprise,
-//            system
-//        );
-//    }
-//
-//    // =====================================================
-//    // ✅ Enterprise 2 — Seller
-//    // =====================================================
-//    else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount) {
-//
-//        workArea = new UI.Enterprise2.SellerJPanel(
-//            (basement_class.Enterprise_2.Account.SellerAccount) loginUser,
-//            userOrg,
-//            userEnterprise,
-//            system
-//        );
-//    }
-//
-//    // =====================================================
-//    // ✅ ✅ ✅ Enterprise 3 — 所有管理员统一进 AdminJPanel
-//    // ✅ ✅ ✅ 后续由 Organization 控制按钮权限
-//    // =====================================================
-//    else {
-//        if (loginUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
-//
-//        for (Network n : system.getNetworks()) {
-//            if (!n.getEnterprises().isEmpty()) {
-//                userEnterprise = n.getEnterprises().get(0);   // ✅ 你唯一的 Enterprise 3
-//                break;
-//            }
-//        }
-//    }
-//        
-//        workArea = new UI.Enterprise3.AdminJPanel(
-//            system,
-//            loginUser,
-//            userEnterprise,
-//            userOrg
-//        );
-//    }
-//
-//    // ===== 7️⃣ 防止空跳转 =====
-//    if (workArea == null) {
-//        JOptionPane.showMessageDialog(this,
-//            "No workspace found for your account type",
-//            "Configuration Error",
-//            JOptionPane.ERROR_MESSAGE);
-//        return;
-//    }
-//
-//    // ===== 8️⃣ 切换界面 =====
-//    this.setContentPane(workArea);
-//    this.revalidate();
-//    this.repaint();
-//
-//    JOptionPane.showMessageDialog(workArea,
-//        "Welcome " + loginUser.getUsername() +
-//        "\nOrganization: " + (userOrg == null ? "System Admin" : userOrg.getName()),
-//        "Login Successful",
-//        JOptionPane.INFORMATION_MESSAGE);
-//        // =========================================
-        // ===============================
-    // ✅ 1️⃣ 读取用户名和密码
-    // ===============================
-    String username = txtUser.getText().trim();
-    String password = txtPass.getText().trim();
 
-    // ===============================
-    // ✅ 2️⃣ 基础输入校验
-    // ===============================
+    String username = txtUser.getText().trim();
+    String password = txtPass.getText().trim();   // 你现在用的是 JTextField，不是 JPasswordField
+
+    // 2️⃣ 基础校验
     if (username.isEmpty() || password.isEmpty()) {
         JOptionPane.showMessageDialog(this,
                 "Please enter username and password",
-                "Input Error",
+                "Missing Information",
                 JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // ===============================
-    // ✅ 3️⃣ 准备登录结果变量
-    // ===============================
     UserAccount loginUser = null;
     Organization userOrg = null;
     Enterprise userEnterprise = null;
 
-    // ============================================================
-    // ✅ 4️⃣ System Admin 登录（不挂 Organization / Enterprise）
-    // ============================================================
+    // =====================================================
+    // 3️⃣ 先尝试：System 级别的超级管理员（Enterprise_3）
+    //    这些账号一般只存放在 system.getUserAccountDirectory()
+    // =====================================================
     loginUser = system.getUserAccountDirectory().findByUsername(username);
 
-    // if (loginUser != null
-            //&& loginUser.authenticate(password)
-            //&& loginUser.getRole().getClass().getSimpleName().equals("SystemAdminRole")) {
+    if (loginUser != null
+            && loginUser.authenticate(password)
+            && loginUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
 
-        //loginUser.recordLogin();
+        // 记录登录
+        loginUser.recordLogin();
 
-        //JPanel workArea = new SuperAdmin(system, loginUser);
-        //this.setContentPane(workArea);
-        //this.revalidate();
-        //this.repaint();
+        // 直接进入 SuperAdmin 界面
+        JPanel workArea = new SuperAdmin(system, loginUser);
+        this.setContentPane(workArea);
+        this.revalidate();
+        this.repaint();
 
-        //JOptionPane.showMessageDialog(workArea,
-                //"Welcome System Admin: " + loginUser.getUsername(),
-                //"Login Successful",
-                //JOptionPane.INFORMATION_MESSAGE);
-        //return;   // ✅ System Admin 登录结束
-    //}
+        JOptionPane.showMessageDialog(workArea,
+                "Welcome " + loginUser.getUsername(),
+                "Login Successful",
+                JOptionPane.INFORMATION_MESSAGE);
+        return;
+    }
 
-    // ============================================================
-    // ✅ 5️⃣ 普通用户 / Enterprise 管理员登录（按 Organization 查找）
-    // ============================================================
+    // 如果到这里，说明不是 super admin，重置一下
+    loginUser = null;
+
+    // =====================================================
+    // 4️⃣ 普通用户：在 Network → Enterprise → Organization 里查找
+    //    包括你负责的 Enterprise_1 里的 Buyer、其他 enterprise 的用户等
+    // =====================================================
+    outer:
     for (Network network : system.getNetworks()) {
         for (Enterprise enterprise : network.getEnterprises()) {
             for (Organization org : enterprise.getOrganizations()) {
 
-                UserAccount ua =
-                        org.getUserAccountDirectory().findByUsername(username);
+                UserAccount ua = org.getUserAccountDirectory().findByUsername(username);
 
                 if (ua != null && ua.authenticate(password)) {
                     loginUser = ua;
                     userOrg = org;
                     userEnterprise = enterprise;
-                    break;
+                    break outer;
                 }
             }
         }
     }
 
-    // ===============================
-    // ✅ 6️⃣ 登录失败校验
-    // ===============================
+    // 5️⃣ 登录失败——没找到对应账号 / 密码不对
     if (loginUser == null) {
         JOptionPane.showMessageDialog(this,
                 "Invalid username or password",
@@ -383,98 +232,50 @@ userService.loadAllUsers();
         return;
     }
 
-    // ===============================
-    // ✅ 7️⃣ 账号状态校验
-    // ===============================
-    if (!loginUser.isActive()) {
+    // 6️⃣ 可选：检查账号状态（如果你有 status 字段）
+    // 如果你的 UserAccount 里没有 getStatus()，把这一段删掉即可
+    if (loginUser.getStatus() != null
+            && !"ACTIVE".equalsIgnoreCase(loginUser.getStatus())) {
         JOptionPane.showMessageDialog(this,
-                "Your account is currently: " + loginUser.getStatus(),
-                "Account Disabled",
+                "Your account is not active. Please contact the administrator.",
+                "Account Inactive",
                 JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // ===============================
-    // ✅ 8️⃣ 记录最后登录时间
-    // ===============================
+    // 7️⃣ 记录登录时间 / 次数
     loginUser.recordLogin();
 
-    JPanel workArea = null;
-
-    // ============================================================
-    // ✅ ✅ ✅ Enterprise 1 — Buyer（✅ 预留）
-    // ============================================================
-    if (loginUser instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
-
-        // TODO: Enterprise 1 买家界面跳转逻辑
-        // workArea = new UI.Enterprise1.BuyerJPanel(...);
-    }
-
-    // ============================================================
-    // ✅ ✅ ✅ Enterprise 2 — Seller（✅ 预留）
-    // ============================================================
-    else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount) {
-
-        // TODO: Enterprise 2 卖家界面跳转逻辑
-        // workArea = new UI.Enterprise2.SellerJPanel(...);
-    }
-
-    // ============================================================
-    // ✅ ✅ ✅ Enterprise 3 — Platform Management（✅ 已实现）
-    // ============================================================
-    else {
-
-        // ✅ 确保拿到 Enterprise 3
-        if (userEnterprise == null && loginUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
-            for (Network n : system.getNetworks()) {
-        for (Enterprise e : n.getEnterprises()) {
-        if ("Platform Management".equals(e.getName())) {
-            userEnterprise = e;
-            break;
-        }
-    }
-            }
-        }
-
-        workArea = new UI.Enterprise3.AdminJPanel(
-                system,
-                loginUser,
-                userEnterprise,
-                userOrg
-        );
-    }
-
-    // ============================================================
-    // ✅ ✅ ✅ Enterprise 4 — （✅ 预留）
-    // ============================================================
-    // else if (loginUser instanceof basement_class.Enterprise_4.Account.XXXAccount) {
-    //     TODO: Enterprise 4 跳转逻辑
-    // }
-
-    // ===============================
-    // ✅ 9️⃣ 防止空跳转
-    // ===============================
-    if (workArea == null) {
+    // 8️⃣ 按 Role 创建 WorkArea（关键点！！！）
+    Role role = loginUser.getRole();
+    if (role == null) {
         JOptionPane.showMessageDialog(this,
-                "No workspace found for your account type",
-                "Configuration Error",
+                "This account does not have a role assigned.\nPlease contact the administrator.",
+                "Role Missing",
                 JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    // ===============================
-    // ✅ 🔟 正式切换页面
-    // ===============================
+    JPanel workArea = role.createWorkArea(loginUser, userOrg, userEnterprise, system);
+
+    if (workArea == null) {
+        JOptionPane.showMessageDialog(this,
+                "The UI for role: " + role.getRoleName() + " is not implemented yet.",
+                "Not Implemented",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // 9️⃣ 真正切换页面
     this.setContentPane(workArea);
     this.revalidate();
     this.repaint();
 
     JOptionPane.showMessageDialog(workArea,
             "Welcome " + loginUser.getUsername()
-            + "\nOrganization: " + (userOrg == null ? "System Admin" : userOrg.getName()),
+            + (userOrg == null ? "" : ("\nOrganization: " + userOrg.getName())),
             "Login Successful",
             JOptionPane.INFORMATION_MESSAGE);
-    
  
     }//GEN-LAST:event_btnLoginActionPerformed
 
@@ -576,6 +377,73 @@ userService.loadAllUsers();
        return null;
    }
 
- 
+   private void initDemoListings() {
+    if (system == null) {
+        System.out.println("EcoSystem is null, cannot init demo listings.");
+        return;
+    }
+
+    ListingDirectory listingDir = system.getListingDirectory();
+    if (listingDir == null) {
+        System.out.println("ListingDirectory is null, cannot init demo listings.");
+        return;
+    }
+
+    // 如果已经有数据了，就不重复添加
+    if (listingDir.size() > 0) {
+        System.out.println("ListingDirectory already has " + listingDir.size() + " listings, skip demo init.");
+        return;
+    }
+
+    System.out.println("Initializing demo listings in LoginPage...");
+
+    // 随便造一个卖家账号（不用放到系统目录里，只给 Listing 显示用）
+    basement_class.Enterprise_2.Account.SellerAccount demoSeller =
+            new basement_class.Enterprise_2.Account.SellerAccount();
+    demoSeller.setUserId("SELLER-DEMO");
+    demoSeller.setUsername("demo_seller");
+    demoSeller.setPasswordHash("123");   // 随便写，反正不登录用
+    demoSeller.setStatus("ACTIVE");
+
+    // ====== Demo Listing 1 ======
+    Listing l1 = new Listing(
+            "L-001",
+            demoSeller,
+            "二手 iPhone 13",
+            "99 新，电池健康 92%，无明显划痕",
+            "iphone13.png",
+            4200
+    );
+    l1.setStatus("Approved");
+
+    // ====== Demo Listing 2 ======
+    Listing l2 = new Listing(
+            "L-002",
+            demoSeller,
+            "机械键盘",
+            "青轴机械键盘，支持 RGB 背光",
+            "keyboard.png",
+            299
+    );
+    l2.setStatus("Approved");
+
+    // ====== Demo Listing 3 ======
+    Listing l3 = new Listing(
+            "L-003",
+            demoSeller,
+            "显示器支架",
+            "可升降 / 旋转，支持 27 寸以内显示器",
+            "monitor_stand.png",
+            159
+    );
+    l3.setStatus("Approved");
+
+    // 加入目录
+    listingDir.addListing(l1);
+    listingDir.addListing(l2);
+    listingDir.addListing(l3);
+
+    System.out.println("Demo listings added. Total = " + listingDir.size());
+}
     
 }

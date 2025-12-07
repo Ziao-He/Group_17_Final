@@ -45,7 +45,7 @@ public class Enterprise2Initializer {
         System.out.println("  Organizations: " + enterprise.getOrganizations().size());
 
         // 3. 创建测试账户
-//        createTestAccounts(system, sellerOrg, listingOrg);
+        createTestAccounts(system, sellerOrg, listingOrg);
     }
 
     /**

@@ -41,6 +41,26 @@ public class SystemInitializer {
         
         System.out.println("\n=== System Ready ===\n");
         
+        System.out.println("===== Listing Directory (After Initialization) =====");
+
+        if (system.getListingDirectory() == null) {
+            System.out.println("ListingDirectory = NULL !!! (可能没初始化)");
+        } else if (system.getListingDirectory().getAllListings().isEmpty()) {
+            System.out.println("ListingDirectory is EMPTY.");
+        } else {
+            system.getListingDirectory().getAllListings().forEach(l -> {
+                System.out.println(
+                        l.getId() + " | " +
+                        l.getTitle() + " | " +
+                        l.getPrice() + " | Seller = " +
+                        l.getSeller().getUsername() + " | Status = " +
+                        l.getStatus()
+                );
+            });
+        }
+
+        System.out.println("====================================================");
+        
         return system;
     }
     

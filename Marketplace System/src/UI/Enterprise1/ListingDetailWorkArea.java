@@ -32,6 +32,8 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         this.parentPanel = parentPanel;
         
         initComponents();
+        rbnYes.setEnabled(false);
+        rbnNo.setEnabled(false);
         
         // Load listing details
         loadListingDetails();
@@ -76,6 +78,7 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         btnTalkWithUser = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
         btnAddfavorite = new javax.swing.JButton();
+        btnReport = new javax.swing.JButton();
         PhotoJpanel = new javax.swing.JPanel();
         Picture = new javax.swing.JLabel();
 
@@ -107,8 +110,18 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         lblNego.setText("Is Negotiable?");
 
         rbnYes.setText("Yes");
+        rbnYes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbnYesActionPerformed(evt);
+            }
+        });
 
         rbnNo.setText("No");
+        rbnNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbnNoActionPerformed(evt);
+            }
+        });
 
         lblDescri.setText("Description:");
 
@@ -142,6 +155,13 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         btnAddfavorite.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddfavoriteActionPerformed(evt);
+            }
+        });
+
+        btnReport.setText("Report");
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
             }
         });
 
@@ -189,12 +209,14 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                             .addComponent(txtCategory)
                             .addComponent(txtCondition)))
                     .addGroup(ListingJpanelLayout.createSequentialGroup()
-                        .addComponent(btnTalkWithUser)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(ListingJpanelLayout.createSequentialGroup()
                         .addComponent(btnBack)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAddfavorite)))
+                        .addComponent(btnAddfavorite))
+                    .addGroup(ListingJpanelLayout.createSequentialGroup()
+                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnTalkWithUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         ListingJpanelLayout.setVerticalGroup(
@@ -248,7 +270,9 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(btnTalkWithUser))
                     .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnReport)
+                .addContainerGap(86, Short.MAX_VALUE))
         );
 
         jSplitPane2.setLeftComponent(ListingJpanel);
@@ -322,6 +346,18 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnAddfavoriteActionPerformed
 
+    private void rbnYesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbnYesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbnYesActionPerformed
+
+    private void rbnNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbnNoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbnNoActionPerformed
+
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReportActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane DescriJpanel;
@@ -330,6 +366,7 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
     private javax.swing.JLabel Picture;
     private javax.swing.JButton btnAddfavorite;
     private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnReport;
     private javax.swing.JButton btnTalkWithUser;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;

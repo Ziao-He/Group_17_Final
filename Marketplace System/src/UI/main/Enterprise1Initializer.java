@@ -43,8 +43,8 @@ public class Enterprise1Initializer {
         System.out.println("  Created Enterprise: " + enterprise.getName());
         System.out.println("  Organizations: " + enterprise.getOrganizations().size());
         
-//        // Create test accounts
-//        createTestAccounts(system, shoppingOrg, orderOrg);
+        // Create test accounts
+        createTestAccounts(system, shoppingOrg, orderOrg);
     }
     
     /**
