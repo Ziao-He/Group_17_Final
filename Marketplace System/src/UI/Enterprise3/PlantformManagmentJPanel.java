@@ -48,9 +48,21 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         this.admin=admin;
         this.userOrg = org;
         loadTable();
+        initManagementTypeComboBox();
+        jComboBox.setSelectedIndex(0);
+
+        javax.swing.SwingUtilities.invokeLater(() -> loadTable());
     }
+    private void initManagementTypeComboBox() {
+    jComboBox.setModel(
+        new javax.swing.DefaultComboBoxModel<>(
+            new String[] { "All", "User Control", "Content Control" }
+        )
+    );
 
-
+    // ✅ 默认选中 All
+    jComboBox.setSelectedIndex(0);
+}    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -69,9 +81,8 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         SearchByID = new javax.swing.JLabel();
         fieldUserAccountName = new javax.swing.JTextField();
         btnSearchByUserAccountName = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
         btnSearchByManagementType = new javax.swing.JButton();
-        fieldManagementType = new javax.swing.JTextField();
+        jComboBox = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -132,18 +143,16 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("Search by Type");
-
-        btnSearchByManagementType.setText("Search");
+        btnSearchByManagementType.setText("Search by Type");
         btnSearchByManagementType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchByManagementTypeActionPerformed(evt);
             }
         });
 
-        fieldManagementType.addActionListener(new java.awt.event.ActionListener() {
+        jComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fieldManagementTypeActionPerformed(evt);
+                jComboBoxActionPerformed(evt);
             }
         });
 
@@ -160,12 +169,10 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
                         .addComponent(fieldUserAccountName, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnSearchByUserAccountName)
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)
+                        .addComponent(jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fieldManagementType, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnSearchByManagementType)
+                        .addComponent(btnSearchByManagementType, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -186,9 +193,8 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
                     .addComponent(fieldUserAccountName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearchByUserAccountName)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
                     .addComponent(btnSearchByManagementType)
-                    .addComponent(fieldManagementType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(42, 42, 42)
@@ -331,20 +337,34 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldUserAccountNameActionPerformed
 
     private void btnSearchByUserAccountNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByUserAccountNameActionPerformed
-            String name = fieldUserAccountName.getText().trim();
-    String type = fieldManagementType.getText().trim();
-    loadTable(name, type);
+                String name = fieldUserAccountName.getText().trim();
+    String selectedType = jComboBox.getSelectedItem().toString();
+
+
+    if ("All".equalsIgnoreCase(selectedType)) {
+        loadTable(name, null);       // 显示全部
+    } else {
+        loadTable(name, selectedType); // 按 User Control / Content Control 过滤
+    }
     }//GEN-LAST:event_btnSearchByUserAccountNameActionPerformed
 
-    private void fieldManagementTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldManagementTypeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fieldManagementTypeActionPerformed
-
     private void btnSearchByManagementTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByManagementTypeActionPerformed
-            String name = fieldUserAccountName.getText().trim();
-    String type = fieldManagementType.getText().trim();
-    loadTable(name, type);
+              String name = fieldUserAccountName.getText().trim();
+
+    String selectedType = jComboBox.getSelectedItem().toString();
+
+    // ✅ 如果选的是 All，相当于不加 org 过滤
+    if ("All".equalsIgnoreCase(selectedType)) {
+        loadTable(name, null);
+    } else {
+        loadTable(name, selectedType);
+    }
     }//GEN-LAST:event_btnSearchByManagementTypeActionPerformed
+    
+    
+    private void jComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -354,10 +374,9 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnOpen;
     private javax.swing.JButton btnSearchByManagementType;
     private javax.swing.JButton btnSearchByUserAccountName;
-    private javax.swing.JTextField fieldManagementType;
     private javax.swing.JTextField fieldUserAccountName;
+    private javax.swing.JComboBox<String> jComboBox;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblManagment;
     // End of variables declaration//GEN-END:variables
