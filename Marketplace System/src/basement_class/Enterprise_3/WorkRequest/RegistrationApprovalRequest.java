@@ -14,11 +14,13 @@ import basement_class.WorkRequest;
 public class RegistrationApprovalRequest extends WorkRequest{
     private UserAccount newUser;
     private String reason;
+    private static int counter=1;
 
     public RegistrationApprovalRequest(UserAccount newUser) {
         super();
         this.newUser = newUser;
         this.setStatus("Pending");
+        this.setId("RARQ"+counter++);
     }
 
     public UserAccount getNewUser() {

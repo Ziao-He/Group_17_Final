@@ -12,7 +12,7 @@ import basement_class.WorkRequest;
  * @author Administrator
  */
 public class AccountStatusReviewRequest extends WorkRequest {
-    
+    private static int counter=1;
     private UserAccount targetUser;            
     private String action;                     // suspend, reactivate, ban
     private String requestDescription;         // 申请人填写：为什么要申请此操作
@@ -24,6 +24,7 @@ public class AccountStatusReviewRequest extends WorkRequest {
         this.action = action;
         this.requestDescription = requestDescription;
         this.setStatus("PENDING");
+        this.setId("ASRQ"+counter++);
     }
 
     public UserAccount getTargetUser() { 
