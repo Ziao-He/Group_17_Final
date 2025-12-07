@@ -40,19 +40,133 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        controlJPanel1 = new javax.swing.JPanel();
+        btnLogout1 = new javax.swing.JButton();
+        btnListingMangement = new javax.swing.JButton();
+        btnViewComplaints = new javax.swing.JButton();
+        btnCreateNewListing = new javax.swing.JButton();
+        workProcessJPanel = new javax.swing.JPanel();
+
+        controlJPanel1.setBackground(new java.awt.Color(102, 255, 255));
+        controlJPanel1.setForeground(new java.awt.Color(102, 255, 255));
+
+        btnLogout1.setText("Log out");
+        btnLogout1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogout1ActionPerformed(evt);
+            }
+        });
+
+        btnListingMangement.setText("Listing  Management");
+        btnListingMangement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListingMangementActionPerformed(evt);
+            }
+        });
+
+        btnViewComplaints.setText("View Complaints");
+        btnViewComplaints.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewComplaintsActionPerformed(evt);
+            }
+        });
+
+        btnCreateNewListing.setText("Create New Listing");
+        btnCreateNewListing.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCreateNewListingActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout controlJPanel1Layout = new javax.swing.GroupLayout(controlJPanel1);
+        controlJPanel1.setLayout(controlJPanel1Layout);
+        controlJPanel1Layout.setHorizontalGroup(
+            controlJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(controlJPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(controlJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(controlJPanel1Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(btnLogout1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btnViewComplaints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        controlJPanel1Layout.setVerticalGroup(
+            controlJPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlJPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(btnCreateNewListing)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnListingMangement)
+                .addGap(18, 18, 18)
+                .addComponent(btnViewComplaints)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 497, Short.MAX_VALUE)
+                .addComponent(btnLogout1)
+                .addGap(33, 33, 33))
+        );
+
+        javax.swing.GroupLayout workProcessJPanelLayout = new javax.swing.GroupLayout(workProcessJPanel);
+        workProcessJPanel.setLayout(workProcessJPanelLayout);
+        workProcessJPanelLayout.setHorizontalGroup(
+            workProcessJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1104, Short.MAX_VALUE)
+        );
+        workProcessJPanelLayout.setVerticalGroup(
+            workProcessJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 672, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(controlJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(workProcessJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(controlJPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(workProcessJPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLogout1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogout1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLogout1ActionPerformed
+
+    private void btnListingMangementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListingMangementActionPerformed
+        
+    }//GEN-LAST:event_btnListingMangementActionPerformed
+
+    private void btnViewComplaintsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewComplaintsActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnViewComplaintsActionPerformed
+
+    private void btnCreateNewListingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewListingActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_btnCreateNewListingActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCreateNewListing;
+    private javax.swing.JButton btnListingMangement;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnLogout1;
+    private javax.swing.JButton btnViewComplaints;
+    private javax.swing.JPanel controlJPanel;
+    private javax.swing.JPanel controlJPanel1;
+    private javax.swing.JPanel workProcessJPanel;
     // End of variables declaration//GEN-END:variables
 }
