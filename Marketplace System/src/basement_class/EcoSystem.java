@@ -82,6 +82,7 @@ public class EcoSystem {
         this.workRequestDirectory = workRequestDirectory;
     }
 
+    
 //    public Listing findListingById(String id) {
 //    for (Network n : networks) {
 //        for (Enterprise e : n.getEnterprises()) {
@@ -95,6 +96,10 @@ public class EcoSystem {
 //    }
 //    return null;
 //}
+
+    public MessageDirectory getMessageDirectory() {
+        return messageDirectory;
+    }
 
 
 }
