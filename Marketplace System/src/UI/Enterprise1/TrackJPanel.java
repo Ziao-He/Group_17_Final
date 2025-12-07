@@ -45,8 +45,6 @@ public class TrackJPanel extends javax.swing.JPanel {
         btnLogout = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
-        cmbRole = new javax.swing.JComboBox<>();
-        btnSwitch = new javax.swing.JButton();
         btnReport = new javax.swing.JButton();
         workArea = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
@@ -93,10 +91,6 @@ public class TrackJPanel extends javax.swing.JPanel {
             }
         });
 
-        cmbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buyer", "Advanced Search", "Order History" }));
-
-        btnSwitch.setText("Switch");
-
         btnReport.setText("Report");
 
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
@@ -106,13 +100,11 @@ public class TrackJPanel extends javax.swing.JPanel {
             .addGroup(controlJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                     .addComponent(btnExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout))
-                    .addComponent(cmbRole, 0, 151, Short.MAX_VALUE)
-                    .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
@@ -125,11 +117,7 @@ public class TrackJPanel extends javax.swing.JPanel {
                 .addComponent(btnExport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnReport)
-                .addGap(173, 173, 173)
-                .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 274, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 499, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
         );
@@ -255,8 +243,6 @@ public class TrackJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnReport;
-    private javax.swing.JButton btnSwitch;
-    private javax.swing.JComboBox<String> cmbRole;
     private javax.swing.JPanel controlJPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;

@@ -7,8 +7,14 @@ package UI.Enterprise1;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_2.Listing;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,16 +26,31 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
     private Organization organization;
     private Enterprise enterprise;
     private EcoSystem system;
-    /**
+    private BuyerJPanel parentPanel;  // used for CardLayout back navigation
+
+    private List<Listing> allListings;   // source listings
+        /**
      * Creates new form ProductSearchJPanel
      */
-    public ProductSearchJPanel(BuyerAccount buyerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
+    public ProductSearchJPanel(BuyerAccount buyerAccount,
+                           Organization organization,
+                           Enterprise enterprise,
+                           EcoSystem system,
+                           BuyerJPanel parentPanel) {
+
         initComponents();
         this.buyerAccount = buyerAccount;
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;
-    
+        this.parentPanel = parentPanel;
+
+        this.allListings = system.getListingDirectory().getListingList();
+
+        populateSortCombo();      // keep sort
+        // category / condition are no longer used
+
+        refreshTable(allListings);
     }
 
     /**
@@ -42,86 +63,27 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        controlJPanel = new javax.swing.JPanel();
-        btnLogout = new javax.swing.JButton();
-        btnRefresh = new javax.swing.JButton();
-        cmbRole = new javax.swing.JComboBox<>();
-        btnSwitch = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        lblKeyword = new javax.swing.JLabel();
+        lblPriceRange = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        txtKeyword = new javax.swing.JTextField();
+        txtLowPrice = new javax.swing.JTextField();
+        lblTo = new javax.swing.JLabel();
+        txtHighPrice = new javax.swing.JTextField();
+        cmbSort = new javax.swing.JComboBox<>();
+        btnReserch = new javax.swing.JButton();
+        btnReset = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblSearchResult = new javax.swing.JTable();
+        btnDetailed = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
-
-        controlJPanel.setBackground(new java.awt.Color(204, 255, 204));
-        controlJPanel.setForeground(new java.awt.Color(204, 255, 204));
-
-        btnLogout.setText("Log out");
-        btnLogout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogoutActionPerformed(evt);
-            }
-        });
-
-        btnRefresh.setText("View");
-        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
-            }
-        });
-
-        cmbRole.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Buyer", "Advanced Search", "Order History" }));
-
-        btnSwitch.setText("Switch");
-
-        javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
-        controlJPanel.setLayout(controlJPanelLayout);
-        controlJPanelLayout.setHorizontalGroup(
-            controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(controlJPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(controlJPanelLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(btnLogout))
-                    .addComponent(cmbRole, 0, 151, Short.MAX_VALUE)
-                    .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        controlJPanelLayout.setVerticalGroup(
-            controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlJPanelLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(btnRefresh)
-                .addGap(243, 243, 243)
-                .addComponent(cmbRole, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnLogout)
-                .addGap(33, 33, 33))
-        );
-
-        jSplitPane1.setLeftComponent(controlJPanel);
 
         jPanel1.setLayout(new java.awt.CardLayout());
 
@@ -129,30 +91,36 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Advanced Product Search ");
-        jPanel2.add(jLabel1, java.awt.BorderLayout.CENTER);
+        lblTitle.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 24)); // NOI18N
+        lblTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitle.setText("Advanced Product Search ");
+        jPanel2.add(lblTitle, java.awt.BorderLayout.CENTER);
 
         jSplitPane2.setTopComponent(jPanel2);
 
-        jLabel2.setText("Keyword: ");
+        lblKeyword.setText("Keyword: ");
 
-        jLabel3.setText("Category: ");
-
-        jLabel4.setText("Price Range:");
-
-        jLabel5.setText("Condition:");
+        lblPriceRange.setText("Price Range:");
 
         jLabel6.setText("Sort By:");
 
-        jLabel7.setText("to");
+        lblTo.setText("to");
 
-        jButton1.setText("Search");
+        btnReserch.setText("Search");
+        btnReserch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReserchActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Reset");
+        btnReset.setText("Reset");
+        btnReset.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetActionPerformed(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblSearchResult.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -160,74 +128,89 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID ", "Title ", "Category", "Price", "Status "
+                "ID ", "Name", "Price", "Status", "Seller"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblSearchResult);
+
+        btnDetailed.setText("Detailed");
+        btnDetailed.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetailedActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Add To Cart");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1205, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnReserch)
+                            .addComponent(lblKeyword, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(txtKeyword, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(btnReset)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnDetailed))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jComboBox1, 0, 145, Short.MAX_VALUE)
-                            .addComponent(jTextField2)
-                            .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblPriceRange, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtLowPrice)
+                            .addComponent(cmbSort, 0, 145, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7)
+                        .addComponent(lblTo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1114, Short.MAX_VALUE)
+                        .addComponent(txtHighPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblKeyword)
+                    .addComponent(txtKeyword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
+                    .addComponent(lblPriceRange)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtLowPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTo)
+                        .addComponent(txtHighPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(cmbSort, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(61, 61, 61)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnReserch)
+                    .addComponent(btnReset)
+                    .addComponent(btnDetailed)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -240,42 +223,224 @@ public class ProductSearchJPanel extends javax.swing.JPanel {
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+    private void btnReserchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReserchActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnLogoutActionPerformed
+        performSearch();
+    }//GEN-LAST:event_btnReserchActionPerformed
 
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+    private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
+        // TODO add your handling code here:
+        txtKeyword.setText("");
+        txtLowPrice.setText("");
+        txtHighPrice.setText("");
 
-    }//GEN-LAST:event_btnRefreshActionPerformed
+        if (cmbSort.getItemCount() > 0) {
+            cmbSort.setSelectedIndex(0);
+        }
+
+        refreshTable(allListings);
+    }//GEN-LAST:event_btnResetActionPerformed
+
+    private void btnDetailedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailedActionPerformed
+        // TODO add your handling code here:
+        Listing selected = getSelectedListing();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select a listing first.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (parentPanel == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Parent buyer panel is not available.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Create a detail panel for the selected listing
+        ListingDetailWorkArea detailPanel = new ListingDetailWorkArea(
+                selected,
+                buyerAccount,
+                system,
+                parentPanel
+        );
+
+        // Show the detail panel via Buyer's CardLayout
+        parentPanel.showDetailPanel(detailPanel);
+    }//GEN-LAST:event_btnDetailedActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Listing selected = getSelectedListing();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select a listing to add to cart.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (parentPanel == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Parent buyer panel is not available.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Delegate to BuyerJPanel to manage the shared shopping cart
+        parentPanel.addToCart(selected);
+
+        JOptionPane.showMessageDialog(this,
+                "Listing added to your shopping cart.",
+                "Added",
+                JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLogout;
-    private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnSwitch;
-    private javax.swing.JComboBox<String> cmbRole;
-    private javax.swing.JPanel controlJPanel;
+    private javax.swing.JButton btnDetailed;
+    private javax.swing.JButton btnReserch;
+    private javax.swing.JButton btnReset;
+    private javax.swing.JComboBox<String> cmbSort;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel lblKeyword;
+    private javax.swing.JLabel lblPriceRange;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblTo;
+    private javax.swing.JTable tblSearchResult;
+    private javax.swing.JTextField txtHighPrice;
+    private javax.swing.JTextField txtKeyword;
+    private javax.swing.JTextField txtLowPrice;
     // End of variables declaration//GEN-END:variables
+
+    private void populateSortCombo() {
+        cmbSort.removeAllItems();
+        cmbSort.addItem("Sort by: Default");
+        cmbSort.addItem("Price: Low to High");
+        cmbSort.addItem("Price: High to Low");
+        cmbSort.addItem("Name: A → Z");
+        cmbSort.addItem("Name: Z → A");
+    }
+    
+    private void performSearch() {
+
+        String keyword = txtKeyword.getText().trim().toLowerCase();
+
+        double low = 0.0;
+        double high = Double.MAX_VALUE;
+
+        try {
+            if (!txtLowPrice.getText().trim().isEmpty()) {
+                low = Double.parseDouble(txtLowPrice.getText().trim());
+            }
+            if (!txtHighPrice.getText().trim().isEmpty()) {
+                high = Double.parseDouble(txtHighPrice.getText().trim());
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Invalid price range.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        List<Listing> results = new ArrayList<>();
+
+        for (Listing l : allListings) {
+            boolean match = true;
+
+            // 1) keyword on title (and optionally description if you have it)
+            if (!keyword.isEmpty()) {
+                String title = l.getTitle() != null ? l.getTitle().toLowerCase() : "";
+                String desc  = l.getDescription() != null ? l.getDescription().toLowerCase() : "";
+
+                if (!title.contains(keyword) && !desc.contains(keyword)) {
+                    match = false;
+                }
+            }
+
+            // 2) price range
+            if (l.getPrice() < low || l.getPrice() > high) {
+                match = false;
+            }
+
+            if (match) {
+                results.add(l);
+            }
+        }
+
+        // sort result then show
+        applySort(results);
+        refreshTable(results);
+    }
+    
+    private void applySort(List<Listing> list) {
+        String sort = cmbSort.getSelectedItem().toString();
+
+        switch (sort) {
+            case "Price: Low to High":
+                list.sort(Comparator.comparingDouble(Listing::getPrice));
+                break;
+            case "Price: High to Low":
+                list.sort((a, b) -> Double.compare(b.getPrice(), a.getPrice()));
+                break;
+            case "Name: A → Z":
+                list.sort(Comparator.comparing(Listing::getTitle));
+                break;
+            case "Name: Z → A":
+                list.sort((a, b) -> b.getTitle().compareTo(a.getTitle()));
+                break;
+            default:
+                break; // no sort
+        }
+    }
+    
+    private void refreshTable(List<Listing> list) {
+        DefaultTableModel model = (DefaultTableModel) tblSearchResult.getModel();
+        model.setRowCount(0);
+
+        if (list == null) return;
+
+        for (Listing l : list) {
+            Object[] row = new Object[]{
+                l.getId(),                                   // Listing ID
+                l.getTitle(),                                // Name
+                String.format("%.2f", l.getPrice()),         // Price
+                l.getStatus(),                               // Status
+                (l.getSeller() != null
+                        ? l.getSeller().getUsername()
+                        : "Unknown")                         // Seller
+            };
+            model.addRow(row);
+        }
+    }
+    
+    private Listing getSelectedListing() {
+        int row = tblSearchResult.getSelectedRow();
+        if (row < 0) {
+            return null;
+        }
+
+        // Assuming column 0 is "Listing ID"
+        String listingId = tblSearchResult.getValueAt(row, 0).toString();
+
+        for (Listing l : allListings) {
+            if (l.getId().equals(listingId)) {
+                return l;
+            }
+        }
+        return null;
+    }
+    
 }

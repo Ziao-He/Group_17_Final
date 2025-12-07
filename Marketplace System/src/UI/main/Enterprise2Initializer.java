@@ -9,6 +9,7 @@ import basement_class.Network;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_2.Enterprise.MarketplaceEnterprise;
+import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.Organization.OrderManagementOrganization;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Enterprise_2.Role.ListingManagerRole;
@@ -46,6 +47,9 @@ public class Enterprise2Initializer {
 
         // 3. 创建测试账户
         createTestAccounts(system, sellerOrg, listingOrg);
+        
+        // 4. 创建测试Listing数据 ← 新增！
+        createTestListings(system, sellerOrg);
     }
 
     /**
@@ -99,6 +103,77 @@ public class Enterprise2Initializer {
         system.getUserAccountDirectory().getUserAccounts().forEach(u -> 
             System.out.println(u.getUsername() + " - " + u.getPasswordHash())
         );
+    }
+    
+    /**
+     * Create test listings (NEW!)
+     */
+    private static void createTestListings(EcoSystem system, SellerOrganization sellerOrg) {
+        System.out.println("  Creating test listings...");
+        
+        // Get seller1 account
+        SellerAccount seller1 = (SellerAccount) system.getUserAccountDirectory()
+            .findByUsername("seller1");
+        
+        if (seller1 == null) {
+            System.out.println("    WARNING: seller1 not found!");
+            return;
+        }
+        
+        // Create 10 test listings
+        String[] titles = {
+            "iPhone 13 Pro - Excellent Condition",
+            "MacBook Pro 2021 - 16GB RAM",
+            "Calculus Textbook - 9th Edition",
+            "IKEA Desk - Slightly Used",
+            "Winter Jacket - North Face",
+            "Gaming Chair - Ergonomic",
+            "Chemistry Lab Manual",
+            "Bicycle - Mountain Bike",
+            "Coffee Maker - Keurig",
+            "Bookshelf - 5 Shelves"
+        };
+        
+        String[] descriptions = {
+            "Gently used iPhone 13 Pro, 256GB, no scratches. Comes with original box and charger.",
+            "Perfect for students! MacBook Pro 2021, runs smoothly, battery health 95%.",
+            "Calculus textbook in great condition. Only used for one semester. All pages intact.",
+            "IKEA desk, white color, some minor scratches but very sturdy. Dimensions: 120x60cm.",
+            "North Face winter jacket, size M, kept me warm through last winter!",
+            "Comfortable gaming chair with lumbar support. Used for 6 months, like new.",
+            "Chemistry lab manual for CHEM 101. Includes all experiments and data sheets.",
+            "Mountain bike, 21-speed, good condition. Great for campus commuting.",
+            "Keurig coffee maker, works perfectly. Includes 10 free K-cups!",
+            "Wooden bookshelf, 5 shelves, can hold many textbooks. Easy to assemble."
+        };
+        
+        double[] prices = {
+            650.00, 1200.00, 45.00, 80.00, 120.00,
+            150.00, 25.00, 200.00, 35.00, 60.00
+        };
+        
+        for (int i = 0; i < titles.length; i++) {
+            String listingId = "LIST-" + UUID.randomUUID().toString().substring(0, 8);
+            
+            Listing listing = new Listing(
+                listingId,
+                seller1,           // seller
+                titles[i],         // title
+                descriptions[i],   // description
+                "",                // imagePath (empty for now)
+                prices[i]          // price
+            );
+            
+            // Set status to Approved so buyers can see them
+            listing.setStatus("Approved");
+            
+            // Add to ListingDirectory
+            system.getListingDirectory().addListing(listing);
+            
+            System.out.println("    • Created: " + titles[i] + " - $" + prices[i]);
+        }
+        
+        System.out.println("  Total listings created: " + system.getListingDirectory().size());
     }
 }
 
