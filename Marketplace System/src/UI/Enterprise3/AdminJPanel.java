@@ -211,12 +211,14 @@ public class AdminJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPolicyEnforcementActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-      // ✅ 1️⃣ 关闭当前窗口（Admin 所在的 JFrame）
+
     JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+    // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
     mainFrame.dispose();
 
-    // ✅ 2️⃣ 重新打开一个全新的 LoginPage
-    LoginPage loginPage = new LoginPage();
+    // ✅ 3️⃣ 用【同一个 system】重新打开 Login
+    LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
     loginPage.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 

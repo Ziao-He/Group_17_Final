@@ -23,6 +23,11 @@ public class LoginPage extends javax.swing.JFrame {
         system = SystemInitializer.initialize();
         initComponents();
     }
+    
+    public LoginPage(EcoSystem system) {
+        this.system = system;   // ✅ 继续用原来的系统
+        initComponents();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
