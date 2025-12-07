@@ -6,7 +6,6 @@ package basement_class.Enterprise_1.Organization;
 
 import basement_class.Organization;
 import basement_class.Enterprise_1.Role.BuyerRole;
-import basement_class.Enterprise_1.Role.ProductSearcherRole;
 
 /**
  *
@@ -19,6 +18,5 @@ public class ShoppingServicesOrganization extends Organization {
         
         // Add roles that belong to this organization
         this.addRole(new BuyerRole());
-        this.addRole(new ProductSearcherRole());
     }
 }

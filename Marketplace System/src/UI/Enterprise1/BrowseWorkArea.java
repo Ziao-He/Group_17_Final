@@ -66,13 +66,13 @@ public class BrowseWorkArea extends javax.swing.JPanel {
 
         tblListing.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Listing ID", "Name", "Category", "Price", "Condition", "Status", "Seller"
+                "Listing ID", "Name", "Price", "Status", "Seller"
             }
         ));
         jScrollPane1.setViewportView(tblListing);

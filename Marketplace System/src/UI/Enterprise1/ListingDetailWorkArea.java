@@ -65,10 +65,6 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         ListingJpanel = new javax.swing.JPanel();
         lblListingID = new javax.swing.JLabel();
         txtListingID = new javax.swing.JTextField();
-        lblCategory = new javax.swing.JLabel();
-        txtCategory = new javax.swing.JTextField();
-        lblCondition = new javax.swing.JLabel();
-        txtCondition = new javax.swing.JTextField();
         lblPrice = new javax.swing.JLabel();
         txtPrice = new javax.swing.JTextField();
         lblNego = new javax.swing.JLabel();
@@ -110,10 +106,6 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         ListingJpanel.setBackground(new java.awt.Color(255, 255, 255));
 
         lblListingID.setText("Listing ID：");
-
-        lblCategory.setText("Category：");
-
-        lblCondition.setText("Condition：");
 
         lblPrice.setText("Price:");
 
@@ -209,15 +201,9 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                             .addComponent(txtFavoriteCount, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(txtPostedDate, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(ListingJpanelLayout.createSequentialGroup()
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblCategory)
-                            .addComponent(lblCondition)
-                            .addComponent(lblListingID))
-                        .addGap(44, 44, 44)
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtListingID)
-                            .addComponent(txtCategory)
-                            .addComponent(txtCondition)))
+                        .addComponent(lblListingID)
+                        .addGap(47, 47, 47)
+                        .addComponent(txtListingID))
                     .addGroup(ListingJpanelLayout.createSequentialGroup()
                         .addComponent(btnBack)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -242,47 +228,38 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
                     .addComponent(txtListingID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCategory)
-                    .addComponent(txtCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPrice))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ListingJpanelLayout.createSequentialGroup()
-                        .addComponent(lblCondition)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblPrice))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rbnYes)
-                            .addComponent(rbnNo)
-                            .addComponent(lblNego))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblDescri)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(DescriJpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblSellerUser)
-                            .addComponent(txtSellerUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblRating)
-                            .addComponent(txtRating, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblFavoriteCount)
-                            .addComponent(txtFavoriteCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblPostedDate)
-                            .addComponent(txtPostedDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnTalkWithUser))
-                    .addComponent(txtCondition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(rbnYes)
+                    .addComponent(rbnNo)
+                    .addComponent(lblNego))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDescri)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(DescriJpanel, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSellerUser)
+                    .addComponent(txtSellerUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRating)
+                    .addComponent(txtRating, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFavoriteCount)
+                    .addComponent(txtFavoriteCount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ListingJpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPostedDate)
+                    .addComponent(txtPostedDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnTalkWithUser)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnReport)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
 
         jSplitPane2.setLeftComponent(ListingJpanel);
@@ -449,8 +426,6 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JLabel lblCategory;
-    private javax.swing.JLabel lblCondition;
     private javax.swing.JLabel lblDescri;
     private javax.swing.JLabel lblFavoriteCount;
     private javax.swing.JLabel lblListingID;
@@ -463,8 +438,6 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
     private javax.swing.JRadioButton rbnNo;
     private javax.swing.JRadioButton rbnYes;
     private javax.swing.JTextArea txtAreaDescri;
-    private javax.swing.JTextField txtCategory;
-    private javax.swing.JTextField txtCondition;
     private javax.swing.JTextField txtFavoriteCount;
     private javax.swing.JTextField txtListingID;
     private javax.swing.JTextField txtPostedDate;
@@ -484,13 +457,9 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
         // Set title
         lblTitle.setText(listing.getTitle());
         
-        // Basic information
+        // Basic information (no category/condition for second-hand items)
         txtListingID.setText(listing.getId());
-        txtCategory.setText("General"); // Placeholder - second-hand items
-        txtCondition.setText("Used"); // Placeholder - since it's second-hand
         txtPrice.setText(String.format("$%.2f", listing.getPrice()));
-        
-        // Quantity is always 1 for second-hand items (no need to display)
         
         // Negotiable (placeholder - assume yes for second-hand)
         rbnYes.setSelected(true);

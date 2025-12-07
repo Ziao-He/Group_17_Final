@@ -58,7 +58,7 @@ switch (role) {
 
     // ===== Enterprise 1 =====
     case "BuyerRole" -> ua.setRole(new basement_class.Enterprise_1.Role.BuyerRole());
-    case "ProductSearcherRole" -> ua.setRole(new basement_class.Enterprise_1.Role.ProductSearcherRole());
+    case "ProductSearcherRole" -> ua.setRole(new basement_class.Enterprise_1.Role.BuyerRole());
     case "OrderTrackerRole" -> ua.setRole(new basement_class.Enterprise_1.Role.OrderTrackerRole());
 
     // ===== Enterprise 2 =====

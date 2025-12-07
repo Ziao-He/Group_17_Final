@@ -221,16 +221,9 @@ public class BuyerJPanel extends javax.swing.JPanel {
 
     private void btnSearchPageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchPageActionPerformed
         // Switch to ProductSearchJPanel
-        ProductSearchJPanel searchPanel = new ProductSearchJPanel(
-            buyerAccount, organization, enterprise, system
-        );
-
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        if (frame != null) {
-            frame.setContentPane(searchPanel);
-            frame.revalidate();
-            frame.repaint();
-        }
+        CardLayout cl = (CardLayout) workArea.getLayout();
+        cl.show(workArea, "SearchCard");
+        currentPanel = "SearchCard";
     }//GEN-LAST:event_btnSearchPageActionPerformed
 
 
@@ -254,6 +247,10 @@ public class BuyerJPanel extends javax.swing.JPanel {
         browsePanel = new BrowseWorkArea(buyerAccount, system, this);
         cartPanel = new ShoppongCartWorkArea(buyerAccount, system, shoppingCart);
         personalPanel = new PersonalJPanel(buyerAccount, system);
+        ProductSearchJPanel searchPanel = new ProductSearchJPanel(
+            buyerAccount, organization, enterprise, system, this
+        );
+
 
         // Set CardLayout if not already set
         workArea.setLayout(new CardLayout());
@@ -263,6 +260,7 @@ public class BuyerJPanel extends javax.swing.JPanel {
         workArea.add(browsePanel, "BrowseCard");
         workArea.add(cartPanel, "CartCard");
         workArea.add(personalPanel, "PersonalCard");
+        workArea.add(searchPanel, "SearchCard");
     }
 
     /**
@@ -384,4 +382,5 @@ public class BuyerJPanel extends javax.swing.JPanel {
         layout.show(workArea, "ChatCard");
         currentPanel = "ChatCard";
     }
+    
 }
