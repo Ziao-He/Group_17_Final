@@ -74,39 +74,39 @@ public class Enterprise1Initializer {
         System.out.println("    • buyer1 / password123");
         
         // Account 2: ProductSearcherRole
-        BuyerAccount buyer2 = new BuyerAccount();
-        buyer2.setUserId("BUYER-002");
-        buyer2.setUsername("searcher1");
-        buyer2.setPasswordHash("password123");
-        buyer2.setStatus("ACTIVE");
-        buyer2.setRole(new ProductSearcherRole());
-        
-        BuyerProfile profile2 = buyer2.getProfile();
-        profile2.setUserId("BUYER-002");
-        profile2.setFullName("Alice Searcher");
-        profile2.setEmail("searcher1@university.edu");
-        profile2.setPhoneNumber("123-456-7891");
-        
-        shoppingOrg.getUserAccountDirectory().addUserAccount(buyer2);
-        system.getUserAccountDirectory().addUserAccount(buyer2);
-        System.out.println("    • searcher1 / password123");
-        
-        // Account 3: OrderTrackerRole
-        BuyerAccount buyer3 = new BuyerAccount();
-        buyer3.setUserId("BUYER-003");
-        buyer3.setUsername("tracker1");
-        buyer3.setPasswordHash("password123");
-        buyer3.setStatus("ACTIVE");
-        buyer3.setRole(new OrderTrackerRole());
-        
-        BuyerProfile profile3 = buyer3.getProfile();
-        profile3.setUserId("BUYER-003");
-        profile3.setFullName("Bob Tracker");
-        profile3.setEmail("tracker1@university.edu");
-        profile3.setPhoneNumber("123-456-7892");
-        
-        orderOrg.getUserAccountDirectory().addUserAccount(buyer3);
-        system.getUserAccountDirectory().addUserAccount(buyer3);
-        System.out.println("    • tracker1 / password123");
+//        BuyerAccount buyer2 = new BuyerAccount();
+//       buyer2.setUserId("BUYER-002");
+//        buyer2.setUsername("searcher1");
+//        buyer2.setPasswordHash("password123");
+//        buyer2.setStatus("ACTIVE");
+//        buyer2.setRole(new ProductSearcherRole());
+//        
+//        BuyerProfile profile2 = buyer2.getProfile();
+//        profile2.setUserId("BUYER-002");
+//        profile2.setFullName("Alice Searcher");
+//        profile2.setEmail("searcher1@university.edu");
+//        profile2.setPhoneNumber("123-456-7891");
+//        
+//        shoppingOrg.getUserAccountDirectory().addUserAccount(buyer2);
+//        system.getUserAccountDirectory().addUserAccount(buyer2);
+//        System.out.println("    • searcher1 / password123");
+//        
+//        // Account 3: OrderTrackerRole
+//        BuyerAccount buyer3 = new BuyerAccount();
+//        buyer3.setUserId("BUYER-003");
+//        buyer3.setUsername("tracker1");
+//        buyer3.setPasswordHash("password123");
+//        buyer3.setStatus("ACTIVE");
+//        buyer3.setRole(new OrderTrackerRole());
+//        
+//        BuyerProfile profile3 = buyer3.getProfile();
+//        profile3.setUserId("BUYER-003");
+//        profile3.setFullName("Bob Tracker");
+//        profile3.setEmail("tracker1@university.edu");
+//        profile3.setPhoneNumber("123-456-7892");
+//        
+//        orderOrg.getUserAccountDirectory().addUserAccount(buyer3);
+//        system.getUserAccountDirectory().addUserAccount(buyer3);
+//        System.out.println("    • tracker1 / password123");
     }
 }

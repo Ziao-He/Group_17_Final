@@ -116,5 +116,7 @@ public abstract class WorkRequest{
         this.reviewComment = comment;
         this.resolveDate = LocalDateTime.now();
     }
+        
+        
 }
 

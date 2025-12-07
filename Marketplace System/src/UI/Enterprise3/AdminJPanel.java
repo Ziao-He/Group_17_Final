@@ -12,6 +12,7 @@ import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -33,6 +34,12 @@ public class AdminJPanel extends javax.swing.JPanel {
         this.adminUser=adminUser;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+        
+         if (userOrg == null && adminUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
+        this.userOrg = enterprise.getOrganizationByName("User Control");  // 也可以改成你想默认看的 org
+    } else {
+        this.userOrg = userOrg;
+    }
 
         System.out.println("====== AdminJPanel Debug ======");
     System.out.println("Username: " + adminUser.getUsername());
@@ -62,6 +69,7 @@ public class AdminJPanel extends javax.swing.JPanel {
         btnContentModeration = new javax.swing.JButton();
         btnPolicyEnforcement = new javax.swing.JButton();
         btnHistory = new javax.swing.JButton();
+        btnAccount = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -111,6 +119,13 @@ public class AdminJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnAccount.setText("Account Managment");
+        btnAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAccountActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
         controlJPanel.setLayout(controlJPanelLayout);
         controlJPanelLayout.setHorizontalGroup(
@@ -125,7 +140,8 @@ public class AdminJPanel extends javax.swing.JPanel {
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout))
-                    .addComponent(btnHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAccount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         controlJPanelLayout.setVerticalGroup(
@@ -141,7 +157,9 @@ public class AdminJPanel extends javax.swing.JPanel {
                 .addComponent(btnPolicyEnforcement)
                 .addGap(18, 18, 18)
                 .addComponent(btnHistory)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 405, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnAccount)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 364, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
         );
@@ -165,13 +183,23 @@ public class AdminJPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAccountManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountManagementActionPerformed
-        UserControlOrganization org =
-        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+//        UserControlOrganization org =
+//        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+//
+//        AccountAdminWorkAreaPanel panel =
+//        new AccountAdminWorkAreaPanel(system, adminUser, org);
+//
+//        replaceWorkArea(panel); 
+    if (!(userOrg instanceof UserControlOrganization)) {
+        JOptionPane.showMessageDialog(this, "User Control organization not found.");
+        return;
+    }
 
-        AccountAdminWorkAreaPanel panel =
-        new AccountAdminWorkAreaPanel(system, adminUser, org);
+    AccountAdminWorkAreaPanel panel =
+        new AccountAdminWorkAreaPanel(system, adminUser,
+            (UserControlOrganization) userOrg);
 
-        replaceWorkArea(panel); 
+    replaceWorkArea(panel);
     }//GEN-LAST:event_btnAccountManagementActionPerformed
 
     private void btnRegistrationReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrationReviewActionPerformed
@@ -220,6 +248,7 @@ public class AdminJPanel extends javax.swing.JPanel {
     // ✅ 3️⃣ 用【同一个 system】重新打开 Login
     LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
     loginPage.setVisible(true);
+    
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
@@ -234,8 +263,21 @@ public class AdminJPanel extends javax.swing.JPanel {
         replaceWorkArea(panel);
     }//GEN-LAST:event_btnHistoryActionPerformed
 
+    private void btnAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountActionPerformed
+        // TODO add your handling code here:
+        
+         UserControlOrganization org =
+        (UserControlOrganization) enterprise.getOrganizationByName("User Control");
+
+
+        PlantformManagmentJPanel panel = new PlantformManagmentJPanel(system, adminUser, org);
+
+        replaceWorkArea(panel);
+    }//GEN-LAST:event_btnAccountActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccount;
     private javax.swing.JButton btnAccountManagement;
     private javax.swing.JButton btnContentModeration;
     private javax.swing.JButton btnHistory;
@@ -252,6 +294,7 @@ public class AdminJPanel extends javax.swing.JPanel {
         workProcessJPanel.add(panel, java.awt.BorderLayout.CENTER);
         workProcessJPanel.revalidate();
         workProcessJPanel.repaint();
+        
     }
 private void configureButtonByOrganization() {
 
@@ -261,6 +304,7 @@ private void configureButtonByOrganization() {
     btnContentModeration.setVisible(false);
     btnPolicyEnforcement.setVisible(false);
     btnHistory.setVisible(false);
+    btnAccount.setVisible(false);
 
     // ✅ 超级管理员（SystemAdmin） → 不绑定 organization → 全开
     if (adminUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
@@ -269,6 +313,7 @@ private void configureButtonByOrganization() {
         btnContentModeration.setVisible(true);
         btnPolicyEnforcement.setVisible(true);
         btnHistory.setVisible(true);
+        btnAccount.setVisible(true);
         return;
     }
 

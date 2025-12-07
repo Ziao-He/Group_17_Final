@@ -13,23 +13,20 @@ import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.ListingDirectory;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Enterprise_2.WorkRequest.ListingSubmissionRequest;
+import basement_class.Enterprise_3.WorkRequest.ListingReviewRequest;
 import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccountDirectory;
 import java.awt.Container;
 import java.awt.Graphics2D;
-
-import java.util.Date;
 import javax.swing.JOptionPane;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +35,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import service.E2.ListingManagementService;
+
 
 
 
@@ -235,21 +232,20 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         }
 
         try {
-            // 2. Collect form data
+            // 1. Collect form data
             String title = txtTitle.getText().trim();
             String description = txtDescription.getText().trim();
             String priceText = txtPrice.getText().trim();
             double price = Double.parseDouble(priceText);
+            int quantity = Integer.parseInt(txtQuantity.getText().trim());
 
-            // 3. Generate unique ID (temporary, will be finalized after approval)
+            // 2. Generate unique ID
             String listingId = generateListingId();
 
-            // 4. Create temporary Listing object (status will be "Draft" or "Pending")
-            // The image will be saved only after approval, or we save it now with draft status
+            // 3. Save image to draft folder
             String imagePath = "";
             if (logoImage != null && imgLogo.getIcon() != null) {
                 try {
-                    // Save image to draft folder
                     File draftDir = new File("draft_images");
                     if (!draftDir.exists()) {
                         draftDir.mkdirs();
@@ -258,7 +254,6 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                     String fileName = seller.getUserId() + "_" + System.currentTimeMillis() + ".jpg";
                     File imageFile = new File(draftDir, fileName);
 
-                    // Save image
                     Image image = logoImage.getImage();
                     BufferedImage bufferedImage = new BufferedImage(
                         image.getWidth(null),
@@ -281,7 +276,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 }
             }
 
-            // 5. Create a Listing object with PENDING status
+            // 4. Create Listing object
             Listing newListing = new Listing(
                 listingId,
                 seller,
@@ -290,32 +285,33 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 imagePath,
                 price
             );
-            newListing.setStatus("Pending"); // Explicitly set to Pending
-            int quantity = Integer.parseInt(txtQuantity.getText().trim());
+            newListing.setStatus("Pending");
             newListing.setQuantity(quantity);
-            // 6. Add to seller's local list (for display purposes)
+
+            // 5. Add to seller's local list
             seller.addListing(newListing);
 
-            // 7. Create and submit ListingSubmissionRequest
-            ListingSubmissionRequest submissionRequest = new ListingSubmissionRequest(newListing, seller);
+            // ⭐ 6. Create ListingReviewRequest 代替 ListingSubmissionRequest
+            ListingReviewRequest reviewRequest = new ListingReviewRequest(
+                newListing,
+                "seller_request_up",                  // 操作类型：卖家申请上架
+                "Seller requests to publish listing"  // 理由（可以将来让卖家输入）
+            );
 
-            // Find the Listing Management Organization to send the request
-            boolean requestSubmitted = submitToListingManagement(submissionRequest);
+            // 7. 提交到 ContentControlOrganization（Enterprise3）
+            boolean requestSubmitted = submitListingReviewToContentControl(reviewRequest);
 
             if (requestSubmitted) {
                 JOptionPane.showMessageDialog(this,
                     "Listing submitted for approval!\n" +
-                    "Temporary ID: " + listingId + "\n" +
+                    "Listing ID: " + listingId + "\n" +
                     "Status: Pending Review\n" +
                     "You can track the status in your listings.\n" +
                     "Note: The listing will be visible only after approval.",
                     "Submission Successful",
                     JOptionPane.INFORMATION_MESSAGE);
 
-                // Clear form
                 clearForm();
-
-                
 
             } else {
                 JOptionPane.showMessageDialog(this,
@@ -327,7 +323,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
-                "Invalid price format!\nPlease enter a valid number (e.g., 99.99)",
+                "Invalid price format or quantity!\nPlease enter valid numbers.",
                 "Input Error",
                 JOptionPane.ERROR_MESSAGE);
             txtPrice.requestFocus();
@@ -340,6 +336,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 "System Error",
                 JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnCreateActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetActionPerformed
@@ -453,43 +450,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
     }
 
 
-    private boolean submitToListingManagement(ListingSubmissionRequest submissionRequest) {
-        try {
-            // Find the Marketplace Enterprise in the system
-            for (Network network : system.getNetworks()) {
-                for (Enterprise enterprise : network.getEnterprises()) {
-                    if (enterprise instanceof MarketplaceEnterprise) {
-                        // Find Listing Management Organization
-                        Organization listingOrg = enterprise.getOrganizationByName("Listing Management Organization");
-
-                        if (listingOrg != null) {
-                            // Set sender
-                            submissionRequest.setSender(seller);
-
-                            // Add request to the organization's work queue
-                            listingOrg.getWorkRequestDirectory().addWorkRequest(submissionRequest);
-
-                            System.out.println("Listing submission request sent to: " + listingOrg.getName());
-                            System.out.println("Request ID: " + submissionRequest.getId());
-
-                            // Also save to a temporary file or database for persistence
-                            saveTemporaryListing(submissionRequest.getListing());
-
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            System.err.println("Listing Management Organization not found!");
-            return false;
-
-        } catch (Exception e) {
-            System.err.println("Error submitting to Listing Management: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
+    
 
     
 
@@ -508,6 +469,53 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
         } catch (Exception e) {
             System.err.println("Failed to save temporary listing: " + e.getMessage());
         }
+    }
+
+    private boolean submitListingReviewToContentControl(ListingReviewRequest reviewRequest) {
+        System.out.println("=== SUBMIT LISTING REVIEW START ===");
+
+        try {
+            // 1. sender
+            reviewRequest.setSender(seller);
+            System.out.println("Sender set: " + seller.getUsername());
+
+            // 2. 一定加入 system-level work directory
+            system.getWorkRequestDirectory().addWorkRequest(reviewRequest);
+            System.out.println("Added to system work directory");
+
+            // 3. 尝试加入 Content Control（可选）
+            boolean foundOrg = false;
+
+            for (Network network : system.getNetworks()) {
+                for (Enterprise enterprise : network.getEnterprises()) {
+                    for (Organization org : enterprise.getOrganizations()) {
+
+                        if ("Content Control".equals(org.getName())) {
+                            org.getWorkRequestDirectory().addWorkRequest(reviewRequest);
+                            foundOrg = true;
+                            System.out.println("Added to Content Control queue");
+                        }
+                    }
+                }
+            }
+
+            if (!foundOrg) {
+                System.out.println(
+                    "WARNING: Content Control not found, but listing review saved to system directory"
+                );
+            }
+
+            // 4. 走到这里 = 提交成功
+            System.out.println("=== SUBMIT LISTING REVIEW SUCCESS ===");
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("ERROR submitting listing review: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+            
+        
     }
     
 

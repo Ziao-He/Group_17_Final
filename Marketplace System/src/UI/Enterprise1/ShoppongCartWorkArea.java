@@ -4,17 +4,33 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_2.Listing;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author bob-h
  */
 public class ShoppongCartWorkArea extends javax.swing.JPanel {
 
+    private BuyerAccount buyerAccount;
+    private EcoSystem system;
+    private List<Listing> shoppingCart;
     /**
      * Creates new form ShoppongCartWorkArea
      */
-    public ShoppongCartWorkArea() {
+    public ShoppongCartWorkArea(BuyerAccount buyerAccount, EcoSystem system, List<Listing> shoppingCart) {
+        this.buyerAccount = buyerAccount;
+        this.system = system;
+        this.shoppingCart = shoppingCart;
+        
         initComponents();
+        
+        // Load cart items
+        refreshCart();
     }
 
     /**
@@ -107,4 +123,37 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblListing;
     // End of variables declaration//GEN-END:variables
+
+        /**
+     * Refresh cart display
+     */
+    public void refreshCart() {
+        DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
+        model.setRowCount(0);
+        
+        for (Listing listing : shoppingCart) {
+            Object[] row = {
+                listing.getId(),
+                listing.getTitle(),
+                "Unknown",  // Category
+                listing.getPrice(),
+                "Unknown",  // Condition
+                listing.getStatus(),
+                listing.getSeller().getUsername()
+            };
+            model.addRow(row);
+        }
+    }
+    
+    /**
+     * Get selected listing from cart
+     */
+    private Listing getSelectedListing() {
+        int selectedRow = tblListing.getSelectedRow();
+        if (selectedRow == -1 || selectedRow >= shoppingCart.size()) {
+            return null;
+        }
+        return shoppingCart.get(selectedRow);
+    }
+    
 }

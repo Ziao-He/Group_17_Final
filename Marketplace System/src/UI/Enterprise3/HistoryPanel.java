@@ -5,8 +5,11 @@
 package UI.Enterprise3;
 
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import basement_class.Enterprise_3.Organization.UserControlOrganization;
 import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
+import basement_class.Network;
+import basement_class.Organization;
 import basement_class.UserAccount;
 import basement_class.WorkRequest;
 import javax.swing.JOptionPane;
@@ -21,6 +24,8 @@ public class HistoryPanel extends javax.swing.JPanel {
     private EcoSystem system;
     private UserAccount admin;
     private UserControlOrganization userOrg;
+        
+    
     /**
      * Creates new form AccountAdminWorkAreaPanel
      */
@@ -200,60 +205,40 @@ public class HistoryPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldIDActionPerformed
 
     private void btnSearchByRequestIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByRequestIDActionPerformed
-            String keyword = fieldID.getText().trim();
+        DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+model.setRowCount(0);
 
-    if (keyword.isEmpty()) {
-        loadTable();
-        return;
-    }
+boolean found = false;
 
-    DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
-    model.setRowCount(0);
+boolean isSystemAdmin =
+        admin.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole;
 
-    boolean found = false;
+String keyword = fieldID.getText().trim();
 
-    boolean isPlatformAdmin =
-            admin.getRole() != null &&
-            "PlatformAdmin".equals(admin.getRole().getRoleName());
+for (Network n : system.getNetworks()) {
+    for (Enterprise e : n.getEnterprises()) {
+        for (Organization org : e.getOrganizations()) {
+            for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
 
-    if (isPlatformAdmin) {
+                if (!req.isResolved()) continue;
+                if (req.getId() == null) continue;
 
-        for (basement_class.Network n : system.getNetworks()) {
-            for (basement_class.Enterprise e : n.getEnterprises()) {
-                for (basement_class.Organization org : e.getOrganizations()) {
-                    for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
+                boolean canSee =
+                        isSystemAdmin  ||
+                        (req.getReviewer() != null && req.getReviewer().equals(admin));
 
-                        if (req.isResolved()
-                                && req.getId() != null
-                                && req.getId().equalsIgnoreCase(keyword)) {
-
-                            addRow(req, model);
-                            found = true;
-                        }
-                    }
+                if (canSee && req.getId().equalsIgnoreCase(keyword)) {
+                    addRow(req, model);
+                    found = true;
                 }
             }
         }
-
-    } else {
-
-        for (WorkRequest req : userOrg.getWorkRequestDirectory().getRequestList()) {
-
-            if (req.isResolved()
-                    && req.getReviewer() != null
-                    && req.getReviewer().equals(admin)
-                    && req.getId() != null
-                    && req.getId().equalsIgnoreCase(keyword)) {
-
-                addRow(req, model);
-                found = true;
-            }
-        }
     }
+}
 
-    if (!found) {
-        JOptionPane.showMessageDialog(this, "No matching record found.");
-    }
+if (!found) {
+    JOptionPane.showMessageDialog(this, "No matching record found.");
+}
     }//GEN-LAST:event_btnSearchByRequestIDActionPerformed
 
     private void fieldTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldTypeActionPerformed
@@ -261,49 +246,28 @@ public class HistoryPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldTypeActionPerformed
 
     private void btnSearchByTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByTypeActionPerformed
-            
-    String keyword = fieldType.getText().trim().toLowerCase();
+        DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+model.setRowCount(0);
 
-    if (keyword.isEmpty()) {
-        loadTable();
-        return;
-    }
+boolean found = false;
 
-    DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
-    model.setRowCount(0);
+boolean isSystemAdmin =
+        admin.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole;
 
-    boolean found = false;
+String keyword = fieldType.getText().trim().toLowerCase();
 
-    boolean isPlatformAdmin =
-            admin.getRole() != null &&
-            "PlatformAdmin".equals(admin.getRole().getRoleName());
+for (Network n : system.getNetworks()) {
+    for (Enterprise e : n.getEnterprises()) {
+        for (Organization org : e.getOrganizations()) {
+            for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
 
-    if (isPlatformAdmin) {
+                if (!req.isResolved()) continue;
 
-        for (basement_class.Network n : system.getNetworks()) {
-            for (basement_class.Enterprise e : n.getEnterprises()) {
-                for (basement_class.Organization org : e.getOrganizations()) {
-                    for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
+                boolean canSee =
+                        isSystemAdmin ||
+                        (req.getReviewer() != null && req.getReviewer().equals(admin));
 
-                        if (req.isResolved()) {
-                            String type = getRequestType(req).toLowerCase();
-                            if (type.contains(keyword)) {
-                                addRow(req, model);
-                                found = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    } else {
-
-        for (WorkRequest req : userOrg.getWorkRequestDirectory().getRequestList()) {
-
-            if (req.isResolved()
-                    && req.getReviewer() != null
-                    && req.getReviewer().equals(admin)) {
+                if (!canSee) continue;
 
                 String type = getRequestType(req).toLowerCase();
                 if (type.contains(keyword)) {
@@ -313,10 +277,11 @@ public class HistoryPanel extends javax.swing.JPanel {
             }
         }
     }
+}
 
-    if (!found) {
-        JOptionPane.showMessageDialog(this, "No matching record found.");
-    }
+if (!found) {
+    JOptionPane.showMessageDialog(this, "No matching record found.");
+}
     }//GEN-LAST:event_btnSearchByTypeActionPerformed
 
 
@@ -334,46 +299,57 @@ public class HistoryPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void loadTable() {
-        DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+          DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
     model.setRowCount(0);
 
-    boolean isPlatformAdmin =
-            admin.getRole() != null &&
-            "PlatformAdmin".equals(admin.getRole().getRoleName());
+boolean isSystemAdmin =
+        admin.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole;
 
-    // ✅ PlatformAdmin：看全系统历史
-    if (isPlatformAdmin) {
+    // ✅✅✅ 统一从【全系统】扫描
+    for (Network n : system.getNetworks()) {
+        for (Enterprise e : n.getEnterprises()) {
+            for (Organization org : e.getOrganizations()) {
+                for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
 
-        for (basement_class.Network n : system.getNetworks()) {
-            for (basement_class.Enterprise e : n.getEnterprises()) {
-                for (basement_class.Organization org : e.getOrganizations()) {
-                    for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
+                    // ✅ PlatformAdmin：看所有已完成
+                  if (isSystemAdmin) {
+    if (req.isResolved()) {
+        addRow(req, model);   // ✅ 超级管理员：显示所有已处理
+    }
+} else {
+    if (req.isResolved()
+            && req.getReviewer() != null
+            && req.getReviewer().equals(admin)) {
 
-                        if (req.isResolved()) {
-                            addRow(req, model);
-                        }
-                    }
+        addRow(req, model);  // ✅ 普通管理员：只看自己
+    }
+}
                 }
             }
         }
-
     }
-    // ✅ Organization Admin：只看“自己审批的”
-    else {
+    }  
 
-        for (WorkRequest req : userOrg.getWorkRequestDirectory().getRequestList()) {
+    private void addRow(WorkRequest req, DefaultTableModel model) {
 
-            if (req.isResolved()
-                    && req.getReviewer() != null
-                    && req.getReviewer().equals(admin)) {
+    Object[] row = new Object[5];
 
-                addRow(req, model);
-            }
-        }
-    }
-    }
+    row[0] = req.getId();  // ✅ Request ID
 
-    private String getRequestType(WorkRequest req) {
+    row[1] = (req.getReviewer() == null)
+            ? "N/A"
+            : req.getReviewer().getUsername();  // ✅ 审批人
+
+    row[2] = req.getReviewAction();            // ✅ 审批动作
+
+    row[3] = getRequestType(req);              // ✅ 请求类型
+
+    row[4] = req;                              // ✅ 隐藏列：完整对象（供 Description 用）
+
+    model.addRow(row);
+}
+
+private String getRequestType(WorkRequest req) {
 
     if (req instanceof basement_class.Enterprise_3.WorkRequest.RegistrationApprovalRequest)
         return "Registration";
@@ -389,19 +365,4 @@ public class HistoryPanel extends javax.swing.JPanel {
 
     return "Unknown";
 }
-
-    private void addRow(WorkRequest req, DefaultTableModel model) {
-
-    Object[] row = new Object[5];
-
-    row[0] = req.getId();                                      // Request ID
-    row[1] = req.getReviewer() == null ? "N/A"
-                                       : req.getReviewer().getUsername(); // Manager
-    row[2] = req.getReviewAction();                            // ✅ Type
-    row[3] = getRequestType(req);                            // Time
-    row[4] = req;                                             // 隐藏列：完整对象
-
-    model.addRow(row);
-}
-   
 }
