@@ -9,6 +9,8 @@ import basement_class.*;
 import basement_class.DAO.UserAccountDAO;
 import basement_class.DAO.UserAccountFileDAO;
 import basement_class.DAO.UserAccountService;
+import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_2.ListingDirectory;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Locale;
@@ -32,6 +34,7 @@ public class LoginPage extends javax.swing.JFrame {
 // ✅ 启动一次性加载
      userService.loadAllUsers();
      userService.distributeUsersToOrganizations();
+     initDemoListings();
         initComponents();
     }
     
@@ -407,8 +410,12 @@ public class LoginPage extends javax.swing.JFrame {
     // ============================================================
     if (loginUser instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
 
-        // TODO: Enterprise 1 买家界面跳转逻辑
-        // workArea = new UI.Enterprise1.BuyerJPanel(...);
+        workArea = new UI.Enterprise1.BuyerJPanel(
+            (basement_class.Enterprise_1.Account.BuyerAccount) loginUser,
+            userOrg,
+            userEnterprise,
+            system
+        );
     }
 
     // ============================================================
@@ -580,6 +587,77 @@ public class LoginPage extends javax.swing.JFrame {
        return null;
    }
 
- 
+   // -------------------------------------------------------------------
+   // 在系统启动后，手动创建一些测试用的 Listing（给 Buyer 浏览）
+   // -------------------------------------------------------------------
+   private void initDemoListings() {
+       if (system == null) {
+           System.out.println("EcoSystem is null, cannot init demo listings.");
+           return;
+       }
+
+       ListingDirectory listingDir = system.getListingDirectory();
+       if (listingDir == null) {
+           System.out.println("ListingDirectory is null, cannot init demo listings.");
+           return;
+       }
+
+       // 如果已经有数据了，就不重复添加
+       if (listingDir.size() > 0) {
+           System.out.println("ListingDirectory already has " + listingDir.size() + " listings, skip demo init.");
+           return;
+       }
+
+       System.out.println("Initializing demo listings in LoginPage...");
+
+       // 随便造一个卖家账号（不用放到系统目录里，只给 Listing 显示用）
+       basement_class.Enterprise_2.Account.SellerAccount demoSeller =
+               new basement_class.Enterprise_2.Account.SellerAccount();
+       demoSeller.setUserId("SELLER-DEMO");
+       demoSeller.setUsername("demo_seller");
+       demoSeller.setPasswordHash("123");   // 随便写，反正不登录用
+       demoSeller.setStatus("ACTIVE");
+
+       // ====== Demo Listing 1 ======
+       Listing l1 = new Listing(
+               "L-001",
+               demoSeller,
+               "二手 iPhone 13",
+               "99 新，电池健康 92%，无明显划痕",
+               "iphone13.png",
+               4200
+       );
+       l1.setStatus("Approved");
+
+       // ====== Demo Listing 2 ======
+       Listing l2 = new Listing(
+               "L-002",
+               demoSeller,
+               "机械键盘",
+               "青轴机械键盘，支持 RGB 背光",
+               "keyboard.png",
+               299
+       );
+       l2.setStatus("Approved");
+
+       // ====== Demo Listing 3 ======
+       Listing l3 = new Listing(
+               "L-003",
+               demoSeller,
+               "显示器支架",
+               "可升降 / 旋转，支持 27 寸以内显示器",
+               "monitor_stand.png",
+               159
+       );
+       l3.setStatus("Approved");
+
+       // 加入目录
+       listingDir.addListing(l1);
+       listingDir.addListing(l2);
+       listingDir.addListing(l3);
+
+       System.out.println("Demo listings added. Total = " + listingDir.size());
+   }
+
     
 }

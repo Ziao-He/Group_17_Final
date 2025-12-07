@@ -4,17 +4,41 @@
  */
 package UI.Enterprise1;
 
+import basement_class.EcoSystem;
+import basement_class.Enterprise;
+import basement_class.Enterprise_1.Account.BuyerAccount;
+import basement_class.Enterprise_1.Account.BuyerProfile;
+import basement_class.Enterprise_3.Organization.UserControlOrganization;
+import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
+import basement_class.Network;
+import basement_class.Organization;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author bob-h
  */
 public class PersonalJPanel extends javax.swing.JPanel {
+    
+    private final EcoSystem system;
+    private final BuyerAccount buyer;
 
+    private String originalName;
+    private String originalEmail;
+    private String originalPhone;
+    private String originalLocation;
+    private String originalPayment;
+    private double originalBudget;
     /**
      * Creates new form PersonalJPanel
      */
-    public PersonalJPanel() {
+    public PersonalJPanel(BuyerAccount buyer,EcoSystem system) {
         initComponents();
+        this.system = system;
+        this.buyer = buyer;
+
+        populateFields();
+        setEditing(false);  
     }
 
     /**
@@ -59,6 +83,12 @@ public class PersonalJPanel extends javax.swing.JPanel {
         txtLocation = new javax.swing.JTextField();
         txtPayment = new javax.swing.JTextField();
         txtPassword = new javax.swing.JTextField();
+        btnClose = new javax.swing.JButton();
+        lblAccountActivity = new javax.swing.JLabel();
+        cmbAccountActivity = new javax.swing.JComboBox<>();
+        lblRequestDescription = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtRequestDescription = new javax.swing.JTextArea();
 
         lblName.setText("Full Name：");
 
@@ -89,18 +119,55 @@ public class PersonalJPanel extends javax.swing.JPanel {
         lblPayment.setText("Preferred Payment:");
 
         btnEdit.setText("Edit Profile");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnChangePassword.setText("Change Password");
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         txtLocation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtLocationActionPerformed(evt);
             }
         });
+
+        btnClose.setText("Close Account");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
+
+        lblAccountActivity.setText("Account Activity：");
+
+        cmbAccountActivity.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "suspend", "reactivate", "ban" }));
+        cmbAccountActivity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbAccountActivityActionPerformed(evt);
+            }
+        });
+
+        lblRequestDescription.setText("Request Description：");
+
+        txtRequestDescription.setColumns(20);
+        txtRequestDescription.setRows(5);
+        jScrollPane1.setViewportView(txtRequestDescription);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -146,10 +213,19 @@ public class PersonalJPanel extends javax.swing.JPanel {
                             .addComponent(txtSpending, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                             .addComponent(txtBudget, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                             .addComponent(txtLocation, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                            .addComponent(txtPayment, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)))
+                            .addComponent(txtPayment, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                        .addGap(109, 109, 109)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblAccountActivity)
+                                .addGap(40, 40, 40)
+                                .addComponent(cmbAccountActivity, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnClose)
+                            .addComponent(lblRequestDescription)
+                            .addComponent(jScrollPane1)))
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnChangePassword))
-                .addContainerGap(800, Short.MAX_VALUE))
+                .addContainerGap(370, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,69 +233,78 @@ public class PersonalJPanel extends javax.swing.JPanel {
                 .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblName)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAccountActivity)
+                    .addComponent(cmbAccountActivity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmail)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRequestDescription))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPhone)
-                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUserName)
-                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblID)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblStatus)
-                    .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTime)
-                    .addComponent(txtTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblOrders)
-                    .addComponent(txtOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCompletedOrders)
-                    .addComponent(txtCompletedOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPoints)
-                    .addComponent(txtPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSpending)
-                    .addComponent(txtSpending, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBudget)
-                    .addComponent(txtBudget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblLocation)
-                    .addComponent(txtLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPayment)
-                    .addComponent(txtPayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEdit)
-                    .addComponent(btnCancel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnChangePassword)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPhone)
+                            .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblUserName)
+                            .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblID)
+                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblStatus)
+                            .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTime)
+                            .addComponent(txtTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblOrders)
+                            .addComponent(txtOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblCompletedOrders)
+                            .addComponent(txtCompletedOrders, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPoints)
+                            .addComponent(txtPoints, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblSpending)
+                            .addComponent(txtSpending, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblBudget)
+                            .addComponent(txtBudget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblLocation)
+                            .addComponent(txtLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPayment)
+                            .addComponent(txtPayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnEdit)
+                            .addComponent(btnCancel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSave)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnChangePassword))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnClose)))
                 .addContainerGap(143, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -228,12 +313,134 @@ public class PersonalJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtLocationActionPerformed
 
+    private void cmbAccountActivityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAccountActivityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbAccountActivityActionPerformed
+
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        // TODO add your handling code here:
+        if (buyer == null) return;
+
+        String action = (String) cmbAccountActivity.getSelectedItem(); // 例如 "suspend"
+        String desc = txtRequestDescription.getText().trim();
+
+        if (desc.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please describe your request.",
+                    "Missing Description",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to submit this request? (" + action + ")",
+                "Confirm",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        AccountStatusReviewRequest req =
+                new AccountStatusReviewRequest(buyer, action, desc);
+        req.setSender(buyer);             
+
+        UserControlOrganization userOrg = findUserControlOrg();
+        if (userOrg == null) {
+            JOptionPane.showMessageDialog(this,
+                    "UserControlOrganization not found. Cannot submit request.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        userOrg.getWorkRequestDirectory().addWorkRequest(req);
+
+        system.getWorkRequestDirectory().addWorkRequest(req);
+
+        JOptionPane.showMessageDialog(this,
+                "Your account status request has been submitted.",
+                "Request Submitted",
+                JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnCloseActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+        setEditing(true);
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+        txtName.setText(originalName);
+        txtEmail.setText(originalEmail);
+        txtPhone.setText(originalPhone);
+        txtLocation.setText(originalLocation);
+        txtPayment.setText(originalPayment);
+        txtBudget.setText(String.valueOf(originalBudget));
+
+        setEditing(false);
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        if (buyer == null) return;
+
+        String name = txtName.getText().trim();
+        String email = txtEmail.getText().trim();
+        String phone = txtPhone.getText().trim();
+        String location = txtLocation.getText().trim();
+        String payment = txtPayment.getText().trim();
+        String budgetStr = txtBudget.getText().trim();
+
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Name, email and phone cannot be empty.",
+                    "Validation Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        double budget;
+        try {
+            budget = Double.parseDouble(budgetStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Max budget must be a number.",
+                    "Validation Error",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        BuyerProfile profile = buyer.getProfile();
+        profile.setFullName(name);
+        profile.setEmail(email);
+        profile.setPhoneNumber(phone);
+        profile.setPreferredLocation(location);
+        profile.setMaxBudget(budget);
+        profile.setPreferredPaymentMethod(payment);
+
+        buyer.setEmail(email);
+        buyer.setPhoneNumber(phone);
+
+        populateFields();
+        setEditing(false);
+
+        JOptionPane.showMessageDialog(this,
+                "Profile saved successfully.",
+                "Success",
+                JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_btnSaveActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnChangePassword;
+    private javax.swing.JButton btnClose;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSave;
+    private javax.swing.JComboBox<String> cmbAccountActivity;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAccountActivity;
     private javax.swing.JLabel lblBudget;
     private javax.swing.JLabel lblCompletedOrders;
     private javax.swing.JLabel lblEmail;
@@ -244,6 +451,7 @@ public class PersonalJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblPayment;
     private javax.swing.JLabel lblPhone;
     private javax.swing.JLabel lblPoints;
+    private javax.swing.JLabel lblRequestDescription;
     private javax.swing.JLabel lblSpending;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblTime;
@@ -259,9 +467,91 @@ public class PersonalJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtPayment;
     private javax.swing.JTextField txtPhone;
     private javax.swing.JTextField txtPoints;
+    private javax.swing.JTextArea txtRequestDescription;
     private javax.swing.JTextField txtSpending;
     private javax.swing.JTextField txtStatus;
     private javax.swing.JTextField txtTime;
     private javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
+
+    private void populateFields() {
+        if (buyer == null) return;
+
+        BuyerProfile profile = buyer.getProfile();
+
+        txtName.setText(profile.getFullName());
+        txtEmail.setText(profile.getEmail());
+        txtPhone.setText(profile.getPhoneNumber());
+        txtUserName.setText(buyer.getUsername());
+        txtID.setText(buyer.getUserId());
+        txtStatus.setText(buyer.getStatus());
+        if (buyer.getCreatedAt() != null) {
+            txtTime.setText(buyer.getCreatedAt().toString());
+        } else {
+            txtTime.setText("N/A");
+        }
+
+        txtOrders.setText(String.valueOf(buyer.getTotalPurchases()));
+        txtCompletedOrders.setText(String.valueOf(buyer.getCompletedPurchases()));
+        txtPoints.setText(String.valueOf(buyer.getPoints()));
+
+        txtSpending.setText(String.format("%.2f", buyer.getTotalSpending()));
+
+        txtBudget.setText(String.valueOf(profile.getMaxBudget()));
+        txtLocation.setText(profile.getPreferredLocation());
+        txtPayment.setText(profile.getPreferredPaymentMethod());
+
+        txtPassword.setText("********");
+
+        originalName = txtName.getText();
+        originalEmail = txtEmail.getText();
+        originalPhone = txtPhone.getText();
+        originalLocation = txtLocation.getText();
+        originalPayment = txtPayment.getText();
+        try {
+            originalBudget = Double.parseDouble(txtBudget.getText());
+        } catch (NumberFormatException e) {
+            originalBudget = 0.0;
+        }
+    }
+    
+    private void setEditing(boolean editing) {
+        txtName.setEditable(editing);
+        txtEmail.setEditable(editing);
+        txtPhone.setEditable(editing);
+        txtBudget.setEditable(editing);
+        txtLocation.setEditable(editing);
+        txtPayment.setEditable(editing);
+
+        txtUserName.setEditable(false);
+        txtID.setEditable(false);
+        txtStatus.setEditable(false);
+        txtTime.setEditable(false);
+        txtOrders.setEditable(false);
+        txtCompletedOrders.setEditable(false);
+        txtPoints.setEditable(false);
+        txtSpending.setEditable(false);
+        txtPassword.setEditable(false);
+
+        btnEdit.setEnabled(!editing);
+        btnSave.setEnabled(editing);
+        btnCancel.setEnabled(editing);
+        btnChangePassword.setEnabled(true);
+        btnClose.setEnabled(true);
+    }
+    
+    private UserControlOrganization findUserControlOrg() {
+        for (Network net : system.getNetworks()) {
+            for (Enterprise ent : net.getEnterprises()) {
+                for (Organization org : ent.getOrganizations()) {
+                    if (org instanceof UserControlOrganization) {
+                        return (UserControlOrganization) org;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    
+    
 }

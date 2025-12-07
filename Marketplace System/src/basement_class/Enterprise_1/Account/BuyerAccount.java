@@ -22,6 +22,7 @@ public class BuyerAccount extends UserAccount {
     private int totalPurchases;
     private int completedPurchases;
     private int points;
+    private double totalSpending = 0.0;
     
     // References
     private List<String> favoriteListingIds;
@@ -128,5 +129,44 @@ public class BuyerAccount extends UserAccount {
     
     public void setOrderIds(List<String> orderIds) {
         this.orderIds = orderIds;
+    }
+
+    public List<String> getFavoriteListingIds() {
+        return favoriteListingIds;
+    }
+
+    public void setFavoriteListingIds(List<String> favoriteListingIds) {
+        this.favoriteListingIds = favoriteListingIds;
+    }
+    
+    public boolean isFavorite(String listingId) {
+        if (favoriteListingIds == null) {
+            return false;
+        }
+        return favoriteListingIds.contains(listingId);
+    }
+    
+    public double getTotalSpending() {
+        return totalSpending;
+    }
+
+    public void setTotalSpending(double totalSpending) {
+        this.totalSpending = totalSpending;
+    }
+    
+    public void recordOrder(double amount, boolean completed) {
+
+        // Order is placed → always count it
+        this.totalPurchases++;
+
+        if (completed) {
+            this.completedPurchases++;
+            this.totalSpending += amount;
+
+            // ⭐ 5% cashback as points
+            int earnedPoints = (int) Math.floor(amount * 0.05);
+
+            this.points += earnedPoints;
+        }
     }
 }

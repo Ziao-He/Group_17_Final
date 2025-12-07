@@ -17,6 +17,14 @@ public class EcoSystem {
     private ArrayList<Network> networks;
     private UserAccountDirectory userAccountDirectory;
     private WorkRequestDirectory workRequestDirectory;
+
+    public MessageDirectory getMessageDirectory() {
+        return messageDirectory;
+    }
+
+    public void setMessageDirectory(MessageDirectory messageDirectory) {
+        this.messageDirectory = messageDirectory;
+    }
     private ListingDirectory listingDirectory;
     private MessageDirectory messageDirectory;
 
@@ -97,4 +105,7 @@ public class EcoSystem {
 //}
 
 
+    public void setListingDirectory(ListingDirectory listingDirectory) {
+        this.listingDirectory = listingDirectory;
+    }
 }

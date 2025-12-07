@@ -43,39 +43,39 @@ public class Enterprise1Initializer {
         System.out.println("  Created Enterprise: " + enterprise.getName());
         System.out.println("  Organizations: " + enterprise.getOrganizations().size());
         
-//        // Create test accounts
-//        createTestAccounts(system, shoppingOrg, orderOrg);
+        // Create test accounts
+        createTestAccounts(system, shoppingOrg, orderOrg);
     }
     
     /**
      * Create test buyer accounts
      */
-//    private static void createTestAccounts(EcoSystem system,
-//                                          ShoppingServicesOrganization shoppingOrg,
-//                                          OrderManagementOrganization orderOrg) {
-//        System.out.println("  Creating test accounts...");
-//        
-//        // Account 1: BuyerRole
-//        BuyerAccount buyer1 = new BuyerAccount();
-//        buyer1.setUserId("BUYER-001");
-//        buyer1.setUsername("buyer1");
-//        buyer1.setPasswordHash("password123");
-//        buyer1.setStatus("ACTIVE");
-//        buyer1.setRole(new BuyerRole());
-//        
-//        BuyerProfile profile1 = buyer1.getProfile();
-//        profile1.setUserId("BUYER-001");
-//        profile1.setFullName("John Buyer");
-//        profile1.setEmail("buyer1@university.edu");
-//        profile1.setPhoneNumber("123-456-7890");
-//        
-//        shoppingOrg.getUserAccountDirectory().addUserAccount(buyer1);
-//        system.getUserAccountDirectory().addUserAccount(buyer1);
-//        System.out.println("    • buyer1 / password123");
-//        
-//        // Account 2: ProductSearcherRole
+    private static void createTestAccounts(EcoSystem system,
+                                          ShoppingServicesOrganization shoppingOrg,
+                                          OrderManagementOrganization orderOrg) {
+        System.out.println("  Creating test accounts...");
+        
+        // Account 1: BuyerRole
+        BuyerAccount buyer1 = new BuyerAccount();
+        buyer1.setUserId("BUYER-001");
+        buyer1.setUsername("buyer1");
+        buyer1.setPasswordHash("password123");
+        buyer1.setStatus("ACTIVE");
+        buyer1.setRole(new BuyerRole());
+        
+        BuyerProfile profile1 = buyer1.getProfile();
+        profile1.setUserId("BUYER-001");
+        profile1.setFullName("John Buyer");
+        profile1.setEmail("buyer1@university.edu");
+        profile1.setPhoneNumber("123-456-7890");
+        
+        shoppingOrg.getUserAccountDirectory().addUserAccount(buyer1);
+        system.getUserAccountDirectory().addUserAccount(buyer1);
+        System.out.println("    • buyer1 / password123");
+        
+        // Account 2: ProductSearcherRole
 //        BuyerAccount buyer2 = new BuyerAccount();
-//        buyer2.setUserId("BUYER-002");
+//       buyer2.setUserId("BUYER-002");
 //        buyer2.setUsername("searcher1");
 //        buyer2.setPasswordHash("password123");
 //        buyer2.setStatus("ACTIVE");
@@ -108,5 +108,5 @@ public class Enterprise1Initializer {
 //        orderOrg.getUserAccountDirectory().addUserAccount(buyer3);
 //        system.getUserAccountDirectory().addUserAccount(buyer3);
 //        System.out.println("    • tracker1 / password123");
-//    }
+    }
 }

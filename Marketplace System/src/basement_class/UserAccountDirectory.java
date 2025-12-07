@@ -97,4 +97,16 @@ public class UserAccountDirectory {
     public int size() {
         return userAccounts.size();
     }
+    
+    public ArrayList<UserAccount> getAllBuyers() {
+        ArrayList<UserAccount> buyers = new ArrayList<>();
+
+        for (UserAccount ua : userAccounts) {
+            if (ua instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
+                buyers.add(ua);
+            }
+        }
+
+        return buyers;
+    }
 }
