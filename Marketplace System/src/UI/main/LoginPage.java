@@ -476,7 +476,9 @@ public class LoginPage extends javax.swing.JFrame {
     this.setContentPane(workArea);
     this.revalidate();
     this.repaint();
-
+    this.pack();                      
+    this.setLocationRelativeTo(null);
+    
     JOptionPane.showMessageDialog(workArea,
             "Welcome " + loginUser.getUsername()
             + "\nOrganization: " + (userOrg == null ? "System Admin" : userOrg.getName()),
@@ -492,6 +494,7 @@ public class LoginPage extends javax.swing.JFrame {
 
     private void btnSignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnSignActionPerformed
 
     /**

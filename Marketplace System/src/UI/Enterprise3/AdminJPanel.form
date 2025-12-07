@@ -55,6 +55,7 @@
                               <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="btnHistory" max="32767" attributes="0"/>
+                          <Component id="btnAccount" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -73,7 +74,9 @@
                       <Component id="btnPolicyEnforcement" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnHistory" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="405" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="btnAccount" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="364" max="32767" attributes="0"/>
                       <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                   </Group>
@@ -127,6 +130,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHistoryActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnAccount">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Account Managment"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAccountActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
