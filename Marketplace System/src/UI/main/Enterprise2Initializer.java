@@ -169,7 +169,8 @@ public class Enterprise2Initializer {
             
             // Add to ListingDirectory
             system.getListingDirectory().addListing(listing);
-            
+            // ✅ 同步添加到 SellerAccount
+            seller1.addListing(listing);
             System.out.println("    • Created: " + titles[i] + " - $" + prices[i]);
         }
         

@@ -8,8 +8,6 @@ import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
-import basement_class.Enterprise_2.Account.SellerAccount;
-import basement_class.Enterprise_2.Organization.SellerOrganization;
 import basement_class.Organization;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
@@ -52,9 +50,9 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
         jSplitPane1 = new javax.swing.JSplitPane();
         controlJPanel = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
-        btnListingMangement = new javax.swing.JButton();
-        btnViewComplaints = new javax.swing.JButton();
-        btnCreateNewListing = new javax.swing.JButton();
+        btnOrderHistory = new javax.swing.JButton();
+        btnOrderReports = new javax.swing.JButton();
+        btnReviewOrders = new javax.swing.JButton();
         workProcessJPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -69,24 +67,24 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnListingMangement.setText("Order History");
-        btnListingMangement.addActionListener(new java.awt.event.ActionListener() {
+        btnOrderHistory.setText("Order History");
+        btnOrderHistory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnListingMangementActionPerformed(evt);
+                btnOrderHistoryActionPerformed(evt);
             }
         });
 
-        btnViewComplaints.setText("Order Reports");
-        btnViewComplaints.addActionListener(new java.awt.event.ActionListener() {
+        btnOrderReports.setText("Order Reports");
+        btnOrderReports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewComplaintsActionPerformed(evt);
+                btnOrderReportsActionPerformed(evt);
             }
         });
 
-        btnCreateNewListing.setText("Review Orders");
-        btnCreateNewListing.addActionListener(new java.awt.event.ActionListener() {
+        btnReviewOrders.setText("Review Orders");
+        btnReviewOrders.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateNewListingActionPerformed(evt);
+                btnReviewOrdersActionPerformed(evt);
             }
         });
 
@@ -97,9 +95,9 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
             .addGroup(controlJPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnViewComplaints, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnListingMangement, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                    .addComponent(btnCreateNewListing, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnOrderReports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnOrderHistory, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(btnReviewOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addComponent(btnLogout)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -109,11 +107,11 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
             controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, controlJPanelLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(btnCreateNewListing)
+                .addComponent(btnReviewOrders)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnListingMangement)
+                .addComponent(btnOrderHistory)
                 .addGap(18, 18, 18)
-                .addComponent(btnViewComplaints)
+                .addComponent(btnOrderReports)
                 .addGap(38, 38, 38)
                 .addComponent(btnLogout)
                 .addContainerGap(482, Short.MAX_VALUE))
@@ -137,22 +135,25 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
         add(jSplitPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnListingMangementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListingMangementActionPerformed
-        
-    }//GEN-LAST:event_btnListingMangementActionPerformed
+    private void btnOrderHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderHistoryActionPerformed
+        OrderHistoryJPanel panel =
+        new OrderHistoryJPanel(orderProcessorAccount, organization, enterprise, system);
 
-    private void btnViewComplaintsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewComplaintsActionPerformed
+        replaceWorkArea(panel);
+    }//GEN-LAST:event_btnOrderHistoryActionPerformed
+
+    private void btnOrderReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderReportsActionPerformed
         // TODO add your handling code here:
         
-    }//GEN-LAST:event_btnViewComplaintsActionPerformed
+    }//GEN-LAST:event_btnOrderReportsActionPerformed
 
-    private void btnCreateNewListingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewListingActionPerformed
+    private void btnReviewOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReviewOrdersActionPerformed
         // TODO add your handling code here:
         ReviewOrdersJPanel panel =
         new ReviewOrdersJPanel(orderProcessorAccount, organization, enterprise, system);
 
         replaceWorkArea(panel);
-    }//GEN-LAST:event_btnCreateNewListingActionPerformed
+    }//GEN-LAST:event_btnReviewOrdersActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
@@ -168,10 +169,10 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCreateNewListing;
-    private javax.swing.JButton btnListingMangement;
     private javax.swing.JButton btnLogout;
-    private javax.swing.JButton btnViewComplaints;
+    private javax.swing.JButton btnOrderHistory;
+    private javax.swing.JButton btnOrderReports;
+    private javax.swing.JButton btnReviewOrders;
     private javax.swing.JPanel controlJPanel;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JPanel workProcessJPanel;

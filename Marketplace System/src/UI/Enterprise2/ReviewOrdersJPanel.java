@@ -55,15 +55,17 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         btnReject = new javax.swing.JButton();
         btnDescpriton = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(255, 204, 204));
+
         tblOrder.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "OrderID", "BuyerID", "List Title", "Status", "Quantity"
+                "OrderID", "BuyerID", "SellerID", "List Title", "Status", "Quantity"
             }
         ));
         jScrollPane1.setViewportView(tblOrder);
@@ -137,53 +139,9 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
                     .addComponent(btnAccept)
                     .addComponent(btnReject)
                     .addComponent(btnDescpriton))
-                .addContainerGap(830, Short.MAX_VALUE))
+                .addContainerGap(171, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
-        // TODO add your handling code here:
-        String input = txtSearch.getText().trim();
-
-        if (input.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter Order ID.",
-                    "Input Required",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        java.util.List<OrderReviewRequest> result = new java.util.ArrayList<>();
-
-        for (WorkRequest wr : organization
-                .getWorkRequestDirectory()
-                .getRequestList()) {
-
-            if (wr instanceof OrderReviewRequest) {
-                OrderReviewRequest req = (OrderReviewRequest) wr;
-
-                Order order = req.getOrder();
-
-                if ("Pending".equalsIgnoreCase(req.getStatus())
-                        && order != null
-                        && input.equalsIgnoreCase(order.getOrderId())) {
-
-                    result.add(req);
-                    break;   // ✅ OrderID 唯一，找到就停
-                }
-            }
-        }
-
-        if (result.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "No matching Order ID found.",
-                    "Not Found",
-                    JOptionPane.INFORMATION_MESSAGE);
-        }
-
-        refreshTable(result);   // ✅ 统一入口刷新表格
-        txtSearch.setText("");
-    }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
         int row = tblOrder.getSelectedRow();
@@ -431,6 +389,50 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         txtSearch.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
 
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        String input = txtSearch.getText().trim();
+
+        if (input.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Please enter Order ID.",
+                "Input Required",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        java.util.List<OrderReviewRequest> result = new java.util.ArrayList<>();
+
+        for (WorkRequest wr : organization
+            .getWorkRequestDirectory()
+            .getRequestList()) {
+
+            if (wr instanceof OrderReviewRequest) {
+                OrderReviewRequest req = (OrderReviewRequest) wr;
+
+                Order order = req.getOrder();
+
+                if ("Pending".equalsIgnoreCase(req.getStatus())
+                    && order != null
+                    && input.equalsIgnoreCase(order.getOrderId())) {
+
+                    result.add(req);
+                    break;   // ✅ OrderID 唯一，找到就停
+                }
+            }
+        }
+
+        if (result.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "No matching Order ID found.",
+                "Not Found",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        refreshTable(result);   // ✅ 统一入口刷新表格
+
+    }//GEN-LAST:event_btnSearchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAccept;
@@ -471,12 +473,13 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
 
             Order order = req.getOrder();
 
-            Object[] row = new Object[5];
+            Object[] row = new Object[6];
             row[0] = order.getOrderId();          // Order ID
             row[1] = order.getBuyerId();          // Buyer ID
-            row[2] = order.getListingId();        // Listing Title（如需 title，下方说明）
-            row[3] = order.getStatus();           // Order status
-            row[4] = order.getQuantity();         // Quantity
+            row[2] = order.getSellerId();          // Buyer ID
+            row[3] = order.getListingId();        // Listing Title（如需 title，下方说明）
+            row[4] = order.getStatus();           // Order status
+            row[5] = order.getQuantity();         // Quantity
 
             model.addRow(row);
         }

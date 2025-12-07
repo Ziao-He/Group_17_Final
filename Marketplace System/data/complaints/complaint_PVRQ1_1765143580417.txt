@@ -1,0 +1,10 @@
+=== COMPLAINT REPORT ===
+ID: PVRQ1
+Date: Sun Dec 07 16:39:40 EST 2025
+Reporter: listingmanager1
+Target: seller1
+Listing ID: LIST-35f43079
+Listing Title: Bicycle - Mountain Bike
+Category: listing_issue
+Reason: 342
+Status: Pending
