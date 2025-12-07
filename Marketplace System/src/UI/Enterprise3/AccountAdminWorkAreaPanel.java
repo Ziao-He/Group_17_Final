@@ -32,6 +32,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         loadTable();
     }
 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -80,7 +81,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
                 btnDescpritonActionPerformed(evt);
             }
         });
-
+        
         btnReject.setText("Reject");
         btnReject.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,6 +216,8 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
 
         JOptionPane.showMessageDialog(this, "Request processed successfully.");
         loadTable();
+        fieldID.setText("");
+        fieldUserName.setText("");
 
     }//GEN-LAST:event_btnAcceptActionPerformed
 
@@ -270,6 +273,8 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     // Step 4: UI 提示 + 刷新
     JOptionPane.showMessageDialog(this, "Request rejected.");
     loadTable();
+            fieldID.setText("");
+        fieldUserName.setText("");
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnDescpritonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescpritonActionPerformed
@@ -280,7 +285,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         }
 
         AccountStatusReviewRequest req =
-            (AccountStatusReviewRequest) tblUser.getValueAt(row, 6);
+            (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
 
         StringBuilder msg = new StringBuilder();
         msg.append("User: ").append(req.getTargetUser().getUsername()).append("\n");
@@ -303,7 +308,48 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldIDActionPerformed
 
     private void btnSearchByRequestIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByRequestIDActionPerformed
-        // TODO add your handling code here:
+            String input = fieldID.getText().trim();
+
+    if (input.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter Request ID.");
+        return;
+    }
+
+    DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+    model.setRowCount(0);
+
+    boolean found = false;
+
+    for (WorkRequest wr : userOrg.getWorkRequestDirectory().getRequestList()) {
+
+        if (wr instanceof AccountStatusReviewRequest) {
+            AccountStatusReviewRequest req = (AccountStatusReviewRequest) wr;
+
+            // ✅ 只查 PENDING（与你原逻辑一致）
+            if (!req.getStatus().equalsIgnoreCase("PENDING")) continue;
+
+            if (req.getId().equalsIgnoreCase(input)) {
+
+                Object[] row = new Object[]{
+                        req.getId(),
+                        req.getTargetUser().getUsername(),
+                        req.getAction(),
+                        req.getStatus(),
+                        req
+                };
+                model.addRow(row);
+                found = true;
+                break; // ID 唯一，找到就停止
+                
+            }
+        }
+    }
+
+
+    if (!found) {
+        JOptionPane.showMessageDialog(this, "No matching Request ID found.");
+    }
+    
     }//GEN-LAST:event_btnSearchByRequestIDActionPerformed
 
     private void fieldUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldUserNameActionPerformed
@@ -311,7 +357,48 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_fieldUserNameActionPerformed
 
     private void btnSearchByUserNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchByUserNameActionPerformed
-        // TODO add your handling code here:
+            String keyword = fieldUserName.getText().trim().toLowerCase();
+
+    if (keyword.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter username.");
+        return;
+    }
+
+    DefaultTableModel model = (DefaultTableModel) tblUser.getModel();
+    model.setRowCount(0);
+
+    boolean found = false;
+
+    for (WorkRequest wr : userOrg.getWorkRequestDirectory().getRequestList()) {
+
+        if (wr instanceof AccountStatusReviewRequest) {
+            AccountStatusReviewRequest req = (AccountStatusReviewRequest) wr;
+
+            if (!req.getStatus().equalsIgnoreCase("PENDING")) continue;
+
+            String username = req.getTargetUser().getUsername().toLowerCase();
+
+            // ✅ 模糊匹配
+            if (username.contains(keyword)) {
+
+                Object[] row = new Object[]{
+                        req.getId(),
+                        req.getTargetUser().getUsername(),
+                        req.getAction(),
+                        req.getStatus(),
+                        req
+                };
+
+                model.addRow(row);
+                found = true;
+            }
+        }
+    }
+
+    if (!found) {
+        JOptionPane.showMessageDialog(this, "No matching username found.");
+    }
+
     }//GEN-LAST:event_btnSearchByUserNameActionPerformed
 
 
@@ -353,4 +440,6 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
             }
          }        
     }
+
+   
 }
