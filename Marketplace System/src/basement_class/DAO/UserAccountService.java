@@ -5,6 +5,10 @@
 package basement_class.DAO;
 
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
+import basement_class.Network;
+import basement_class.Organization;
+import basement_class.Role;
 import basement_class.UserAccount;
 
 /**
@@ -63,4 +67,57 @@ public class UserAccountService {
         system.getUserAccountDirectory().removeUserAccount(ua);
         dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
     }
+
+public void distributeUsersToOrganizations() {
+
+    System.out.println("\n===== [START REDISTRIBUTE] =====");
+
+    // ✅ 打印 system 中的所有用户 + 角色
+    for (UserAccount ua : system.getUserAccountDirectory().getUserAccounts()) {
+        System.out.println(
+            "[SYSTEM USER] " + ua.getUsername()
+            + " | role = " + (ua.getRole() == null ? "NULL" : ua.getRole().getClass().getSimpleName())
+        );
+    }
+
+    // ✅ 原有逻辑（你现在用的那一版）
+    for (Network n : system.getNetworks()) {
+        for (Enterprise e : n.getEnterprises()) {
+            for (Organization o : e.getOrganizations()) {
+                o.getUserAccountDirectory().getUserAccounts().clear();
+
+                // 🔍 打印每个 org 拥有哪些 role
+                System.out.println(
+                    "[ORG ROLE] " + e.getName() + " -> " + o.getName()
+                    + " roles = " + o.getRoles()
+                );
+            }
+        }
+    }
+
+    for (UserAccount ua : system.getUserAccountDirectory().getUserAccounts()) {
+
+        if (ua.getRole() == null) continue;
+        Class<? extends Role> userRoleClass = ua.getRole().getClass();
+
+        for (Network n : system.getNetworks()) {
+            for (Enterprise e : n.getEnterprises()) {
+                for (Organization org : e.getOrganizations()) {
+
+                    if (org.hasRole(userRoleClass)) {
+                        org.getUserAccountDirectory().addUserAccount(ua);
+
+                        System.out.println(
+                            "[AUTO-BIND SUCCESS] " + ua.getUsername()
+                            + " -> " + e.getName()
+                            + " -> " + org.getName()
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    System.out.println("===== [END REDISTRIBUTE] =====\n");
+}
 }

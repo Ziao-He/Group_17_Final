@@ -30,7 +30,8 @@ public class LoginPage extends javax.swing.JFrame {
         UserAccountService userService = new UserAccountService(dao, system);
     
 // ✅ 启动一次性加载
-userService.loadAllUsers();
+     userService.loadAllUsers();
+     userService.distributeUsersToOrganizations();
         initComponents();
     }
     

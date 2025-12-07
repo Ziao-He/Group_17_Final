@@ -52,7 +52,7 @@ public static void initialize(EcoSystem system, Network network) {
 
         contentOrg.addRole(new ContentModeratorRole());
         contentOrg.addRole(new PolicyEnforcerRole());
-//
+
 //        // ✅ 4️⃣ 创建 Platform Admin 账号（总管理员）
 //        PlatformAdminAccount admin = new PlatformAdminAccount();
 //        admin.setUserId("ADMIN_001");
@@ -90,8 +90,8 @@ public static void initialize(EcoSystem system, Network network) {
 //        contentAdmin.setRole(new ContentModeratorRole());
 //
 //        contentOrg.getUserAccountDirectory().addUserAccount(contentAdmin);
-
-        // ✅ 7️⃣ 构造一些测试 Listing
+//
+////         ✅ 7️⃣ 构造一些测试 Listing
 //        Listing l1 = new Listing("L001", admin, "Old iPhone", "Used iPhone 11", "iphone.png", 200);
 //        Listing l2 = new Listing("L002", accountAdmin, "MacBook", "M1 MacBook Air", "mac.png", 900);
 //
@@ -120,7 +120,7 @@ public static void initialize(EcoSystem system, Network network) {
 //                "keyword_violation", "Illegal keyword found");
 //
 //        contentOrg.getWorkRequestDirectory().addWorkRequest(pReq);
-
-        System.out.println("[Enterprise3] Platform Management initialized successfully.\n");
+//
+//        System.out.println("[Enterprise3] Platform Management initialized successfully.\n");
     }
 }
