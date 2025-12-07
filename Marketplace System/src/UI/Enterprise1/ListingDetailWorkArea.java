@@ -7,6 +7,7 @@ package UI.Enterprise1;
 import basement_class.EcoSystem;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Enterprise_2.Listing;
+import basement_class.UserAccount;
 import java.awt.Image;
 import java.io.File;
 import javax.swing.ImageIcon;
@@ -356,6 +357,25 @@ public class ListingDetailWorkArea extends javax.swing.JPanel {
 
     private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
         // TODO add your handling code here:
+        if (listing == null || buyerAccount == null) {
+            JOptionPane.showMessageDialog(this,
+                "Missing user or listing information.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        UserAccount seller = listing.getSeller();
+
+        ReportViolationWorkArea reportPanel = new ReportViolationWorkArea(
+                buyerAccount,
+                seller,
+                listing,
+                system,
+                parentPanel
+        );
+
+        parentPanel.showReportPanel(reportPanel);
     }//GEN-LAST:event_btnReportActionPerformed
 
 

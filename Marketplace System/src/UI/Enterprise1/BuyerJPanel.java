@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -192,31 +193,16 @@ public class BuyerJPanel extends javax.swing.JPanel {
         CardLayout cl = (CardLayout) workArea.getLayout();
         cl.show(workArea, "PersonalCard");
         currentPanel = "PersonalCard";
-
-        // Load personal info
-        personalPanel.loadPersonalInfo();
     }//GEN-LAST:event_btnPersonalActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to logout?",
-            "Confirm Logout",
-            JOptionPane.YES_NO_OPTION);
+        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            if (frame != null) {
-                // Don't create new LoginPage - use CardLayout to go back
-                // Or save the original LoginPage reference
+        mainFrame.dispose();
 
-                // For now, recreate but don't re-initialize
-                LoginPage loginPage = new LoginPage();
-                frame.setContentPane(loginPage.getContentPane());
-                frame.revalidate();
-                frame.repaint();
-            }
-        }
+        LoginPage loginPage = new LoginPage(system);
+        loginPage.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchActionPerformed
@@ -282,7 +268,7 @@ public class BuyerJPanel extends javax.swing.JPanel {
     /**
      * Show browse panel (default view)
      */
-    private void showBrowsePanel() {
+    void showBrowsePanel() {
         CardLayout cl = (CardLayout) workArea.getLayout();
         cl.show(workArea, "BrowseCard");
         currentPanel = "BrowseCard";
@@ -383,5 +369,12 @@ public class BuyerJPanel extends javax.swing.JPanel {
      */
     public EcoSystem getSystem() {
         return system;
+    }
+    
+    public void showReportPanel(JPanel reportPanel) {
+        workArea.add(reportPanel, "ReportCard");
+        CardLayout layout = (CardLayout) workArea.getLayout();
+        layout.show(workArea, "ReportCard");
+        currentPanel = "ReportCard";
     }
 }

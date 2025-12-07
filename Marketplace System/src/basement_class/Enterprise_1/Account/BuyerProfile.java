@@ -18,6 +18,7 @@ public class BuyerProfile extends Profile {
     private List<String> preferredCategories;
     private double maxBudget;
     private String preferredLocation;
+    private String preferredPaymentMethod;
     
     /**
      * Constructor
@@ -26,6 +27,8 @@ public class BuyerProfile extends Profile {
         super();
         this.preferredCategories = new ArrayList<>();
         this.maxBudget = 0.0;
+        this.preferredPaymentMethod = "";
+        this.preferredLocation = "";
     }
     
     @Override
@@ -73,5 +76,13 @@ public class BuyerProfile extends Profile {
     
     public void setPreferredLocation(String preferredLocation) {
         this.preferredLocation = preferredLocation;
+    }
+
+    public String getPreferredPaymentMethod() {
+        return preferredPaymentMethod;
+    }
+
+    public void setPreferredPaymentMethod(String preferredPaymentMethod) {
+        this.preferredPaymentMethod = preferredPaymentMethod;
     }
 }
