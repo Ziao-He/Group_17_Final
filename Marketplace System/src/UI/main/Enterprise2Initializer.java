@@ -40,7 +40,7 @@ public class Enterprise2Initializer {
                 (SellerOrganization) enterprise.getOrganizationByName("Seller Organization");
 
         OrderManagementOrganization listingOrg =
-        (OrderManagementOrganization) enterprise.getOrganizationByName("Listing Management Organization");
+        (OrderManagementOrganization) enterprise.getOrganizationByName("Order Management Organization");
 
         System.out.println("  Created Enterprise: " + enterprise.getName());
         System.out.println("  Organizations: " + enterprise.getOrganizations().size());

@@ -7,7 +7,11 @@ package UI.Enterprise1;
 import basement_class.EcoSystem;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Enterprise_2.Listing;
+import basement_class.Enterprise_2.WorkRequest.OrderReviewRequest;
+import common_class.Order;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,7 +23,7 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
 
     private BuyerAccount buyerAccount;
     private EcoSystem system;
-    private List<Listing> shoppingCart;   // reference from BuyerJPanel
+    private List<Listing> shoppingCart;
 
     /**
      * Creates new form ShoppongCartWorkArea
@@ -32,7 +36,7 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
         this.shoppingCart = shoppingCart;
 
         initComponents();
-        refreshCart();    // load table at start
+        refreshCart();
     }
 
     /**
@@ -115,106 +119,202 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinishActionPerformed
-        // TODO add your handling code here:
+        // Check if cart is empty
         if (shoppingCart == null || shoppingCart.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Your cart is empty.",
-                    "Empty Cart",
-                    JOptionPane.WARNING_MESSAGE);
+                "Your cart is empty.",
+                "Empty Cart",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // 1) Calculate total price
-        double total = 0.0;
-        for (Listing l : shoppingCart) {
-            total += l.getPrice();
+        // 1. Calculate total price
+        double totalPrice = 0.0;
+        for (Listing listing : shoppingCart) {
+            totalPrice += listing.getPrice();
         }
 
-        // 2) Get buyer's budget
-        double budget = buyerAccount.getProfile().getMaxBudget();
-
-        // If budget > 0, enforce it
-        if (budget > 0 && total > budget) {
+        // 2. Check budget from BuyerProfile
+        double maxBudget = buyerAccount.getProfile().getMaxBudget();
+        
+        // If budget is set (> 0), enforce budget check
+        if (maxBudget > 0 && totalPrice > maxBudget) {
             JOptionPane.showMessageDialog(this,
-                    String.format("Total price (%.2f) exceeds your budget (%.2f).",
-                            total, budget),
-                    "Over Budget",
-                    JOptionPane.WARNING_MESSAGE);
+                String.format("Total price ($%.2f) exceeds your budget ($%.2f).\n" +
+                             "Please remove some items or increase your budget in Personal Info.",
+                             totalPrice, maxBudget),
+                "Over Budget",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Confirm checkout
+        // 3. Confirm checkout
+        String confirmMessage = String.format(
+            "Total amount: $%.2f\n" +
+            "Number of items: %d\n" +
+            (maxBudget > 0 ? "Remaining budget: $%.2f\n" : "") +
+            "\nProceed with checkout?",
+            totalPrice, 
+            shoppingCart.size(),
+            maxBudget > 0 ? (maxBudget - totalPrice) : 0
+        );
+        
         int confirm = JOptionPane.showConfirmDialog(this,
-                String.format("Total amount: $%.2f\nDo you want to checkout?", total),
-                "Confirm Checkout",
-                JOptionPane.YES_NO_OPTION);
+            confirmMessage,
+            "Confirm Checkout",
+            JOptionPane.YES_NO_OPTION);
 
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
 
-        // 3) Record spending & points in BuyerAccount
-        //    We treat all items as one combined order here.
-        buyerAccount.recordOrder(total, true);
+        // 4. Create Order and OrderReviewRequest for EACH listing separately
+        int successCount = 0;
+        List<String> failedItems = new ArrayList<>();
+        
+        for (Listing listing : shoppingCart) {
+            try {
+                // Generate unique IDs
+                String orderId = "ORD-" + UUID.randomUUID().toString().substring(0, 8);
+                String requestId = "REQ-" + UUID.randomUUID().toString().substring(0, 8);
+                
+                // Create Order object
+                Order order = new Order(
+                    orderId,                          // orderId
+                    listing.getId(),                  // listingId
+                    buyerAccount.getUserId(),         // buyerId
+                    listing.getSeller().getUserId(),  // sellerId
+                    listing.getPrice()                // totalPrice
+                );
+                order.setTotalPrice(listing.getPrice());
+                order.setQuantity(1);  // Always 1 for second-hand items
+                order.setStatus("Pending");
+                
+                // Create OrderReviewRequest (WorkRequest)
+                OrderReviewRequest orderRequest = new OrderReviewRequest(
+                    buyerAccount,  // sender
+                    order,
+                    "Purchase request for: " + listing.getTitle()
+                );
+                orderRequest.setId(requestId);
+                orderRequest.setReceiver(listing.getSeller());
+                
+                // Save Order (if you have OrderDao)
+                // orderDao.save(order);
+                
+                // Add order ID to buyer's account
+                buyerAccount.addOrder(orderId);
+                
+                // Update listing status to Reserved
+                listing.setStatus("Reserved");
+                
+                // Add WorkRequest to system
+                // If you have WorkRequestDirectory:
+                // system.getWorkRequestDirectory().addWorkRequest(orderRequest);
+                
+                // Or add to Order Management Organization's work queue:
+                // Find OrderManagementOrganization and add to its queue
+                
+                successCount++;
+                
+                System.out.println("Created Order: " + orderId + " for Listing: " + listing.getId());
+                System.out.println("Created OrderReviewRequest: " + requestId);
+                
+            } catch (Exception e) {
+                failedItems.add(listing.getTitle() + " (error: " + e.getMessage() + ")");
+                e.printStackTrace();
+            }
+        }
 
-        // 4) Clear cart
+        // 5. Update buyer account statistics
+        buyerAccount.recordOrder(totalPrice, true);
+
+        // 6. Clear shopping cart
         shoppingCart.clear();
         refreshCart();
 
+        // 7. Show checkout results
+        StringBuilder resultMessage = new StringBuilder();
+        resultMessage.append("Checkout successful!\n\n");
+        resultMessage.append(String.format("Orders created: %d\n", successCount));
+        resultMessage.append(String.format("Total spent: $%.2f\n", totalPrice));
+        resultMessage.append(String.format("Points earned: %d\n", (int)(totalPrice / 10)));
+        
+        if (maxBudget > 0) {
+            resultMessage.append(String.format("Remaining budget: $%.2f\n", 
+                maxBudget - totalPrice));
+        }
+        
+        if (!failedItems.isEmpty()) {
+            resultMessage.append("\nFailed items:\n");
+            for (String item : failedItems) {
+                resultMessage.append("- ").append(item).append("\n");
+            }
+        }
+
         JOptionPane.showMessageDialog(this,
-                "Checkout successful!\nThank you for your purchase.",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
+            resultMessage.toString(),
+            "Checkout Complete",
+            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnFinishActionPerformed
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
-        // TODO add your handling code here:
+        // Remove selected item from cart
         Listing selected = getSelectedListing();
         if (selected == null) {
             JOptionPane.showMessageDialog(this,
-                    "Please select an item to remove.",
-                    "No Selection",
-                    JOptionPane.WARNING_MESSAGE);
+                "Please select an item to remove.",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Remove from cart list
-        shoppingCart.removeIf(l -> l.getId().equals(selected.getId()));
-
-        // Refresh table
-        refreshCart();
-
-        JOptionPane.showMessageDialog(this,
+        // Confirm removal
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Remove \"" + selected.getTitle() + "\" from cart?",
+            "Confirm Removal",
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Remove from cart
+            shoppingCart.removeIf(l -> l.getId().equals(selected.getId()));
+            
+            // Refresh display
+            refreshCart();
+            
+            JOptionPane.showMessageDialog(this,
                 "Item removed from cart.",
                 "Removed",
                 JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
-        // TODO add your handling code here:
+        // Show detailed view of selected item
         Listing selected = getSelectedListing();
         if (selected == null) {
             JOptionPane.showMessageDialog(this,
-                    "Please select an item first.",
-                    "No Selection",
-                    JOptionPane.WARNING_MESSAGE);
+                "Please select an item first.",
+                "No Selection",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Find parent BuyerJPanel
         BuyerJPanel parentPanel = findParentBuyerPanel();
         if (parentPanel == null) {
             JOptionPane.showMessageDialog(this,
-                    "Cannot find parent buyer panel.",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                "Cannot find parent panel.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Create detail panel (same as BrowseWorkArea)
-        ListingDetailWorkArea detailPanel =
-                new ListingDetailWorkArea(selected, buyerAccount, system, parentPanel);
-
-        // Show it via parent panel's CardLayout
+        // Create and show detail panel
+        ListingDetailWorkArea detailPanel = new ListingDetailWorkArea(
+            selected, buyerAccount, system, parentPanel
+        );
+        
         parentPanel.showDetailPanel(detailPanel);
     }//GEN-LAST:event_btnDetailActionPerformed
 
@@ -227,66 +327,69 @@ public class ShoppongCartWorkArea extends javax.swing.JPanel {
     private javax.swing.JTable tblListing;
     // End of variables declaration//GEN-END:variables
 
-        /**
+    /**
      * Refresh cart display
      */
     public void refreshCart() {
         DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
         model.setRowCount(0);
 
-        if (shoppingCart == null) return;
+        if (shoppingCart == null) {
+            return;
+        }
 
+        double totalPrice = 0.0;
+        
         for (Listing listing : shoppingCart) {
-            Object[] row = new Object[] {
-                listing.getId(),                            // Listing ID
-                listing.getTitle(),                         // Name
-                "General",                                  // Category (placeholder)
-                String.format("$%.2f", listing.getPrice()), // Price
-                "Good",                                     // Condition (placeholder)
-                listing.getStatus(),                        // Status
-                listing.getSeller() != null
-                    ? listing.getSeller().getUsername()
-                    : "Unknown"                             // Seller
+            Object[] row = {
+                listing.getId(),
+                listing.getTitle(),
+                String.format("$%.2f", listing.getPrice()),
+                listing.getStatus(),
+                listing.getSeller() != null ? listing.getSeller().getUsername() : "Unknown"
             };
             model.addRow(row);
+            totalPrice += listing.getPrice();
+        }
+        
+        // Update button text with total price
+        if (shoppingCart.isEmpty()) {
+            btnFinish.setText("Finish");
+        } else {
+            btnFinish.setText(String.format("Finish (Total: $%.2f)", totalPrice));
         }
     }
     
     /**
-     * Get the Listing object corresponding to the selected row.
+     * Get the Listing object corresponding to the selected row
      */
     private Listing getSelectedListing() {
         int selectedRow = tblListing.getSelectedRow();
-        if (selectedRow < 0) {
+        if (selectedRow < 0 || selectedRow >= shoppingCart.size()) {
             return null;
         }
 
         String listingId = (String) tblListing.getValueAt(selectedRow, 0);
 
-        if (shoppingCart == null) return null;
-
-        for (Listing l : shoppingCart) {
-            if (l.getId().equals(listingId)) {
-                return l;
+        for (Listing listing : shoppingCart) {
+            if (listing.getId().equals(listingId)) {
+                return listing;
             }
         }
         return null;
     }
     
     /**
-     * Find the parent BuyerJPanel using the Swing component hierarchy.
+     * Find the parent BuyerJPanel using the Swing component hierarchy
      */
     private BuyerJPanel findParentBuyerPanel() {
-        java.awt.Component c = this;
-        while (c != null) {
-            if (c instanceof BuyerJPanel) {
-                return (BuyerJPanel) c;
+        java.awt.Component component = this;
+        while (component != null) {
+            if (component instanceof BuyerJPanel) {
+                return (BuyerJPanel) component;
             }
-            c = c.getParent();
+            component = component.getParent();
         }
         return null;
     }
-    
-    
-    
 }
