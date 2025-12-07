@@ -9,6 +9,7 @@ import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_3.Account.PlatformAdminAccount;
+import basement_class.Enterprise_3.Account.SystemAdminAccount;
 import basement_class.Enterprise_3.Enterprise.PlatformManagementEnterprise;
 import basement_class.Enterprise_3.Organization.ContentControlOrganization;
 import basement_class.Enterprise_3.Organization.UserControlOrganization;
@@ -61,19 +62,19 @@ public static void initialize(EcoSystem system, Network network) {
 
         userOrg.getUserAccountDirectory().addUserAccount(admin);
 
-        UserAccount systemAdmin = new PlatformAdminAccount();
-systemAdmin.setUserId("SYS_001");
-systemAdmin.setUsername("systemadmin");
-systemAdmin.setPasswordHash("123");
-systemAdmin.setStatus("ACTIVE");
+        UserAccount systemAdmin = new SystemAdminAccount();
+        systemAdmin.setUserId("SYS_001");
+        systemAdmin.setUsername("s");
+        systemAdmin.setPasswordHash("123");
+        systemAdmin.setStatus("ACTIVE");
 
 
-system.getUserAccountDirectory().addUserAccount(systemAdmin);
+        system.getUserAccountDirectory().addUserAccount(systemAdmin);
 
         // ✅ 5️⃣ 创建 UserControl 管理员
         UserAccount accountAdmin = new PlatformAdminAccount();
         accountAdmin.setUserId("ADMIN_002");
-        accountAdmin.setUsername("accountadmin");
+        accountAdmin.setUsername("a");
         accountAdmin.setPasswordHash("123");
         accountAdmin.setStatus("ACTIVE");
         accountAdmin.setRole(new AccountAdminRole());
@@ -83,7 +84,7 @@ system.getUserAccountDirectory().addUserAccount(systemAdmin);
         // ✅ 6️⃣ 创建 ContentControl 管理员
         UserAccount contentAdmin = new PlatformAdminAccount();
         contentAdmin.setUserId("ADMIN_003");
-        contentAdmin.setUsername("contentadmin");
+        contentAdmin.setUsername("c");
         contentAdmin.setPasswordHash("123");
         contentAdmin.setStatus("ACTIVE");
         contentAdmin.setRole(new ContentModeratorRole());
