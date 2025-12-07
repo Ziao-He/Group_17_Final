@@ -30,6 +30,13 @@ public class AdminJPanel extends javax.swing.JPanel {
         this.adminUser=adminUser;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+
+        System.out.println("====== AdminJPanel Debug ======");
+    System.out.println("Username: " + adminUser.getUsername());
+    System.out.println("Role: " + adminUser.getRole().getClass().getName());
+    System.out.println("RoleName: " + adminUser.getRole().getRoleName());
+    System.out.println("Organization: " + (userOrg == null ? "NULL" : userOrg.getName()));
+    System.out.println("================================");
         
 //        FakeDataGenerator.generate(system, enterprise);
         configureButtonByOrganization();
