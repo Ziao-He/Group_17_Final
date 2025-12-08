@@ -385,6 +385,7 @@ public class PersonalJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         if (buyer == null) return;
 
+        // Get input values
         String name = txtName.getText().trim();
         String email = txtEmail.getText().trim();
         String phone = txtPhone.getText().trim();
@@ -392,25 +393,168 @@ public class PersonalJPanel extends javax.swing.JPanel {
         String payment = txtPayment.getText().trim();
         String budgetStr = txtBudget.getText().trim();
 
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+        // ==========================================
+        // VALIDATION 1: Required fields
+        // ==========================================
+        if (name.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Name, email and phone cannot be empty.",
-                    "Validation Error",
-                    JOptionPane.WARNING_MESSAGE);
+                "Full Name is required.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtName.requestFocus();
             return;
         }
 
+        if (email.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Email is required.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtEmail.requestFocus();
+            return;
+        }
+
+        if (phone.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Phone Number is required.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtPhone.requestFocus();
+            return;
+        }
+
+        // ==========================================
+        // VALIDATION 2: Name format (letters and spaces only)
+        // ==========================================
+        if (!name.matches("^[a-zA-Z\\s]+$")) {
+            JOptionPane.showMessageDialog(this,
+                "Full Name can only contain letters and spaces.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtName.requestFocus();
+            return;
+        }
+
+        // Name length limit
+        if (name.length() < 2 || name.length() > 50) {
+            JOptionPane.showMessageDialog(this,
+                "Full Name must be between 2 and 50 characters.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtName.requestFocus();
+            return;
+        }
+
+        // ==========================================
+        // VALIDATION 3: Email format
+        // ==========================================
+        // Basic email pattern: xxx@xxx.xxx
+        String emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        if (!email.matches(emailPattern)) {
+            JOptionPane.showMessageDialog(this,
+                "Please enter a valid email address.\n" +
+                "Format: example@university.edu",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtEmail.requestFocus();
+            return;
+        }
+
+        // Email length limit
+        if (email.length() > 100) {
+            JOptionPane.showMessageDialog(this,
+                "Email address is too long (max 100 characters).",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtEmail.requestFocus();
+            return;
+        }
+
+        // ==========================================
+        // VALIDATION 4: Phone number format
+        // ==========================================
+        // Remove spaces and dashes for validation
+        String cleanPhone = phone.replaceAll("[\\s-]", "");
+
+        // Check if it contains only digits (and optional + at start)
+        if (!cleanPhone.matches("^\\+?\\d{10,15}$")) {
+            JOptionPane.showMessageDialog(this,
+                "Please enter a valid phone number.\n" +
+                "Format: 123-456-7890 or +1234567890\n" +
+                "Must be 10-15 digits.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtPhone.requestFocus();
+            return;
+        }
+
+        // ==========================================
+        // VALIDATION 5: Budget (must be number >= 0)
+        // ==========================================
         double budget;
         try {
             budget = Double.parseDouble(budgetStr);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
-                    "Max budget must be a number.",
-                    "Validation Error",
-                    JOptionPane.WARNING_MESSAGE);
+                "Max Budget must be a valid number.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtBudget.requestFocus();
             return;
         }
 
+        // Budget must be non-negative
+        if (budget < 0) {
+            JOptionPane.showMessageDialog(this,
+                "Max Budget cannot be negative.\n" +
+                "Enter 0 for unlimited budget.",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtBudget.requestFocus();
+            return;
+        }
+
+        // Budget reasonable limit (optional)
+        if (budget > 1000000) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "Budget is very high ($" + String.format("%.2f", budget) + ").\n" +
+                "Are you sure?",
+                "Confirm Budget",
+                JOptionPane.YES_NO_OPTION);
+
+            if (confirm != JOptionPane.YES_OPTION) {
+                txtBudget.requestFocus();
+                return;
+            }
+        }
+
+        // ==========================================
+        // VALIDATION 6: Location (optional but with length limit)
+        // ==========================================
+        if (!location.isEmpty() && location.length() > 100) {
+            JOptionPane.showMessageDialog(this,
+                "Preferred Location is too long (max 100 characters).",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtLocation.requestFocus();
+            return;
+        }
+
+        // ==========================================
+        // VALIDATION 7: Payment method (optional but with length limit)
+        // ==========================================
+        if (!payment.isEmpty() && payment.length() > 50) {
+            JOptionPane.showMessageDialog(this,
+                "Preferred Payment Method is too long (max 50 characters).",
+                "Validation Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtPayment.requestFocus();
+            return;
+        }
+
+        // ==========================================
+        // ALL VALIDATIONS PASSED - Save data
+        // ==========================================
         BuyerProfile profile = buyer.getProfile();
         profile.setFullName(name);
         profile.setEmail(email);
@@ -419,16 +563,26 @@ public class PersonalJPanel extends javax.swing.JPanel {
         profile.setMaxBudget(budget);
         profile.setPreferredPaymentMethod(payment);
 
+        // Also update UserAccount level
         buyer.setEmail(email);
         buyer.setPhoneNumber(phone);
 
+        // Update original values for cancel functionality
+        originalName = name;
+        originalEmail = email;
+        originalPhone = phone;
+        originalLocation = location;
+        originalPayment = payment;
+        originalBudget = budget;
+
+        // Refresh display and disable editing
         populateFields();
         setEditing(false);
 
         JOptionPane.showMessageDialog(this,
-                "Profile saved successfully.",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE);
+            "Profile saved successfully!",
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnSaveActionPerformed
 
 

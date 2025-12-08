@@ -466,7 +466,9 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         if (order != null) {
             order.setStatus(Order.STATUS_COMPLETED);
             if (buyerAccount != null) {
-                buyerAccount.recordOrder(order.getTotalPrice(), true);
+                buyerAccount.incrementCompletedPurchases();
+                buyerAccount.setTotalSpending(buyerAccount.getTotalSpending() + order.getTotalPrice());
+                buyerAccount.addPoints((int)(order.getTotalPrice() * 0.05));
             }
         }
 
@@ -525,8 +527,13 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         }
 
         if (buyerAccount != null) {
-            // decide if you still want to count canceled orders:
-            buyerAccount.recordOrder(order.getTotalPrice(), false);
+            // Canceled order: decrease totalPurchases
+            // (because this order was counted when it was created)
+            buyerAccount.setTotalPurchases(buyerAccount.getTotalPurchases() - 1);
+            double currentBudget = buyerAccount.getProfile().getMaxBudget();
+            if (currentBudget > 0) {
+                buyerAccount.getProfile().setMaxBudget(currentBudget + order.getTotalPrice());
+            }
         }
 
     refreshData();
