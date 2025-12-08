@@ -156,4 +156,8 @@ public abstract class UserAccount {
         this.warningCount++;
     }
     
+    @Override
+    public String toString() {
+        return getUserId();
+    }
 }

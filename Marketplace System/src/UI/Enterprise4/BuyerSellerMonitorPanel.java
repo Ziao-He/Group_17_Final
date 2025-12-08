@@ -49,9 +49,11 @@ public class BuyerSellerMonitorPanel extends javax.swing.JPanel {
         if (buyer == null || seller == null) return;
 
         ArrayList<Message> messages = messageDirectory.getMessagesBetween(buyer, seller);
-        for (Message m : messages) {
-            appendMessageToConversation(m);
-        }
+        if(messages.size()>0){
+            for (Message m : messages) {
+                appendMessageToConversation(m);
+            }}else{
+            return;}
     }
      
     private void appendMessageToConversation(Message m) {
@@ -68,9 +70,11 @@ public class BuyerSellerMonitorPanel extends javax.swing.JPanel {
         if (buyer == null || seller == null) return;
 
         ArrayList<Message> messages = messageDirectory.getMessagesBetween(buyer, seller);
+        if(messages.size()>0){
         for (Message msg : messages) {
             cbMessageToFlag.addItem(msg);
-        }
+        }}else{
+            return;}
     }
 
     /**
