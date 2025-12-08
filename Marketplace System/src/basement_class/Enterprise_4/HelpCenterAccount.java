@@ -10,8 +10,8 @@ import basement_class.UserAccount;
  *
  * @author yujie-liang
  */
-public class HelpCenterAdminAccount extends UserAccount{
-       public HelpCenterAdminAccount() {
+public class HelpCenterAccount extends UserAccount{
+       public HelpCenterAccount() {
         super();
     }
 
