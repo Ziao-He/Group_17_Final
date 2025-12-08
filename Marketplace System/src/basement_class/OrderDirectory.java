@@ -103,6 +103,20 @@ public class OrderDirectory {
                 .collect(Collectors.toList());
     }
     
+    public Order findById(String orderId) {
+        if (orderId == null || orderList == null) {
+           return null;
+        }
+
+        for (Order order : orderList) {
+            if (order.getOrderId().equals(orderId)) {
+                return order;
+            }
+        }
+
+        return null;
+    }
+    
     public Order findActiveOrderByListingId(String listingId) {
         for (Order o : orderList) {
 

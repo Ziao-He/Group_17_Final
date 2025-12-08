@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author 心火牧神塞勒斯
  */
-public class ListingDao {
+public class ListingHelperFunction {
 
     private static final String FILE_PATH = "data/listings.csv";
     private static final String DELIMITER = ",";
@@ -26,7 +26,7 @@ public class ListingDao {
     private List<Listing> listings = new ArrayList<>();
     private UserAccountDirectory userAccountDirectory;
 
-    public ListingDao(UserAccountDirectory userAccountDirectory) {
+    public ListingHelperFunction(UserAccountDirectory userAccountDirectory) {
         this.userAccountDirectory = userAccountDirectory;
         loadFromCSV();
     }

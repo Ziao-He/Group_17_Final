@@ -4,8 +4,8 @@
  */
 package service.E2;
 
-import basement_class.DAO.ListingDao;
-import basement_class.DAO.OrderDao;
+import basement_class.DAO.ListingHelperFunction;
+import basement_class.DAO.OrderHelperFuction;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Network;
@@ -24,10 +24,10 @@ import java.util.List;
 public class OrderFulfillmentService {
 
     private EcoSystem system;
-    private OrderDao orderDao;
-    private ListingDao listingDao;
+    private OrderHelperFuction orderDao;
+    private ListingHelperFunction listingDao;
     
-    public OrderFulfillmentService(EcoSystem system, OrderDao orderDao, ListingDao listingDao) {
+    public OrderFulfillmentService(EcoSystem system, OrderHelperFuction orderDao, ListingHelperFunction listingDao) {
         this.system = system;
         this.orderDao = orderDao;
         this.listingDao = listingDao;

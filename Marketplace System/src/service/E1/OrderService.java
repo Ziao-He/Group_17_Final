@@ -5,9 +5,7 @@
 package service.E1;
 
 import common_class.Order;
-import common_class.Product;
-import basement_class.DAO.OrderDao;
-import basement_class.DAO.ProductDao;
+import basement_class.DAO.OrderHelperFuction;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.ListingDirectory;
 import java.util.ArrayList;
@@ -19,14 +17,14 @@ import java.util.List;
  */
 public class OrderService {
     
-    private OrderDao orderDao;
+    private OrderHelperFuction orderDao;
     private ListingDirectory listingDirectory;
     
     /**
      * Constructor
      */
     public OrderService(ListingDirectory listingDirectory) {
-        this.orderDao = new OrderDao();
+        this.orderDao = new OrderHelperFuction();
         this.listingDirectory = listingDirectory;
     }
     
