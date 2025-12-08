@@ -5,6 +5,10 @@
 package UI.main;
 
 import basement_class.*;
+import basement_class.DAO.ListingFileDAO;
+import basement_class.DAO.ListingService;
+import basement_class.DAO.OdedrService;
+import basement_class.DAO.OderFileDAO;
 import basement_class.DAO.UserAccountDAO;
 import basement_class.DAO.UserAccountFileDAO;
 import basement_class.DAO.UserAccountService;
@@ -27,13 +31,26 @@ public class LoginPage extends javax.swing.JFrame {
      */
     public LoginPage() {
         system = SystemInitializer.initialize();
+        
+            if (!SystemInitializer.firstLauch) {
+        OdedrService orderService = new OdedrService(
+                new OderFileDAO(),
+                system.getOrderDirectory()
+        );
+        orderService.saveOrders();
+        
+          new ListingService(
+            new ListingFileDAO(),
+            system.getListingDirectory()
+        ).saveListings();
+    }
         UserAccountDAO dao = new UserAccountFileDAO();
         UserAccountService userService = new UserAccountService(dao, system);
     
 // ✅ 启动一次性加载
      userService.loadAllUsers();
      userService.distributeUsersToOrganizations();
-     initDemoListings();
+//     initDemoListings();
         initComponents();
     }
     

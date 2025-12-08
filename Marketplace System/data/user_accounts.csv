@@ -1,36 +1,11 @@
-id,username,email,password,phone,orgId,status,role,warningCount,buyerPreferredCategories,buyerMaxBudget,buyerLocation,buyerPayMethod
-<<<<<<< HEAD
-BUYER-001,buyer1,null,password123,null,null,ACTIVE,BuyerRole,0,,0.0,,
-SELLER-001,seller1,null,123,null,null,ACTIVE,SellerRole,0,,,,
-LM-001,listingmanager1,null,1234,null,null,ACTIVE,ListingManagerRole,0,,,,
-OP-001,order1,null,12345,null,null,ACTIVE,OrderProcessorRole,0,,,,
-BUYER-001,buyer1,null,password123,null,null,ACTIVE,BuyerRole,0,,0.0,,
-SELLER-001,seller1,null,123,null,null,ACTIVE,SellerRole,0,,,,
-LM-001,listingmanager1,null,1234,null,null,ACTIVE,ListingManagerRole,0,,,,
-OP-001,order1,null,12345,null,null,ACTIVE,OrderProcessorRole,0,,,,
-U1,buyer1,null,password123,null,null,ACTIVE,BuyerRole,0,Book|Electronics,800.0,Boston,CreditCard
-=======
-U1,buyer1,null,password123,null,null,ACTIVE,BuyerRole,0,Book|Electronics,800,Boston,CreditCard
->>>>>>> dfa561c28089b18694e7d3bfc5b8c33e850efa19
-U2,seller1,null,123,null,null,ACTIVE,SellerRole,0,,,,
-U3,listingmanager1,null,1234,null,null,ACTIVE,ListingManagerRole,0,,,,
-U4,order1,null,12345,null,null,ACTIVE,OrderProcessorRole,0,,,,
-SELLER-001,seller1,seller1@test.com,123,1111111111,SELLER_ORG,ACTIVE,SellerRole,0,,,,
-LM-001,listingmanager1,lm1@test.com,1234,2222222222,SELLER_ORG,ACTIVE,ListingManagerRole,0,,,,
-OP-001,order1,order1@test.com,12345,3333333333,ORDER_ORG,ACTIVE,OrderProcessorRole,0,,,,
-ADMIN_001,platformadmin,admin@test.com,123,9999999999,USER_ORG,ACTIVE,PlatformAdminRole,0,,,,
-SYS_001,s,sys@test.com,123,8888888888,SYSTEM,ACTIVE,SystemAdminRole,0,,,,
-ADMIN_002,a,a@test.com,1234,7777777777,USER_ORG,ACTIVE,AccountAdminRole,0,,,,
-ADMIN_003,c,c@test.com,1234,6666666666,CONTENT_ORG,ACTIVE,ContentModeratorRole,0,,,,
-<<<<<<< HEAD
-BUYER-001,buyer1,buyer1@university.edu,password123,123-456-7890,SHOPPING_ORG,ACTIVE,BuyerRole,0,Electronics|Books,1000.0,Campus,CreditCard
-BUYER-002,searcher1,searcher1@university.edu,password123,123-456-7891,SHOPPING_ORG,ACTIVE,BuyerRole,0,Food|Clothing,400.0,Campus,DebitCard
-BUYER-003,tracker1,tracker1@university.edu,password123,123-456-7892,ORDER_ORG,ACTIVE,OrderTrackerRole,0,Books|Stationery,300.0,Dormitory,MobilePay
-=======
-BUYER-001,buyer1,buyer1@university.edu,password123,123-456-7890,SHOPPING_ORG,ACTIVE,BuyerRole,0,Electronics|Books,1000,Campus,CreditCard
-BUYER-002,searcher1,searcher1@university.edu,password123,123-456-7891,SHOPPING_ORG,ACTIVE,BuyerRole,0,Food|Clothing,400,Campus,DebitCard
-BUYER-003,tracker1,tracker1@university.edu,password123,123-456-7892,ORDER_ORG,ACTIVE,OrderTrackerRole,0,Books|Stationery,300,Dormitory,MobilePay
->>>>>>> dfa561c28089b18694e7d3bfc5b8c33e850efa19
-PM-15bc6eba,q,q@platform.com,1234,N/A,User Control,ACTIVE,AccountAdminRole,0,,,,
-PM-83a8efea,t,t@platform.com,1234,N/A,Content Control,ACTIVE,ContentModeratorRole,0,,,,
-U17,test,test@platform.com,1234,N/A,User Control,ACTIVE,AccountAdminRole,0,,,,
+id,username,email,password,phone,orgId,status,role,warningCount,buyerPreferredCategories,buyerMaxBudget,buyerLocation,buyerPayMethod,profileFullName
+SELLER-001,seller1,seller1@test.com,123,1111111111,SELLER_ORG,ACTIVE,SellerRole,0,,,,,
+LM-001,listingmanager1,lm1@test.com,1234,2222222222,SELLER_ORG,ACTIVE,ListingManagerRole,0,,,,,
+OP-001,order1,order1@test.com,12345,3333333333,ORDER_ORG,ACTIVE,OrderProcessorRole,0,,,,,
+ADMIN_001,platformadmin,admin@test.com,123,9999999999,USER_ORG,ACTIVE,PlatformAdminRole,0,,,,,
+SYS_001,s,sys@test.com,123,8888888888,SYSTEM,ACTIVE,SystemAdminRole,0,,,,,
+ADMIN_002,a,a@test.com,1234,7777777777,USER_ORG,ACTIVE,AccountAdminRole,0,,,,,
+ADMIN_003,c,c@test.com,1234,6666666666,CONTENT_ORG,ACTIVE,ContentModeratorRole,0,,,,,
+BUYER-001,buyer1,buyer1@university.edu,password123,123-456-7890,SHOPPING_ORG,ACTIVE,BuyerRole,0,Electronics|Books,1000,Campus,CreditCard,Buyer One
+BUYER-002,searcher1,searcher1@university.edu,password123,123-456-7891,SHOPPING_ORG,ACTIVE,BuyerRole,0,Food|Clothing,400,Campus,DebitCard,Searcher One
+BUYER-003,tracker1,tracker1@university.edu,password123,123-456-7892,ORDER_ORG,ACTIVE,OrderTrackerRole,0,Books|Stationery,300,Dormitory,MobilePay,Tracker One

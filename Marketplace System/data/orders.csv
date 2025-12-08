@@ -1,0 +1,5 @@
+orderId,listingId,buyerId,sellerId,totalPrice,quantity,status,deliveryMethod,meetingLocation,isReviewed,buyerRating
+O001,L001,BUYER-001,SELLER-001,199.99,1,PENDING,MeetUp,Library,false,0
+O002,L002,BUYER-002,SELLER-001,88.5,2,COMPLETED,Delivery,MIT,true,5
+O003,L003,BUYER-003,SELLER-001,45.0,1,ACCEPTED,MeetUp,Student Center,false,0
+O004,L004,BUYER-001,SELLER-001,320.75,1,CANCELLED,Delivery,Dorm,false,0
