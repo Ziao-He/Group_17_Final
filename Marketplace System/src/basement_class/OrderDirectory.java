@@ -102,6 +102,19 @@ public class OrderDirectory {
                 .filter(o -> Order.STATUS_ACCEPTED.equals(o.getStatus()))
                 .collect(Collectors.toList());
     }
+    
+    public Order findActiveOrderByListingId(String listingId) {
+        for (Order o : orderList) {
+
+            if (o.getListingId().equals(listingId) &&
+                !Order.STATUS_CANCELLED.equals(o.getStatus()) &&
+                !Order.STATUS_REJECTED.equals(o.getStatus())) {
+
+                return o; // ✅ 找到当前有效订单
+            }
+        }
+        return null;
+    }
 
     // =====================================================
     // ✅ Utility
