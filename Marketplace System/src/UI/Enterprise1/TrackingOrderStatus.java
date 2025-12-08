@@ -310,8 +310,7 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
             for (basement_class.Network network : system.getNetworks()) {
                 for (basement_class.Enterprise ent : network.getEnterprises()) {
                     // Find Enterprise 4 (Help Center)
-                    if (ent.getName().contains("Help Center") || 
-                        ent.getName().contains("Issue")) {
+                    if (ent.getName().contains("Help Center")) {
 
                         // Find Issue Resolution Organization
                         for (basement_class.Organization org : ent.getOrganizations()) {
