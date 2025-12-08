@@ -5,7 +5,7 @@ import basement_class.Enterprise_2.Account.OrderProcessorAccount;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_3.Account.PlatformAdminAccount;
 import basement_class.Enterprise_3.Account.SystemAdminAccount;
-import basement_class.Enterprise_4.HelpCenterAdminAccount;
+import basement_class.Enterprise_4.HelpCenterAccount;
 import basement_class.UserAccount;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -144,7 +144,7 @@ private UserAccount createByRole(String role) {
         case "ContentModeratorRole" -> new PlatformAdminAccount();
 
         // ✅ Enterprise 4
-        case "HelpCenterAdminRole" -> new HelpCenterAdminAccount();
+        case "HelpCenterAdminRole" -> new HelpCenterAccount();
 
         default -> null;
     };

@@ -30,6 +30,7 @@ public class EcoSystem {
         this.workRequestDirectory = new WorkRequestDirectory();
         this.listingDirectory = new ListingDirectory();
         this.orderDirectory = new OrderDirectory();
+        this.messageDirectory = new MessageDirectory();
     }
     
     /**

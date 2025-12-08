@@ -102,11 +102,23 @@ public class UserAccountDirectory {
         ArrayList<UserAccount> buyers = new ArrayList<>();
 
         for (UserAccount ua : userAccounts) {
-            if (ua instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
+            if (ua.getRole() instanceof basement_class.Enterprise_1.Role.BuyerRole || ua.getRole() instanceof basement_class.Enterprise_1.Role.OrderTrackerRole) {
                 buyers.add(ua);
             }
         }
 
         return buyers;
+    }
+    
+    public ArrayList<UserAccount> getAllSellers() {
+        ArrayList<UserAccount> sellers = new ArrayList<>();
+
+        for (UserAccount ua : userAccounts) {
+            if (ua.getRole() instanceof basement_class.Enterprise_2.Role.SellerRole) {
+                sellers.add(ua);
+            }
+        }
+
+        return sellers;
     }
 }
