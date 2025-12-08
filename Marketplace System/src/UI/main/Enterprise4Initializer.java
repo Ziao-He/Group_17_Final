@@ -27,20 +27,16 @@ public class Enterprise4Initializer {
         Enterprise enterprise4 = new Enterprise("Help Center") {};
         network.addEnterprise(enterprise4);
 
-        // ✅ 2️⃣ 创建 Organization
         CommunicationServiceOrganization csOrg = new CommunicationServiceOrganization();
         IssueResolutionOrganization irOrg = new IssueResolutionOrganization();
 
         enterprise4.addOrganization(csOrg);
         enterprise4.addOrganization(irOrg);
 
-        // ✅ 3️⃣ 注册 Role 到 Organization
         irOrg.addRole(new ComplaintHandlerRole());
         csOrg.addRole(new MessageHandlerRole());
         
         createTestAccounts(system, csOrg, irOrg);
-        
-        createDemoMessagesBetweenBuyerAndSeller(system);
 
     }
     private static void createTestAccounts(EcoSystem system,
@@ -49,7 +45,7 @@ public class Enterprise4Initializer {
 
         System.out.println("  Creating Help Center test accounts...");
 
-        // ===== 1. Help Center Admin 账号 =====
+        // 1. Help Center Admin
         HelpCenterAccount admin = new HelpCenterAccount();
         admin.setUserId("HC-ADMIN-001");
         admin.setUsername("h");
@@ -57,11 +53,11 @@ public class Enterprise4Initializer {
         admin.setStatus("ACTIVE");
         admin.setRole(new HelpCenterAdmin());
 
-        // 放在 IssueResolutionOrganization 里，也可以理解为总管理员
+        // Put in IssueResolutionOrganization, can also be understood as the administrator
         irOrg.getUserAccountDirectory().addUserAccount(admin);
         system.getUserAccountDirectory().addUserAccount(admin);
 
-        // ===== 2. Message Handler 账号 =====
+        // 2. Message Handler
         HelpCenterAccount msgHandler = new HelpCenterAccount();
         msgHandler.setUserId("HC-MSG-001");
         msgHandler.setUsername("msg1");
@@ -69,11 +65,11 @@ public class Enterprise4Initializer {
         msgHandler.setStatus("ACTIVE");
         msgHandler.setRole(new MessageHandlerRole());
 
-        // 放在 Communication Service 组织中
+        // Placed in the Communication Service organization
         csOrg.getUserAccountDirectory().addUserAccount(msgHandler);
         system.getUserAccountDirectory().addUserAccount(msgHandler);
 
-        // ===== 3. Complaint Handler 账号 =====
+        // Complaint Handler
         HelpCenterAccount complaintHandler = new HelpCenterAccount();
         complaintHandler.setUserId("HC-CMP-001");
         complaintHandler.setUsername("ch1");
@@ -81,130 +77,120 @@ public class Enterprise4Initializer {
         complaintHandler.setStatus("ACTIVE");
         complaintHandler.setRole(new ComplaintHandlerRole());
 
-        // 放在 Issue Resolution 组织中
+        // Place it in the Issue Resolution organization
         irOrg.getUserAccountDirectory().addUserAccount(complaintHandler);
         system.getUserAccountDirectory().addUserAccount(complaintHandler);
-        createDemoMessageFlagRequests(system,csOrg);
     }
     
-    private static void createDemoMessagesBetweenBuyerAndSeller(EcoSystem system) {
-
-        MessageDirectory messageDirectory = system.getMessageDirectory();
-        if (messageDirectory == null) {
-            messageDirectory = new MessageDirectory();
-            system.setMessageDirectory(messageDirectory);
-            System.out.println("[Enterprise4] MessageDirectory created.");
-        }
-
-        // 如果已经有消息了，就不重复塞（可选）
-        if (messageDirectory.getAllMessages() != null
-                && !messageDirectory.getAllMessages().isEmpty()) {
-            System.out.println("[Enterprise4] MessageDirectory already has messages, skip demo messages.");
-            return;
-        }
-
-        // 2. 在系统的 UserAccountDirectory 里找到 buyer1 和 seller1
-        UserAccount buyer = system.getUserAccountDirectory().findByUserId("BUYER-001");
-        UserAccount seller = system.getUserAccountDirectory().findByUserId("SELLER-001");
-
-        if (buyer == null || seller == null) {
-            System.err.println("[Enterprise4] Cannot find buyer1 or seller1, skip demo messages.");
-            return;
-        }
-
-        // 3. 创建 10 条 Buyer / Seller 互相发送的信息
-        //    （BuyerAccount <-> SellerAccount，都是 UserAccount 类型）
-
-        messageDirectory.addMessage(
-                buyer,
-                seller,
-                "Hi, I saw your listing for the CS textbook. Is it still available?"
-        );
-
-        messageDirectory.addMessage(
-                seller,
-                buyer,
-                "Hi! Yes, it's still available. Are you still looking for it this week?"
-        );
-
-        messageDirectory.addMessage(
-                buyer,
-                seller,
-                "Yes, I need it for my exam review. What condition is the book in?"
-        );
-
-        messageDirectory.addMessage(
-                seller,
-                buyer,
-                "It's in very good condition, no notes inside, just a little wear on the cover."
-        );
-
-        messageDirectory.addMessage(
-                buyer,
-                seller,
-                "Nice. Could you do 25 dollars instead of 30?"
-        );
-
-        messageDirectory.addMessage(
-                seller,
-                buyer,
-                "I can do 27 dollars. It's almost like new."
-        );
-
-        messageDirectory.addMessage(
-                buyer,
-                seller,
-                "27 is okay for me. Where can we meet on campus?"
-        );
-
-        messageDirectory.addMessage(
-                seller,
-                buyer,
-                "How about tomorrow 3pm at the library entrance?"
-        );
-
-        messageDirectory.addMessage(
-                buyer,
-                seller,
-                "Sounds good. I will bring cash. See you tomorrow!"
-        );
-
-        messageDirectory.addMessage(
-                seller,
-                buyer,
-                "Great, see you then. If anything changes, I will message you here."
-        );
-
-        System.out.println("[Enterprise4] Demo messages between buyer1 and seller1 created.");
-    }
-    
-    /**
- * 创建 3 条 MessageFlagRequest：
- * 从 MessageDirectory 里取前三条消息，
- * 由消息的接收方(receiver)举报发送方(sender)。
- */
-private static void createDemoMessageFlagRequests(EcoSystem system,
-                                                  CommunicationServiceOrganization csOrg) {
-
-
-    MessageDirectory messageDirectory = system.getMessageDirectory();
-    java.util.List<Message> allMessages = messageDirectory.getAllMessages();
-        MessageFlagRequest req = new MessageFlagRequest(allMessages.get(0), allMessages.get(0).getSender(), "001");
-        csOrg.getWorkRequestDirectory().addWorkRequest(req);
-        allMessages.get(0).setFlaggedByUser(true);
-        
-        MessageFlagRequest req1 = new MessageFlagRequest(allMessages.get(1), allMessages.get(1).getSender(), "002");
-        csOrg.getWorkRequestDirectory().addWorkRequest(req1);
-        allMessages.get(1).setFlaggedByUser(true);
-        
-        MessageFlagRequest req2 = new MessageFlagRequest(allMessages.get(2), allMessages.get(2).getSender(), "003");
-        csOrg.getWorkRequestDirectory().addWorkRequest(req2);
-        allMessages.get(2).setFlaggedByUser(true);
-        
-
-
-    
-}
+//    private static void createDemoMessagesBetweenBuyerAndSeller(EcoSystem system) {
+//
+//        MessageDirectory messageDirectory = system.getMessageDirectory();
+//        if (messageDirectory == null) {
+//            messageDirectory = new MessageDirectory();
+//            system.setMessageDirectory(messageDirectory);
+//            System.out.println("[Enterprise4] MessageDirectory created.");
+//        }
+//
+//        if (messageDirectory.getAllMessages() != null
+//                && !messageDirectory.getAllMessages().isEmpty()) {
+//            System.out.println("[Enterprise4] MessageDirectory already has messages, skip demo messages.");
+//            return;
+//        }
+//
+//        UserAccount buyer = system.getUserAccountDirectory().findByUserId("BUYER-001");
+//        UserAccount seller = system.getUserAccountDirectory().findByUserId("SELLER-001");
+//
+//        if (buyer == null || seller == null) {
+//            System.err.println("[Enterprise4] Cannot find buyer1 or seller1, skip demo messages.");
+//            return;
+//        }
+//
+//        messageDirectory.addMessage(
+//                buyer,
+//                seller,
+//                "Hi, I saw your listing for the CS textbook. Is it still available?"
+//        );
+//
+//        messageDirectory.addMessage(
+//                seller,
+//                buyer,
+//                "Hi! Yes, it's still available. Are you still looking for it this week?"
+//        );
+//
+//        messageDirectory.addMessage(
+//                buyer,
+//                seller,
+//                "Yes, I need it for my exam review. What condition is the book in?"
+//        );
+//
+//        messageDirectory.addMessage(
+//                seller,
+//                buyer,
+//                "It's in very good condition, no notes inside, just a little wear on the cover."
+//        );
+//
+//        messageDirectory.addMessage(
+//                buyer,
+//                seller,
+//                "Nice. Could you do 25 dollars instead of 30?"
+//        );
+//
+//        messageDirectory.addMessage(
+//                seller,
+//                buyer,
+//                "I can do 27 dollars. It's almost like new."
+//        );
+//
+//        messageDirectory.addMessage(
+//                buyer,
+//                seller,
+//                "27 is okay for me. Where can we meet on campus?"
+//        );
+//
+//        messageDirectory.addMessage(
+//                seller,
+//                buyer,
+//                "How about tomorrow 3pm at the library entrance?"
+//        );
+//
+//        messageDirectory.addMessage(
+//                buyer,
+//                seller,
+//                "Sounds good. I will bring cash. See you tomorrow!"
+//        );
+//
+//        messageDirectory.addMessage(
+//                seller,
+//                buyer,
+//                "Great, see you then. If anything changes, I will message you here."
+//        );
+//
+//        System.out.println("[Enterprise4] Demo messages between buyer1 and seller1 created.");
+//    }
+//    
+//
+//private static void createDemoMessageFlagRequests(EcoSystem system,
+//                                                  CommunicationServiceOrganization csOrg) {
+//
+//
+//    MessageDirectory messageDirectory = system.getMessageDirectory();
+//    java.util.List<Message> allMessages = messageDirectory.getAllMessages();
+//        MessageFlagRequest req = new MessageFlagRequest(allMessages.get(0), allMessages.get(0).getSender(), "001");
+//        csOrg.getWorkRequestDirectory().addWorkRequest(req);
+//        allMessages.get(0).setFlaggedByUser(true);
+//        
+//        MessageFlagRequest req1 = new MessageFlagRequest(allMessages.get(1), allMessages.get(1).getSender(), "002");
+//        csOrg.getWorkRequestDirectory().addWorkRequest(req1);
+//        allMessages.get(1).setFlaggedByUser(true);
+//        
+//        MessageFlagRequest req2 = new MessageFlagRequest(allMessages.get(2), allMessages.get(2).getSender(), "003");
+//        csOrg.getWorkRequestDirectory().addWorkRequest(req2);
+//        allMessages.get(2).setFlaggedByUser(true);
+//        
+//
+//
+//    
+//}
 
 
   
