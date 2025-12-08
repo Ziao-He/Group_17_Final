@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import basement_class.Enterprise_4.OrderReportRequest;
+import basement_class.UserAccount;
 /**
  *
  * @author bob-h
@@ -120,6 +122,11 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         btnCancel.setText("Cancel");
 
         btnReport.setText("Report");
+        btnReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -220,6 +227,137 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
     private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnApplyActionPerformed
+
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
+        // TODO add your handling code here:
+        // Get selected request
+        int row = tblRequest.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this,
+                "Please select an order to report.",
+                "No selection",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        OrderProcessingResultRequest req = displayedRequests.get(row);
+        if (req == null) return;
+
+        Order order = req.getOrder();
+        if (order == null) {
+            JOptionPane.showMessageDialog(this,
+                "Order information not available.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Get seller (target user to report)
+        UserAccount seller = system.getUserAccountDirectory()
+            .findByUserId(order.getSellerId());
+
+        if (seller == null) {
+            JOptionPane.showMessageDialog(this,
+                "Seller information not found.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Ask for violation description
+        String violationInfo = JOptionPane.showInputDialog(this,
+            "Please describe the issue with this order:\n" +
+            "Order ID: " + order.getOrderId() + "\n" +
+            "Seller: " + seller.getUsername() + "\n\n" +
+            "Enter your complaint:",
+            "Report Order Issue",
+            JOptionPane.QUESTION_MESSAGE);
+
+        // User cancelled
+        if (violationInfo == null || violationInfo.trim().isEmpty()) {
+            return;
+        }
+
+        // Confirm report
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Submit this report?\n\n" +
+            "Order: " + order.getOrderId() + "\n" +
+            "Reporting: " + seller.getUsername() + "\n" +
+            "Issue: " + violationInfo.substring(0, Math.min(50, violationInfo.length())) + "...",
+            "Confirm Report",
+            JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            // Generate unique request ID
+            String reportId = "REPORT-" + java.util.UUID.randomUUID().toString().substring(0, 8);
+
+            // Create OrderReportRequest
+            OrderReportRequest reportRequest = new OrderReportRequest(
+                order,              // the order being reported
+                buyerAccount,       // reporter (buyer)
+                seller,             // target user (seller)
+                violationInfo       // violation description
+            );
+            reportRequest.setId(reportId);
+
+            // Find Enterprise 4's Issue Resolution Organization
+            boolean sentToIssueResolution = false;
+
+            for (basement_class.Network network : system.getNetworks()) {
+                for (basement_class.Enterprise ent : network.getEnterprises()) {
+                    // Find Enterprise 4 (Help Center)
+                    if (ent.getName().contains("Help Center") || 
+                        ent.getName().contains("Issue")) {
+
+                        // Find Issue Resolution Organization
+                        for (basement_class.Organization org : ent.getOrganizations()) {
+                            if (org.getName().contains("Issue Resolution")) {
+                                // Send to organization's work queue
+                                org.getWorkRequestDirectory().addWorkRequest(reportRequest);
+                                sentToIssueResolution = true;
+                                System.out.println("Sent OrderReportRequest to Issue Resolution Organization");
+                                break;
+                            }
+                        }
+                    }
+                    if (sentToIssueResolution) break;
+                }
+                if (sentToIssueResolution) break;
+            }
+
+            // Also save to system level for tracking
+            if (system.getWorkRequestDirectory() != null) {
+                system.getWorkRequestDirectory().addWorkRequest(reportRequest);
+            }
+
+            if (!sentToIssueResolution) {
+                JOptionPane.showMessageDialog(this,
+                    "Warning: Issue Resolution Organization not found.\n" +
+                    "Report saved to system but may not be processed.",
+                    "Warning",
+                    JOptionPane.WARNING_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Report submitted successfully!\n\n" +
+                    "Report ID: " + reportId + "\n" +
+                    "Status: Pending\n\n" +
+                    "The Help Center will review your complaint.",
+                    "Report Submitted",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Failed to submit report: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnReportActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
