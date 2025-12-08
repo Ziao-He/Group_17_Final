@@ -4,7 +4,7 @@
  */
 package service.E2;
 
-import basement_class.DAO.ListingDao;
+import basement_class.DAO.ListingHelperFunction;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Network;
@@ -23,10 +23,10 @@ import java.util.ArrayList;
 public class ListingManagementService {
 
     private EcoSystem system;
-    private ListingDao listingDao;          // NEW: 数据持久化层
+    private ListingHelperFunction listingDao;          // NEW: 数据持久化层
     private ListingDirectory listingDirectory;  // NEW: 内存管理
 
-    public ListingManagementService(EcoSystem system, ListingDao listingDao, ListingDirectory directory) {
+    public ListingManagementService(EcoSystem system, ListingHelperFunction listingDao, ListingDirectory directory) {
         this.system = system;
         this.listingDao = listingDao;
         this.listingDirectory = directory;
