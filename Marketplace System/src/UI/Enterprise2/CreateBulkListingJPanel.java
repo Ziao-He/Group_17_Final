@@ -315,17 +315,17 @@ public class CreateBulkListingJPanel extends javax.swing.JPanel {
             targetSeller.addListing(newListing);
             system.getListingDirectory().addListing(newListing);
 
-            // ✅ 7. Create ListingReviewRequest（核心修改点）
+            // ✅ 7. Create ListingReviewRequest
             ListingReviewRequest reviewRequest = new ListingReviewRequest(
                 newListing,
                 "seller_request_up",
                 "Bulk listing created by platform"
             );
 
-            // sender = 当前登录 ListingManager（你这个 Panel 里的 seller 变量）
+            // sender = Currently logged in ListingManager
             reviewRequest.setSender(sellerAccount);
 
-            // ✅ 8. Submit to Content Control（逻辑与投诉一致）
+            // Submit to Content Control
             boolean submitted = submitListingReviewToContentControl(reviewRequest);
 
             if (submitted) {

@@ -143,11 +143,9 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
         mainFrame.dispose();
 
-        // ✅ 3️⃣ 用【同一个 system】重新打开 Login
-        LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
+        LoginPage loginPage = new LoginPage(system);
         loginPage.setVisible(true);
                 OdedrService orderService = new OdedrService(
                 new OderFileDAO(),
@@ -176,11 +174,11 @@ public class ListingManagerJPanel extends javax.swing.JPanel {
         workProcessJPanel.setLayout(new BorderLayout());
         workProcessJPanel.add(panel, BorderLayout.CENTER);
 
-        // 强制重新验证和重绘
+        // Mandatory re-verification and redrawing
         workProcessJPanel.revalidate();
         workProcessJPanel.repaint();
 
-        // 确保父容器也更新
+        // Make sure the parent container is also updated
         workProcessJPanel.getParent().revalidate();
         workProcessJPanel.getParent().repaint();
     } 

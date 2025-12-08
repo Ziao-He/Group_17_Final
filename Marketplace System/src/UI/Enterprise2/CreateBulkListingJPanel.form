@@ -51,10 +51,8 @@
                               <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="txtDescription" min="-2" pref="255" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="txtQuantity" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="txtPrice" alignment="0" pref="117" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="txtQuantity" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtPrice" alignment="0" max="32767" attributes="0"/>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Component id="txtTitle" alignment="0" min="-2" pref="117" max="-2" attributes="0"/>

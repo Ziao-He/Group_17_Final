@@ -316,10 +316,10 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
         }
 
         try {
-            // 1. 获取 Listing ID（第 1 列）
+            // 1.Obtain the Listing ID 
             String listingId = (String) tblListing.getValueAt(selectedRow, 1);
 
-            // 2. 从系统查找对应 listing（不再从 seller.getListings() 取）
+            // 2. Search for the corresponding listing from the system
             Listing selectedListing = system.getListingDirectory().findById(listingId);
 
             if (selectedListing == null) {
@@ -330,7 +330,7 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
                 return;
             }
 
-            // 3. 填充 Listing 基本信息
+            // 3. Fill in the basic information of the Listing
             txtID.setText(selectedListing.getId());
             txtTitle.setText(selectedListing.getTitle());
             txtDescription.setText(selectedListing.getDescription());
@@ -338,10 +338,10 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
             txtStatus.setText(selectedListing.getStatus());
             txtQuantity.setText(String.valueOf(selectedListing.getQuantity()));
 
-            // 4. ⭐ 显示 SellerID（新增功能）
+            // 4. show SellerID
             txtSellerID.setText(selectedListing.getSellerId());
 
-            // 5. 显示提交时间
+            // 5. Display the submission time
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String submitTime = dateFormat.format(
                 Date.from(selectedListing.getSubmitTime()
@@ -350,7 +350,7 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
             );
             txtSubmitTime.setText(submitTime);
 
-            // 6. 显示图片
+            // 6. Display picture
             String imagePath = selectedListing.getImagePath();
             imgLogo.setIcon(null);
 
@@ -371,7 +371,7 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
                 }
             }
 
-            // 7. 调试输出
+            // 7. Debug output
             System.out.println("Viewing listing: " + selectedListing.getId()
                 + " | seller = " + selectedListing.getSellerId());
 
@@ -623,16 +623,16 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
 
 
     private void loadSellerListings() {
-        // 1. 获取当前卖家的所有Listing
+        // 1. Get all the listings of the current seller
         List<Listing> allListings = system.getListingDirectory().getAllListings();
 
-        // 2. 获取表格模型
+        // 2. Obtain the table model
         DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
 
-        // 3. 清空表格现有数据
+        // 3. Clear the existing data in the table
         model.setRowCount(0);
 
-        // 4. 添加数据到表格
+        // 4. Add data to the table
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         for (Listing listing : allListings) {
@@ -647,11 +647,11 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
             model.addRow(rowData);
         }
 
-        // 5. 更新表格显示
+        // 5. Update the table display
         tblListing.revalidate();
         tblListing.repaint();
 
-        // 6. 显示记录数
+        // 6. Display record count
         System.out.println("Loaded " + allListings.size() + " listings for seller: " + seller.getUsername());
     }
 
@@ -706,12 +706,12 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
             request.setSender(seller);
             System.out.println("Step 9.2: Sender set to: " + seller.getUsername());
 
-            // 方案A: 尝试添加到系统目录
+            // Option A: Try adding it to the system directory
             System.out.println("Step 9.3: Trying to add to system work directory...");
             system.getWorkRequestDirectory().addWorkRequest(request);
             System.out.println("Step 9.4: Added to system directory");
 
-            // 方案B: 尝试找到Content Control组织
+            // Option B: Try to find the Content Control organization
             System.out.println("Step 9.5: Looking for Content Control organization...");
             boolean foundOrg = false;
 
@@ -738,7 +738,7 @@ public class ManageAllListingJPanel extends javax.swing.JPanel {
                 System.out.println("WARNING: Content Control organization not found, but complaint saved to system directory");
             }
 
-            // 方案C: 保存到文件
+            // Option C: Save to a file
             System.out.println("Step 9.6: Saving complaint to file...");
             saveComplaintToFile(request);
 
