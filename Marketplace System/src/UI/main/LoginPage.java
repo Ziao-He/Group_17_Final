@@ -478,6 +478,14 @@ public class LoginPage extends javax.swing.JFrame {
     // ✅ ✅ ✅ Enterprise 4 — （✅ 预留）
     // ============================================================
     if (loginUser instanceof basement_class.Enterprise_4.HelpCenterAccount) {
+        for (Network n : system.getNetworks()) {
+            for (Enterprise e : n.getEnterprises()) {
+                if ("Help Center".equals(e.getName())) {
+                    userEnterprise = e;
+                    break;
+                }
+            }
+                    }
 
         Role role = loginUser.getRole();
 

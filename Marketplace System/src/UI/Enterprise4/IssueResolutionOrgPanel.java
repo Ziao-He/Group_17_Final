@@ -102,17 +102,7 @@ public class IssueResolutionOrgPanel extends javax.swing.JPanel {
 
         jSplitPane1.setLeftComponent(jPanel1);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 401, Short.MAX_VALUE)
-        );
-
+        jPanel2.setLayout(new java.awt.CardLayout());
         jSplitPane1.setRightComponent(jPanel2);
 
         add(jSplitPane1, java.awt.BorderLayout.PAGE_START);

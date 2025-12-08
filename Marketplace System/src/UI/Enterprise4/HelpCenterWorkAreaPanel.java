@@ -12,6 +12,7 @@ import basement_class.Enterprise_4.IssueResolutionOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import basement_class.UserAccountDirectory;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -36,6 +37,7 @@ public class HelpCenterWorkAreaPanel extends javax.swing.JPanel {
         this.adminUser=adminUser;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+        this.setPreferredSize(new Dimension(600,400));
     }
 
     /**
