@@ -20,6 +20,8 @@ import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import common_class.Order;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -36,6 +38,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -588,10 +591,19 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         );
 
         // ✅ 9. 切换到 Chat Panel（无 CardLayout 版本）
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.setContentPane(chatPanel);
-        frame.revalidate();
-        frame.repaint();
+        JPanel workPanel = findWorkProcessPanel(this);
+        if (workPanel == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Cannot locate work area panel.",
+                    "UI Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        workPanel.removeAll();
+        workPanel.setLayout(new BorderLayout());
+        workPanel.add(chatPanel, BorderLayout.CENTER);
+        workPanel.revalidate();
+        workPanel.repaint();
     }//GEN-LAST:event_btnTalkWithUserActionPerformed
 
 
@@ -721,6 +733,16 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         }
 
         // Not found
+        return null;
+    }
+        private JPanel findWorkProcessPanel(Component comp) {
+        while (comp != null) {
+            if (comp instanceof JPanel panel
+                    && "workProcessJPanel".equals(panel.getName())) {
+                return panel;
+            }
+            comp = comp.getParent();
+        }
         return null;
     }
     

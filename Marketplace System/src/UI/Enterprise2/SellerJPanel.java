@@ -48,6 +48,7 @@ public class SellerJPanel extends javax.swing.JPanel {
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;
+        workProcessJPanel.setName("workProcessJPanel");
     }
 
     /**
@@ -186,6 +187,8 @@ public class SellerJPanel extends javax.swing.JPanel {
         workProcessJPanel.getParent().revalidate();
         workProcessJPanel.getParent().repaint();
     }
-    
+    public void showChatPanel(JPanel chatPanel) {
+        replaceWorkArea(chatPanel);
+    }
     
 }
