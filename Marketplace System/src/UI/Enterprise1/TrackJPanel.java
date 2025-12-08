@@ -65,6 +65,7 @@ public class TrackJPanel extends javax.swing.JPanel {
         btnRefresh = new javax.swing.JButton();
         btnWorkRequestPending = new javax.swing.JButton();
         btnSwitch = new javax.swing.JButton();
+        btnHistory = new javax.swing.JButton();
         workArea = new javax.swing.JPanel();
         jSplitPane2 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
@@ -104,6 +105,13 @@ public class TrackJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnHistory.setText("History");
+        btnHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
         controlJPanel.setLayout(controlJPanelLayout);
         controlJPanelLayout.setHorizontalGroup(
@@ -116,7 +124,8 @@ public class TrackJPanel extends javax.swing.JPanel {
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout))
                     .addComponent(btnWorkRequestPending, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnSwitch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         controlJPanelLayout.setVerticalGroup(
@@ -127,8 +136,10 @@ public class TrackJPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnWorkRequestPending)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnHistory)
+                .addGap(8, 8, 8)
                 .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 499, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 468, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
         );
@@ -198,8 +209,21 @@ public class TrackJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnSwitchActionPerformed
 
+    private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
+        // TODO add your handling code here:
+        TrackManuJPanel historyPanel = new TrackManuJPanel(buyerAccount, system);
+    
+        // Replace work area content
+        workArea.removeAll();
+        workArea.setLayout(new java.awt.BorderLayout());
+        workArea.add(historyPanel, java.awt.BorderLayout.CENTER);
+        workArea.revalidate();
+        workArea.repaint();
+    }//GEN-LAST:event_btnHistoryActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSwitch;

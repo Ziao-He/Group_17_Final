@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author bob-h
  */
-public class OrderDao {
+public class OrderHelperFuction {
     
     private static final String FILE_PATH = "data/orders.csv";
     private static final String DELIMITER = ",";
@@ -25,7 +25,7 @@ public class OrderDao {
     /**
      * Constructor - loads orders from CSV
      */
-    public OrderDao() {
+    public OrderHelperFuction() {
         this.orders = new ArrayList<>();
         loadFromCSV();
     }

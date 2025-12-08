@@ -4,7 +4,7 @@
  */
 package UI.Enterprise2;
 
-import basement_class.DAO.ListingDao;
+import basement_class.DAO.ListingHelperFunction;
 import basement_class.EcoSystem;
 import java.awt.Image;
 import java.util.logging.Level;
