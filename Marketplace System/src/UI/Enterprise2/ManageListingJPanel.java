@@ -5,7 +5,7 @@
 package UI.Enterprise2;
 
 import UI.Enterprise4.BuyerSellerChatPanel;
-import basement_class.DAO.ListingDao;
+//import basement_class.DAO.ListingDao;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import java.awt.Image;

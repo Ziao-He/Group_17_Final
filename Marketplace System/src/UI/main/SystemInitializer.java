@@ -5,6 +5,10 @@
 package UI.main;
 
 import basement_class.*;
+import basement_class.DAO.ListingFileDAO;
+import basement_class.DAO.ListingService;
+import basement_class.DAO.OdedrService;
+import basement_class.DAO.OderFileDAO;
 
 
 /**
@@ -12,7 +16,7 @@ import basement_class.*;
  * @author bob-h
  */
 public class SystemInitializer {
-    
+    public static boolean firstLauch =true ;
     /**
      * Initialize the entire Campus Marketplace System
      * 
@@ -24,6 +28,19 @@ public class SystemInitializer {
         // Get EcoSystem singleton
         EcoSystem system = EcoSystem.getInstance();
         
+        if(firstLauch){
+            OrderDirectory orderDir =system.getOrderDirectory();
+            OdedrService odedrService = new OdedrService(new OderFileDAO(),orderDir); 
+            odedrService.loadOrders();
+            
+            ListingService listingService = new ListingService(
+            new ListingFileDAO(), system.getListingDirectory());
+            listingService.loadListings();
+        
+        }
+        
+    
+
         // Create Campus Marketplace Network
         Network campusNetwork = system.createNetwork("Campus Marketplace Network");
         System.out.println("✓ Created Network: " + campusNetwork.getName() + "\n");
