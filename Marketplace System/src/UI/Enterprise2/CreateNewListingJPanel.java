@@ -296,14 +296,14 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
             // 5. Add to seller's local list
             seller.addListing(newListing);
             system.getListingDirectory().addListing(newListing);
-            // ⭐ 6. Create ListingReviewRequest 代替 ListingSubmissionRequest
+            // 6. Create ListingReviewRequest replace ListingSubmissionRequest
             ListingReviewRequest reviewRequest = new ListingReviewRequest(
                 newListing,
-                "seller_request_up",                  // 操作类型：卖家申请上架
-                "Seller requests to publish listing"  // 理由（可以将来让卖家输入）
+                "seller_request_up",                  // Seller applies for listing
+                "Seller requests to publish listing"  
             );
 
-            // 7. 提交到 ContentControlOrganization（Enterprise3）
+            // 7. Submit ContentControlOrganization（Enterprise3）
             boolean requestSubmitted = submitListingReviewToContentControl(reviewRequest);
 
             if (requestSubmitted) {
@@ -488,11 +488,11 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
             reviewRequest.setSender(seller);
             System.out.println("Sender set: " + seller.getUsername());
 
-            // 2. 一定加入 system-level work directory
+            // 2. Definitely join system-level work directory
             system.getWorkRequestDirectory().addWorkRequest(reviewRequest);
             System.out.println("Added to system work directory");
 
-            // 3. 尝试加入 Content Control（可选）
+            // 3. Try it to Content Control
             boolean foundOrg = false;
 
             for (Network network : system.getNetworks()) {
@@ -514,7 +514,7 @@ public class CreateNewListingJPanel extends javax.swing.JPanel {
                 );
             }
 
-            // 4. 走到这里 = 提交成功
+            // 4. Submitted successfully
             System.out.println("=== SUBMIT LISTING REVIEW SUCCESS ===");
             return true;
 
