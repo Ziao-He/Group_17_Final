@@ -13,7 +13,9 @@ import common_class.Order;
  * @author yujie-liang
  */
 public class OrderReportRequest extends WorkRequest {
-
+    
+    private static int counter = 1;
+    private static final String PREFIX = "ORR"; 
     private Order order;
     private UserAccount reporter;             
     private UserAccount targetUser;           
@@ -24,6 +26,7 @@ public class OrderReportRequest extends WorkRequest {
                               UserAccount targetUser,
                               String violationInfo) {
         super();
+        this.id = generateId();
         this.order = order;
         this.reporter = reporter;
         this.targetUser = targetUser;
@@ -33,6 +36,9 @@ public class OrderReportRequest extends WorkRequest {
         this.status = "Pending";
     }
 
+    private static synchronized String generateId() {
+        return String.format("%s%03d", PREFIX, counter++);
+    }
     public Order getOrder() {
         return order;
     }

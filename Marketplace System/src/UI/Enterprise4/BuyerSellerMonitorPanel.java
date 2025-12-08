@@ -201,7 +201,7 @@ public class BuyerSellerMonitorPanel extends javax.swing.JPanel {
         }
 
         //Mark the message
-        selected.contentIsInappropriate();   // 标记 isFlagged = true（根据你的实现）
+        selected.contentIsInappropriate();   // Mark isFlagged = true (depending on your implementation)
 
         reloadConversation();
         reloadFlagCombo();

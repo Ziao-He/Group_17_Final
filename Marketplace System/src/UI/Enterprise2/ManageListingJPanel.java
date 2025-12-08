@@ -303,7 +303,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRow = tblListing.getSelectedRow();
 
-        // 2. 检查是否有选中的行
+        // 2. Check if there are any selected rows
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                 "Please select a listing from the table first.",
@@ -313,10 +313,10 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         }
 
         try {
-            // 3. 从选中的行获取 Listing ID
-            String listingId = (String) tblListing.getValueAt(selectedRow, 1); // 第二列是ID
+            // 3. Obtain from the selected row Listing ID
+            String listingId = (String) tblListing.getValueAt(selectedRow, 1); // The second column is the ID
 
-            // 4. 根据ID查找Listing对象
+            // 4. Search for the Listing object based on the ID
             Listing selectedListing = null;
             for (Listing listing : seller.getListings()) {
                 if (listing.getId().equals(listingId)) {
@@ -333,7 +333,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 return;
             }
 
-            // 5. 将Listing信息填充到文本框中
+            // 5. Fill the Listing information into the text box
             txtID.setText(selectedListing.getId());
             txtTitle.setText(selectedListing.getTitle());
             txtDescription.setText(selectedListing.getDescription());
@@ -341,35 +341,35 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             txtStatus.setText(selectedListing.getStatus());
             txtQuantity.setText(String.valueOf(selectedListing.getQuantity()));
 
-            // 格式化提交时间
+            // Format the submission time
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String submitTime = dateFormat.format(
                 Date.from(selectedListing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())
             );
             txtSubmitTime.setText(submitTime);
 
-            // 6. 显示图片
+            // 6. Display picture
             String imagePath = selectedListing.getImagePath();
             System.out.println("Loading image from path: " + imagePath);
 
-            // 清除之前的显示
+            // Clear the previous display
             imgLogo.setIcon(null);
 
             if (imagePath != null && !imagePath.trim().isEmpty()) {
                 try {
                     File imageFile = new File(imagePath);
 
-                    // 调试信息
+                    // Debugging information
                     System.out.println("Image file absolute path: " + imageFile.getAbsolutePath());
                     System.out.println("Image file exists: " + imageFile.exists());
 
                     if (imageFile.exists()) {
-                        // 加载图片
+                        // Load the picture
                         ImageIcon listingImage = new ImageIcon(imageFile.getAbsolutePath());
 
-                        // 检查图片是否有效加载
+                        // Check whether the picture is loaded effectively
                         if (listingImage.getIconWidth() > 0 && listingImage.getIconHeight() > 0) {
-                            // 调整大小以适应显示区域
+                            // Resize to fit the display area
                             int width = imgLogo.getWidth() > 0 ? imgLogo.getWidth() : 150;
                             int height = imgLogo.getHeight() > 0 ? imgLogo.getHeight() : 150;
 
@@ -392,7 +392,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 System.out.println("No image path specified for this listing");
             }
 
-            // 7.在控制台输出调试信息
+            // 7.Output debug information in the console
             System.out.println("Viewing listing: " + selectedListing.getId() + " - " + selectedListing.getTitle());
 
         } catch (Exception e) {
@@ -506,7 +506,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 1. 通过表格获取 Listing ID
+        //  Obtain through the table Listing ID
         String listingId = (String) tblListing.getValueAt(row, 1);
 
         Listing listing = system.getListingDirectory().findById(listingId);
@@ -518,7 +518,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 2. 必须是 Reserved 才允许聊天
+        // 2. Chatting is only allowed if it is Reserved
         if (!"Reserved".equalsIgnoreCase(listing.getStatus())) {
             JOptionPane.showMessageDialog(this,
                     "This listing has not been reserved by any buyer.",
@@ -527,7 +527,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 3. 通过 ListingID 找到当前有效 Order
+        // 3. Find the currently valid Order through the ListingID
         Order order = system.getOrderDirectory()
                 .findActiveOrderByListingId(listing.getId());
 
@@ -539,7 +539,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 4. 找 Buyer
+        // 4. find Buyer
         UserAccount buyer =
                 system.getUserAccountDirectory().findByUserId(order.getBuyerId());
 
@@ -551,14 +551,14 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 5. 封装对话对象（Buyer）
+        // 5. Encapsulate the dialogue object（Buyer）
         ArrayList<UserAccount> partners = new ArrayList<>();
         partners.add(buyer);
 
-        // ✅ 6. 获取全局 MessageDirectory
+        // 6. Obtain the global MessageDirectory
         MessageDirectory messageDirectory = system.getMessageDirectory();
 
-        // ✅ 7. 查找 CommunicationServiceOrganization
+        // 7. find CommunicationServiceOrganization
         CommunicationServiceOrganization commOrg = null;
         for (Network n : system.getNetworks()) {
             for (Enterprise e : n.getEnterprises()) {
@@ -579,15 +579,15 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             return;
         }
 
-        // ✅ 8. 创建 Chat Panel（Seller → Buyer）
+        // 8. create Chat Panel（Seller → Buyer）
         BuyerSellerChatPanel chatPanel = new BuyerSellerChatPanel(
-                seller,     // 当前用户：Seller
-                partners,          // 对话对象：Buyer
+                seller,     // current user：Seller
+                partners,          // chat object：Buyer
                 messageDirectory,
                 commOrg
         );
 
-        // ✅ 9. 切换到 Chat Panel（无 CardLayout 版本）
+        // 9. switch Chat Panel
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
         frame.setContentPane(chatPanel);
         frame.revalidate();
@@ -624,16 +624,16 @@ public class ManageListingJPanel extends javax.swing.JPanel {
 
 
     private void loadSellerListings() {
-        // 1. 获取当前卖家的所有Listing
+        // 1. Get all the listings of the current seller
         List<Listing> sellerListings = seller.getListings();
 
-        // 2. 获取表格模型
+        // 2. Obtain the table model
         DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
 
-        // 3. 清空表格现有数据
+        // 3. Clear the existing data in the table
         model.setRowCount(0);
 
-        // 4. 添加数据到表格
+        // 4. Add data to the table
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         for (Listing listing : sellerListings) {
@@ -648,11 +648,11 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             model.addRow(rowData);
         }
 
-        // 5. 更新表格显示
+        // 5. Update the table display
         tblListing.revalidate();
         tblListing.repaint();
 
-        // 6. 显示记录数
+        // 6. Display record count
         System.out.println("Loaded " + sellerListings.size() + " listings for seller: " + seller.getUsername());
     }
 
