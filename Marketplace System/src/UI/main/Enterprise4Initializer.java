@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -30,7 +30,7 @@ public class Enterprise4Initializer {
         IssueResolutionOrganization irOrg = new IssueResolutionOrganization();
 
         enterprise4.addOrganization(csOrg);
-        enterprise4.addOrganization(csOrg);
+        enterprise4.addOrganization(irOrg);
 
         // ✅ 3️⃣ 注册 Role 到 Organization
         irOrg.addRole(new ComplaintHandlerRole());
