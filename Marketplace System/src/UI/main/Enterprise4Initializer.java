@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -11,7 +11,9 @@ import basement_class.Enterprise_4.ComplaintHandlerRole;
 import basement_class.Enterprise_4.HelpCenterAccount;
 import basement_class.Enterprise_4.HelpCenterAdmin;
 import basement_class.Enterprise_4.IssueResolutionOrganization;
+import basement_class.Enterprise_4.Message;
 import basement_class.Enterprise_4.MessageDirectory;
+import basement_class.Enterprise_4.MessageFlagRequest;
 import basement_class.Enterprise_4.MessageHandlerRole;
 import basement_class.Network;
 import basement_class.UserAccount;
@@ -30,7 +32,7 @@ public class Enterprise4Initializer {
         IssueResolutionOrganization irOrg = new IssueResolutionOrganization();
 
         enterprise4.addOrganization(csOrg);
-        enterprise4.addOrganization(csOrg);
+        enterprise4.addOrganization(irOrg);
 
         // ✅ 3️⃣ 注册 Role 到 Organization
         irOrg.addRole(new ComplaintHandlerRole());
@@ -82,6 +84,7 @@ public class Enterprise4Initializer {
         // 放在 Issue Resolution 组织中
         irOrg.getUserAccountDirectory().addUserAccount(complaintHandler);
         system.getUserAccountDirectory().addUserAccount(complaintHandler);
+        createDemoMessageFlagRequests(system,csOrg);
     }
     
     private static void createDemoMessagesBetweenBuyerAndSeller(EcoSystem system) {
@@ -174,6 +177,35 @@ public class Enterprise4Initializer {
 
         System.out.println("[Enterprise4] Demo messages between buyer1 and seller1 created.");
     }
+    
+    /**
+ * 创建 3 条 MessageFlagRequest：
+ * 从 MessageDirectory 里取前三条消息，
+ * 由消息的接收方(receiver)举报发送方(sender)。
+ */
+private static void createDemoMessageFlagRequests(EcoSystem system,
+                                                  CommunicationServiceOrganization csOrg) {
+
+
+    MessageDirectory messageDirectory = system.getMessageDirectory();
+    java.util.List<Message> allMessages = messageDirectory.getAllMessages();
+        MessageFlagRequest req = new MessageFlagRequest(allMessages.get(0), allMessages.get(0).getSender(), "001");
+        csOrg.getWorkRequestDirectory().addWorkRequest(req);
+        allMessages.get(0).setFlaggedByUser(true);
+        
+        MessageFlagRequest req1 = new MessageFlagRequest(allMessages.get(1), allMessages.get(1).getSender(), "002");
+        csOrg.getWorkRequestDirectory().addWorkRequest(req1);
+        allMessages.get(1).setFlaggedByUser(true);
+        
+        MessageFlagRequest req2 = new MessageFlagRequest(allMessages.get(2), allMessages.get(2).getSender(), "003");
+        csOrg.getWorkRequestDirectory().addWorkRequest(req2);
+        allMessages.get(2).setFlaggedByUser(true);
+        
+
+
+    
+}
+
 
   
 }

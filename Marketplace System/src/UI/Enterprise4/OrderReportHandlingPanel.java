@@ -28,8 +28,10 @@ public class OrderReportHandlingPanel extends javax.swing.JPanel {
    public OrderReportHandlingPanel(IssueResolutionOrganization issueResolutionOrg) {
         this.issueResolutionOrg = issueResolutionOrg;
         this.requestList = new ArrayList<>();
-
+        
+        initComponents();
         reloadRequests();
+        
     }
    
    private void reloadRequests() {
