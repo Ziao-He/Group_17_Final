@@ -10,6 +10,7 @@ import basement_class.Enterprise;
 import basement_class.Enterprise_4.CommunicationServiceOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -34,6 +35,7 @@ public class CommunicationServicesOrgPanel extends javax.swing.JPanel {
         this.orgUserAccount=orgUserAccount;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+        this.setPreferredSize(new Dimension(600,400));
     }
 
     /**

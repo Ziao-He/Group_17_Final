@@ -4,14 +4,23 @@
  */
 package UI.Enterprise2;
 
+import UI.Enterprise4.BuyerSellerChatPanel;
 import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.SellerAccount;
+import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
+import basement_class.Enterprise_4.CommunicationServiceOrganization;
+import basement_class.Enterprise_4.MessageDirectory;
+import basement_class.Network;
 import basement_class.Organization;
+import basement_class.UserAccount;
+import common_class.Order;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -24,6 +33,7 @@ public class SellerJPanel extends javax.swing.JPanel {
     private Organization organization;
     private Enterprise enterprise;
     private EcoSystem system;
+    private Order order;
     /**
      * Creates new form SellerJPanel
      * @param sellerAccount
@@ -34,9 +44,11 @@ public class SellerJPanel extends javax.swing.JPanel {
     public SellerJPanel(SellerAccount sellerAccount,Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
         this.sellerAccount = sellerAccount;
+        this.order = order;
         this.organization = organization;
         this.enterprise = enterprise;
         this.system = system;
+        workProcessJPanel.setName("workProcessJPanel");
     }
 
     /**
@@ -102,9 +114,9 @@ public class SellerJPanel extends javax.swing.JPanel {
                 .addComponent(btnCreateNewListing)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnListingMangement)
-                .addGap(79, 79, 79)
+                .addGap(67, 67, 67)
                 .addComponent(btnLogout)
-                .addContainerGap(482, Short.MAX_VALUE))
+                .addContainerGap(494, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(controlJPanel);
@@ -174,5 +186,9 @@ public class SellerJPanel extends javax.swing.JPanel {
         // 确保父容器也更新
         workProcessJPanel.getParent().revalidate();
         workProcessJPanel.getParent().repaint();
-    } 
+    }
+    public void showChatPanel(JPanel chatPanel) {
+        replaceWorkArea(chatPanel);
+    }
+    
 }

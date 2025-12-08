@@ -4,20 +4,31 @@
  */
 package UI.Enterprise2;
 
-import basement_class.DAO.ListingHelperFunction;
+import UI.Enterprise4.BuyerSellerChatPanel;
+import basement_class.DAO.ListingDao;
 import basement_class.EcoSystem;
+import basement_class.Enterprise;
 import java.awt.Image;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import basement_class.Enterprise_2.Account.SellerAccount;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.Organization.SellerOrganization;
+import basement_class.Enterprise_4.CommunicationServiceOrganization;
+import basement_class.Enterprise_4.MessageDirectory;
+import basement_class.Network;
+import basement_class.Organization;
+import basement_class.UserAccount;
+import common_class.Order;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -25,7 +36,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -90,6 +104,7 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         lblListingID = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtQuantity = new javax.swing.JTextField();
+        btnTalkWithUser = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(102, 255, 255));
 
@@ -154,6 +169,13 @@ public class ManageListingJPanel extends javax.swing.JPanel {
 
         jLabel1.setText("Quantity");
 
+        btnTalkWithUser.setText("Talk with Buyer");
+        btnTalkWithUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTalkWithUserActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -185,11 +207,6 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(103, 103, 103)
-                                        .addComponent(lblDescription)
-                                        .addGap(55, 55, 55))
-                                    .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(btnSelectImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
@@ -198,7 +215,15 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                                             .addComponent(txtID))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                                         .addComponent(imgLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(20, 20, 20)))
+                                        .addGap(20, 20, 20))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(txtTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(103, 103, 103)
+                                                .addComponent(lblDescription))
+                                            .addComponent(btnTalkWithUser, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,7 +236,9 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnView)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnView)
+                    .addComponent(btnTalkWithUser))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -469,10 +496,121 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         setUpdateMode();
     }//GEN-LAST:event_btnUpdateActionPerformed
 
+    private void btnTalkWithUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTalkWithUserActionPerformed
+        // Start a chat with the seller of this listing
+
+        // Basic checks
+        int row = tblListing.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select a listing first.",
+                    "No Selection",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // ✅ 1. 通过表格获取 Listing ID
+        String listingId = (String) tblListing.getValueAt(row, 1);
+
+        Listing listing = system.getListingDirectory().findById(listingId);
+        if (listing == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Listing not found.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ 2. 必须是 Reserved 才允许聊天
+        if (!"Reserved".equalsIgnoreCase(listing.getStatus())) {
+            JOptionPane.showMessageDialog(this,
+                    "This listing has not been reserved by any buyer.",
+                    "No Active Order",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        // ✅ 3. 通过 ListingID 找到当前有效 Order
+        Order order = system.getOrderDirectory()
+                .findActiveOrderByListingId(listing.getId());
+
+        if (order == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No active order found for this listing.",
+                    "Order Not Found",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ 4. 找 Buyer
+        UserAccount buyer =
+                system.getUserAccountDirectory().findByUserId(order.getBuyerId());
+
+        if (buyer == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Buyer account not found.",
+                    "User Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ 5. 封装对话对象（Buyer）
+        ArrayList<UserAccount> partners = new ArrayList<>();
+        partners.add(buyer);
+
+        // ✅ 6. 获取全局 MessageDirectory
+        MessageDirectory messageDirectory = system.getMessageDirectory();
+
+        // ✅ 7. 查找 CommunicationServiceOrganization
+        CommunicationServiceOrganization commOrg = null;
+        for (Network n : system.getNetworks()) {
+            for (Enterprise e : n.getEnterprises()) {
+                for (Organization org : e.getOrganizations()) {
+                    if (org instanceof CommunicationServiceOrganization) {
+                        commOrg = (CommunicationServiceOrganization) org;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (commOrg == null) {
+            JOptionPane.showMessageDialog(this,
+                    "CommunicationServiceOrganization not found.",
+                    "System Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ 8. 创建 Chat Panel（Seller → Buyer）
+        BuyerSellerChatPanel chatPanel = new BuyerSellerChatPanel(
+                seller,     // 当前用户：Seller
+                partners,          // 对话对象：Buyer
+                messageDirectory,
+                commOrg
+        );
+
+        // ✅ 9. 切换到 Chat Panel（无 CardLayout 版本）
+        JPanel workPanel = findWorkProcessPanel(this);
+        if (workPanel == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Cannot locate work area panel.",
+                    "UI Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        workPanel.removeAll();
+        workPanel.setLayout(new BorderLayout());
+        workPanel.add(chatPanel, BorderLayout.CENTER);
+        workPanel.revalidate();
+        workPanel.repaint();
+    }//GEN-LAST:event_btnTalkWithUserActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSelectImage;
+    private javax.swing.JButton btnTalkWithUser;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnView;
     private javax.swing.JLabel imgLogo;
@@ -571,6 +709,41 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         txtSubmitTime.setEnabled(true);
         txtTitle.setEnabled(true);
         btnSelectImage.setEnabled(true);
+    }
+    
+    private CommunicationServiceOrganization findCommunicationServiceOrg(EcoSystem system) {
+
+        if (system == null) {
+            return null;
+        }
+
+        // Search through all networks → enterprises → organizations
+        for (Network net : system.getNetworks()) {
+            for (Enterprise ent : net.getEnterprises()) {
+
+                // Loop through organizations inside this enterprise
+                for (Organization org : ent.getOrganizations()) {
+
+                    // Check if this org is the communication service org
+                    if (org instanceof CommunicationServiceOrganization) {
+                        return (CommunicationServiceOrganization) org;
+                    }
+                }
+            }
+        }
+
+        // Not found
+        return null;
+    }
+        private JPanel findWorkProcessPanel(Component comp) {
+        while (comp != null) {
+            if (comp instanceof JPanel panel
+                    && "workProcessJPanel".equals(panel.getName())) {
+                return panel;
+            }
+            comp = comp.getParent();
+        }
+        return null;
     }
     
 
