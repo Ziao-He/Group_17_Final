@@ -10,6 +10,7 @@ import basement_class.Enterprise;
 import basement_class.Enterprise_4.IssueResolutionOrganization;
 import basement_class.Organization;
 import basement_class.UserAccount;
+import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -33,6 +34,8 @@ public class IssueResolutionOrgPanel extends javax.swing.JPanel {
         this.orgUserAccount=orgUserAccount;
         this.enterprise=enterprise;
         this.userOrg=userOrg;
+        
+        this.setPreferredSize(new Dimension(600,400));
     }
 
     /**
@@ -110,7 +113,7 @@ public class IssueResolutionOrgPanel extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        OrderReportHandlingPanel panel = new OrderReportHandlingPanel((IssueResolutionOrganization) userOrg);
+        OrderReportHandlingPanel panel = new OrderReportHandlingPanel((IssueResolutionOrganization) enterprise.getOrganizationByName("Issue Resolution"));
 
         java.awt.CardLayout layout = (java.awt.CardLayout) jPanel2.getLayout();
         jPanel2.add("OrderReportHandlingPanel", panel);
