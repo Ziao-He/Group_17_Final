@@ -125,6 +125,7 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinishActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinishActionPerformed
+        // Check if cart is empty
         if (shoppingCart == null || shoppingCart.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                 "Your cart is empty.",
@@ -143,28 +144,30 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
         double maxBudget = buyerAccount.getProfile().getMaxBudget();
         
         // If budget is set (> 0), enforce budget check
-        if (totalPrice > maxBudget) {
+        if (maxBudget > 0 && totalPrice > maxBudget) {
             JOptionPane.showMessageDialog(this,
-                String.format("Total price ($%.2f) exceeds your budget ($%.2f).",
-                              totalPrice, maxBudget),
+                String.format("Total price ($%.2f) exceeds your budget ($%.2f).\n" +
+                             "Please remove some items or increase your budget in Personal Info.",
+                             totalPrice, maxBudget),
                 "Over Budget",
                 JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         // 3. Confirm checkout
-        String confirmMessage = String.format(
-            "Total amount: $%.2f\n" +
-            "Number of items: %d\n" +
-            (maxBudget > 0 ? "Remaining budget: $%.2f\n" : "") +
-            "\nProceed with checkout?",
-            totalPrice, 
-            shoppingCart.size(),
-            maxBudget > 0 ? (maxBudget - totalPrice) : 0
-        );
+        StringBuilder confirmMsg = new StringBuilder();
+        confirmMsg.append(String.format("Total amount: $%.2f\n", totalPrice));
+        confirmMsg.append(String.format("Number of items: %d\n", shoppingCart.size()));
+        
+        // Only show remaining budget if budget is set
+        if (maxBudget > 0) {
+            confirmMsg.append(String.format("Remaining budget: $%.2f\n", maxBudget - totalPrice));
+        }
+        
+        confirmMsg.append("\nProceed with checkout?");
         
         int confirm = JOptionPane.showConfirmDialog(this,
-            confirmMessage,
+            confirmMsg.toString(),
             "Confirm Checkout",
             JOptionPane.YES_NO_OPTION);
 
@@ -192,7 +195,10 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
                 );
                 order.setQuantity(1);  // Always 1 for second-hand
                 order.setStatus(Order.STATUS_PENDING);
+                
+                // Save order to OrderDirectory
                 system.getOrderDirectory().addOrder(order);
+                
                 // Create OrderReviewRequest (WorkRequest)
                 OrderReviewRequest orderRequest = new OrderReviewRequest(
                     buyerAccount,
@@ -202,36 +208,48 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
                 orderRequest.setId(requestId);
                 orderRequest.setReceiver(listing.getSeller());
                 
-                // Add order ID to buyer's account
-                buyerAccount.addOrder(orderId);
+                // Add order ID to buyer's orderIds list
+                if (buyerAccount.getOrderIds() == null) {
+                    buyerAccount.setOrderIds(new ArrayList<>());
+                }
+                buyerAccount.getOrderIds().add(orderId);
                 
                 // Update listing status to Reserved
                 listing.setStatus("Reserved");
                 
-                // Save WorkRequest to system
-                system.getWorkRequestDirectory().addWorkRequest(orderRequest);
+                // Save WorkRequest to system level
+                // Save WorkRequest to system level
+                if (system.getWorkRequestDirectory() != null) {
+                    system.getWorkRequestDirectory().addWorkRequest(orderRequest);
+                }
 
-                // ✅ 2. 同时投递到 OrderManagementOrganization
+                // IMPORTANT: Also send to Enterprise 2's Order Management Organization
+                // So that Order Processor (Enterprise 2) can receive it
                 boolean sentToOrderOrg = false;
 
                 for (Network network : system.getNetworks()) {
-                    for (Enterprise enterprise : network.getEnterprises()) {
-                        if (enterprise instanceof MarketplaceEnterprise) {
+                    for (Enterprise ent : network.getEnterprises()) {
+                        // Find Enterprise 2 (Marketplace/Seller Enterprise)
+                        if (ent.getName().contains("Marketplace") || 
+                            ent.getName().contains("Seller")) {
 
-                            Organization orderOrg =
-                                enterprise.getOrganizationByName("Order Management Organization");
-
-                            if (orderOrg != null) {
-                                orderOrg.getWorkRequestDirectory().addWorkRequest(orderRequest);
-                                sentToOrderOrg = true;
-                                break;
+                            // Find Order Management Organization in Enterprise 2
+                            for (Organization org : ent.getOrganizations()) {
+                                if (org.getName().contains("Order Management")) {
+                                    org.getWorkRequestDirectory().addWorkRequest(orderRequest);
+                                    sentToOrderOrg = true;
+                                    System.out.println("Sent to Enterprise 2 Order Management Org");
+                                    break;
+                                }
                             }
                         }
+                        if (sentToOrderOrg) break;
                     }
+                    if (sentToOrderOrg) break;
                 }
-
+                
                 if (!sentToOrderOrg) {
-                    System.err.println("WARNING: Order Management Organization not found. OrderReviewRequest only saved in system.");
+                    System.err.println("WARNING: Order Management Organization not found!");
                 }
                 
                 successCount++;
@@ -245,17 +263,17 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
             }
         }
 
-        // 5. Update buyer account statistics
-        // IMPORTANT: Only update totalPurchases here, not completedPurchases
-        // completedPurchases should only be updated when order status becomes COMPLETED
-        // (which happens in TrackJPanel when buyer clicks Complete)
+        // 5. Update buyer account statistics and budget
+        // Manually increment totalPurchases by number of successful orders
+        buyerAccount.setTotalPurchases(buyerAccount.getTotalPurchases() + successCount);
         
-        // Update total purchases count (number of orders created)
-        // This is already done in addOrder() which increments totalPurchases
-        // So we don't need to do anything extra here
-        
-        // NOTE: Points are NOT awarded at checkout
-        // Points should be awarded when order is COMPLETED in TrackJPanel
+        // IMPORTANT: Decrease budget after purchase
+        double currentBudget = buyerAccount.getProfile().getMaxBudget();
+        if (currentBudget > 0) {
+            double newBudget = currentBudget - totalPrice;
+            buyerAccount.getProfile().setMaxBudget(newBudget);
+            System.out.println("Budget decreased: $" + currentBudget + " -> $" + newBudget);
+        }
 
         // 6. Clear shopping cart
         shoppingCart.clear();
@@ -265,14 +283,15 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
         StringBuilder resultMessage = new StringBuilder();
         resultMessage.append("Checkout successful!\n\n");
         resultMessage.append(String.format("Orders created: %d\n", successCount));
-        resultMessage.append(String.format("Total amount: $%.2f\n", totalPrice));
+        resultMessage.append(String.format("Total spent: $%.2f\n", totalPrice));
         resultMessage.append("\nStatus: Pending\n");
         resultMessage.append("Your orders are waiting for seller approval.\n");
         resultMessage.append("Check Order Tracker to view status updates.\n");
         
-        if (maxBudget > 0) {
-            resultMessage.append(String.format("\nRemaining budget: $%.2f", 
-                maxBudget - totalPrice));
+        // Show new budget if it was set
+        if (currentBudget > 0) {
+            resultMessage.append(String.format("\nNew budget: $%.2f", 
+                buyerAccount.getProfile().getMaxBudget()));
         }
         
         if (!failedItems.isEmpty()) {
@@ -289,34 +308,32 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
     }//GEN-LAST:event_btnFinishActionPerformed
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
-        // Remove selected item from cart
+        // Show detailed view of selected item
         Listing selected = getSelectedListing();
         if (selected == null) {
             JOptionPane.showMessageDialog(this,
-                "Please select an item to remove.",
+                "Please select an item first.",
                 "No Selection",
                 JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Confirm removal
-        int confirm = JOptionPane.showConfirmDialog(this,
-            "Remove \"" + selected.getTitle() + "\" from cart?",
-            "Confirm Removal",
-            JOptionPane.YES_NO_OPTION);
-            
-        if (confirm == JOptionPane.YES_OPTION) {
-            // Remove from cart
-            shoppingCart.removeIf(l -> l.getId().equals(selected.getId()));
-            
-            // Refresh display
-            refreshCart();
-            
+        // Find parent BuyerJPanel
+        BuyerJPanel parentPanel = findParentBuyerPanel();
+        if (parentPanel == null) {
             JOptionPane.showMessageDialog(this,
-                "Item removed from cart.",
-                "Removed",
-                JOptionPane.INFORMATION_MESSAGE);
+                "Cannot find parent panel.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        // Create and show detail panel
+        ListingDetailWorkArea detailPanel = new ListingDetailWorkArea(
+            selected, buyerAccount, system, parentPanel
+        );
+        
+        parentPanel.showDetailPanel(detailPanel);
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void btnDetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailActionPerformed
@@ -357,9 +374,6 @@ public class ShoppingCartWorkArea extends javax.swing.JPanel {
     private javax.swing.JTable tblListing;
     // End of variables declaration//GEN-END:variables
 
-    /**
-     * Refresh cart display
-     */
     public void refreshCart() {
         DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
         model.setRowCount(0);
