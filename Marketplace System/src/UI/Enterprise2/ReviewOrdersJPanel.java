@@ -340,7 +340,6 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
 
         loadtable();
         txtSearch.setText("");
-
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed

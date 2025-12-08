@@ -4,12 +4,15 @@
  */
 package UI.Enterprise1;
 
+import UI.main.LoginPage;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import java.awt.CardLayout;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -60,7 +63,6 @@ public class TrackJPanel extends javax.swing.JPanel {
         controlJPanel = new javax.swing.JPanel();
         btnLogout = new javax.swing.JButton();
         btnRefresh = new javax.swing.JButton();
-        btnHistory = new javax.swing.JButton();
         btnWorkRequestPending = new javax.swing.JButton();
         btnSwitch = new javax.swing.JButton();
         workArea = new javax.swing.JPanel();
@@ -88,13 +90,6 @@ public class TrackJPanel extends javax.swing.JPanel {
             }
         });
 
-        btnHistory.setText("Order History");
-        btnHistory.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHistoryActionPerformed(evt);
-            }
-        });
-
         btnWorkRequestPending.setText("Order Pending");
         btnWorkRequestPending.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -103,6 +98,11 @@ public class TrackJPanel extends javax.swing.JPanel {
         });
 
         btnSwitch.setText("Switch");
+        btnSwitch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSwitchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout controlJPanelLayout = new javax.swing.GroupLayout(controlJPanel);
         controlJPanel.setLayout(controlJPanelLayout);
@@ -112,7 +112,6 @@ public class TrackJPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(controlJPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
-                    .addComponent(btnHistory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(controlJPanelLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
                         .addComponent(btnLogout))
@@ -126,12 +125,10 @@ public class TrackJPanel extends javax.swing.JPanel {
                 .addGap(24, 24, 24)
                 .addComponent(btnRefresh)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnHistory)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnWorkRequestPending)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSwitch)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 464, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 499, Short.MAX_VALUE)
                 .addComponent(btnLogout)
                 .addGap(33, 33, 33))
         );
@@ -163,6 +160,12 @@ public class TrackJPanel extends javax.swing.JPanel {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
+        JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        mainFrame.dispose();
+
+        LoginPage loginPage = new LoginPage(system);
+        loginPage.setVisible(true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
@@ -170,10 +173,6 @@ public class TrackJPanel extends javax.swing.JPanel {
             trackingOrderStatusPanel.refreshData();
         }
     }//GEN-LAST:event_btnRefreshActionPerformed
-
-    private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnHistoryActionPerformed
 
     private void btnWorkRequestPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnWorkRequestPendingActionPerformed
         // TODO add your handling code here:
@@ -184,9 +183,23 @@ public class TrackJPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnWorkRequestPendingActionPerformed
 
+    private void btnSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchActionPerformed
+        // TODO add your handling code here:
+        // Switch back to BuyerJPanel
+        BuyerJPanel buyerPanel = new BuyerJPanel(
+            buyerAccount, organization, enterprise, system
+        );
+
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        if (frame != null) {
+            frame.setContentPane(buyerPanel);
+            frame.revalidate();
+            frame.repaint();
+        }
+    }//GEN-LAST:event_btnSwitchActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnSwitch;
