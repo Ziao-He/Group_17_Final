@@ -1,6 +1,0 @@
-listingId,sellerId,title,description,imagePath,price,status,submitTime,quantity
-L001,SELLER-001,iPhone 14,Almost new iPhone,,699.99,Approved,2025-12-01T14:30,1
-L002,SELLER-001,Java Book,Data Structures Textbook,,45.5,Pending,2025-12-02T10:15,2
-L003,SELLER-001,Headphones,Noise Cancelling Headset,,120.0,Approved,2025-12-03T09:40,1
-L004,SELLER-001,Laptop Stand,Adjustable Aluminum Stand,,35.0,Rejected,2025-12-04T11:20,5
-LIST-SELLER-001-0001,SELLER-001,4124,532,,513531.0,Approved,2025-12-07T22:17:57.945448400,123
