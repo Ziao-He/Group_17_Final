@@ -1,0 +1,35 @@
+id,username,email,password,phone,orgId,status,role,warningCount,buyerPreferredCategories,buyerMaxBudget,buyerLocation,buyerPayMethod,profileFullName,profileEmail,profilePhone
+HC-ADMIN-001,h,null,1234,null,null,ACTIVE,HelpCenterAdmin,0,,,,,,,
+HC-MSG-001,msg1,null,1234,null,null,ACTIVE,MessageHandlerRole,0,,,,,,,
+HC-CMP-001,ch1,null,1234,null,null,ACTIVE,ComplaintHandlerRole,0,,,,,,,
+SYS-ADMIN-001,sys,null,1234,null,null,ACTIVE,SystemAdmin,0,,,,,,,
+SELLER-001,seller1,seller1@test.com,123,1111111111,SELLER_ORG,ACTIVE,SellerRole,0,,,,,,,
+LM-001,listingmanager1,lm1@test.com,1234,2222222222,SELLER_ORG,ACTIVE,ListingManagerRole,0,,,,,,,
+OP-001,order1,order1@test.com,12345,3333333333,ORDER_ORG,ACTIVE,OrderProcessorRole,0,,,,,,,
+ADMIN_001,platformadmin,admin@test.com,123,9999999999,USER_ORG,ACTIVE,PlatformAdminRole,0,,,,,,,
+SYS_001,s,sys@test.com,123,8888888888,SYSTEM,ACTIVE,SystemAdminRole,0,,,,,,,
+ADMIN_002,a,a@test.com,1234,7777777777,USER_ORG,ACTIVE,AccountAdminRole,0,,,,,,,
+ADMIN_003,c,c@test.com,1234,6666666666,CONTENT_ORG,ACTIVE,ContentModeratorRole,0,,,,,,,
+BUYER-001,buyer1,example@email.com,password123,5204499229,SHOPPING_ORG,ACTIVE,BuyerRole,0,Electronics|Books,1.0E9,Campus,CreditCard,Buyer One,example@email.com,5204499229
+BUYER-002,searcher1,searcher1@university.edu,password123,123-456-7891,SHOPPING_ORG,ACTIVE,BuyerRole,0,Food|Clothing,400.0,Campus,DebitCard,Searcher One,,
+BUYER-003,tracker1,tracker1@university.edu,password123,123-456-7892,ORDER_ORG,ACTIVE,BuyerRole,0,Books|Stationery,300.0,Dormitory,MobilePay,Tracker One,,
+BUYER-87A1B58E,faker_kingjaskolski6413,king.jaskolski146@university.edu,password123,9018769591,SHOPPING_ORG,ACTIVE,OrderTrackerRole,0,Clothing|Furniture,1792.0,Library,PayPal,King Jaskolski,king.jaskolski146@university.edu,9018769591
+BUYER-BBA98054,faker_louwalker3996,lou.walker849@university.edu,password123,8477253836,SHOPPING_ORG,ACTIVE,BuyerRole,0,Clothing|Books,4906.0,Dormitory B,Cash,Lou Walker,lou.walker849@university.edu,8477253836
+BUYER-19443CAC,faker_olympialarkin811,olympia.larkin476@university.edu,password123,0888470468,SHOPPING_ORG,ACTIVE,OrderTrackerRole,0,Books,709.0,Library,PayPal,Olympia Larkin,olympia.larkin476@university.edu,0888470468
+BUYER-2F691EC5,faker_kirbylangworth6581,kirby.langworth814@university.edu,password123,2601260238,SHOPPING_ORG,ACTIVE,BuyerRole,0,Stationery|Clothing,4345.0,Student Center,Cash,Kirby Langworth,kirby.langworth814@university.edu,2601260238
+BUYER-D787E7AE,faker_ricocummings5600,rico.cummings380@university.edu,password123,9028408053,SHOPPING_ORG,ACTIVE,OrderTrackerRole,0,Books,589.0,Dormitory B,CreditCard,Rico Cummings,rico.cummings380@university.edu,9028408053
+BUYER-19B11033,faker_willywintheiser1664,willy.wintheiser355@university.edu,password123,0723226512,SHOPPING_ORG,ACTIVE,BuyerRole,0,Clothing|Furniture,4064.0,West Campus,PayPal,Willy Wintheiser,willy.wintheiser355@university.edu,0723226512
+BUYER-6473141D,faker_jerryortiz2101,jerry.ortiz394@university.edu,password123,7003822396,SHOPPING_ORG,ACTIVE,OrderTrackerRole,0,Kitchen|Books,3389.0,Student Center,DebitCard,Jerry Ortiz,jerry.ortiz394@university.edu,7003822396
+BUYER-306B14B7,faker_josefahalvorson9125,josefa.halvorson502@university.edu,password123,3469823230,SHOPPING_ORG,ACTIVE,BuyerRole,0,Furniture,2332.0,Dormitory B,Venmo,Josefa Halvorson,josefa.halvorson502@university.edu,3469823230
+SELLER-FC0FF2B9,faker_seller_caroline3329,seller.caroline69@university.edu,password123,8761560884,SELLER_ORG,ACTIVE,SellerRole,0,,,,,,,
+SELLER-1D0C1BA9,faker_seller_craig4720,seller.craig551@university.edu,password123,8508725956,SELLER_ORG,ACTIVE,ListingManagerRole,0,,,,,,,
+SELLER-2D176B99,faker_seller_chuck8551,seller.chuck161@university.edu,password123,7222656362,SELLER_ORG,ACTIVE,SellerRole,0,,,,,,,
+SELLER-7879940C,faker_seller_oscar6631,seller.oscar553@university.edu,password123,8939048187,SELLER_ORG,ACTIVE,ListingManagerRole,0,,,,,,,
+SELLER-2EE66CD6,faker_seller_emanuel3954,seller.emanuel787@university.edu,password123,9553856164,SELLER_ORG,ACTIVE,SellerRole,0,,,,,,,
+SELLER-897DC2BA,faker_seller_lorna5971,seller.lorna434@university.edu,password123,7796103746,SELLER_ORG,ACTIVE,ListingManagerRole,0,,,,,,,
+ADMIN-1847BDA1,faker_admin4368,admin274@marketplace.com,admin123,4153616683,USER_ORG,ACTIVE,PlatformAdminRole,0,,,,,,,
+ADMIN-9BC1C5E4,faker_admin1385,admin872@marketplace.com,admin123,2791660157,CONTENT_ORG,ACTIVE,AccountAdminRole,0,,,,,,,
+ADMIN-BB1211F6,faker_admin6807,admin660@marketplace.com,admin123,6544340394,USER_ORG,ACTIVE,ContentModeratorRole,0,,,,,,,
+ADMIN-07CD6888,faker_admin4120,admin564@marketplace.com,admin123,6068958062,CONTENT_ORG,ACTIVE,PolicyEnforcerRole,0,,,,,,,
+HC-6D102898,faker_help7092,help905@marketplace.com,help123,7499421764,HELP_ORG,ACTIVE,MessageHandlerRole,0,,,,,,,
+HC-6FCAB104,faker_help1489,help451@marketplace.com,help123,4530586161,HELP_ORG,ACTIVE,ComplaintHandlerRole,0,,,,,,,

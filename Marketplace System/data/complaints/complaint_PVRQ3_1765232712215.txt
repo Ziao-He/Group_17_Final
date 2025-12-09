@@ -1,0 +1,10 @@
+=== COMPLAINT REPORT ===
+ID: PVRQ3
+Date: Mon Dec 08 17:25:12 EST 2025
+Reporter: listingmanager1
+Target: seller1
+Listing ID: LIST-SELLER-001-0004
+Listing Title: 1
+Category: listing_issue
+Reason: 1
+Status: Pending
