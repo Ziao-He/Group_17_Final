@@ -24,16 +24,12 @@ public class OrderReviewRequest extends WorkRequest {
     public static final String OP_SELLER_REJECT = "seller_reject";
     public static final String OP_SYSTEM_CANCEL = "system_cancel";
 
-    // 操作类型
     private String operationType;
 
-    // Buyer / Processor 提交时的备注
     private String message;
 
-    // ✅ OrderProcessor 的处理结果说明（Accept / Reject 理由）
     private String processingResult;
 
-    // ✅ 谁处理了这个订单（OrderProcessor）
     private UserAccount processor;
     private String processReason;
 

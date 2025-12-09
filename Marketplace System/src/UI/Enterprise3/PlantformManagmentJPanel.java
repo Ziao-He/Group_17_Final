@@ -60,7 +60,7 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         )
     );
 
-    // ✅ 默认选中 All
+ 
     jComboBox.setSelectedIndex(0);
 }    
     /**
@@ -213,7 +213,6 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // 第 5 列藏的是 UserAccount 对象
     UserAccount ua = (UserAccount) tblManagment.getValueAt(row, 4);
 
     if (ua == null) {
@@ -221,7 +220,6 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // 已经是 ACTIVE
     if ("ACTIVE".equalsIgnoreCase(ua.getStatus())) {
         JOptionPane.showMessageDialog(this,
                 "This account is already ACTIVE.",
@@ -230,7 +228,6 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // 不能把自己关了再开（可选保护）
     if (admin != null && ua.getUsername().equals(admin.getUsername())) {
         JOptionPane.showMessageDialog(this,
                 "You cannot modify your own account status here.",
@@ -239,17 +236,14 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // 修改状态
     ua.setStatus("ACTIVE");
 
-    // 写回 CSV
     basement_class.DAO.UserAccountDAO dao = new basement_class.DAO.UserAccountFileDAO();
     dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
 
     JOptionPane.showMessageDialog(this,
             "Account [" + ua.getUsername() + "] is now ACTIVE.");
 
-    // 刷新表格
     loadTable();
     }//GEN-LAST:event_btnOpenActionPerformed
 
@@ -267,7 +261,6 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // 不允许关掉自己（防止把自己锁出系统）
     if (admin != null && ua.getUsername().equals(admin.getUsername())) {
         JOptionPane.showMessageDialog(this,
                 "You cannot SUSPEND your own account.",
@@ -276,7 +269,6 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // 可以视情况禁止关关键账号，例如 system admin / super platform admin
     if ("platformadmin".equalsIgnoreCase(ua.getUsername())
             || "s".equalsIgnoreCase(ua.getUsername())) {
         JOptionPane.showMessageDialog(this,
@@ -303,17 +295,14 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // 修改状态
     ua.setStatus("SUSPENDED");
 
-    // 写回 CSV
     basement_class.DAO.UserAccountDAO dao = new basement_class.DAO.UserAccountFileDAO();
     dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
 
     JOptionPane.showMessageDialog(this,
             "Account [" + ua.getUsername() + "] is now SUSPENDED.");
 
-    // 刷新表格
     loadTable();
     }//GEN-LAST:event_btnCloseActionPerformed
 
@@ -327,7 +316,7 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
     dialog.setVisible(true);
 
     if (dialog.isSucceeded()) {
-        // ✅ 创建成功后刷新表格
+
         loadTable();
     }
     }//GEN-LAST:event_btnCreatNewAccountActionPerformed
@@ -342,9 +331,9 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
 
 
     if ("All".equalsIgnoreCase(selectedType)) {
-        loadTable(name, null);       // 显示全部
+        loadTable(name, null);     
     } else {
-        loadTable(name, selectedType); // 按 User Control / Content Control 过滤
+        loadTable(name, selectedType); 
     }
     }//GEN-LAST:event_btnSearchByUserAccountNameActionPerformed
 
@@ -353,7 +342,6 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
 
     String selectedType = jComboBox.getSelectedItem().toString();
 
-    // ✅ 如果选的是 All，相当于不加 org 过滤
     if ("All".equalsIgnoreCase(selectedType)) {
         loadTable(name, null);
     } else {
@@ -400,13 +388,11 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
 
                 for (UserAccount ua : org.getUserAccountDirectory().getUserAccounts()) {
 
-                    // 🔍 用户名过滤
                     if (nameFilter != null &&
                         !ua.getUsername().toLowerCase().contains(nameFilter)) {
                         continue;
                     }
 
-                    // 🔍 组织过滤
                     if (orgNameFilter != null &&
                         !org.getName().toLowerCase().contains(orgNameFilter)) {
                         continue;
@@ -419,7 +405,7 @@ public class PlantformManagmentJPanel extends javax.swing.JPanel {
                     row[3] = ua.getRole() == null
                             ? "N/A"
                             : ua.getRole().getClass().getSimpleName();
-                    row[4] = ua;             // ✅ 隐藏对象
+                    row[4] = ua;             
 
                     model.addRow(row);
                 }

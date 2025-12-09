@@ -181,6 +181,16 @@ public class TrackJPanel extends javax.swing.JPanel {
 
         LoginPage loginPage = new LoginPage(system);
         loginPage.setVisible(true);
+            new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+    new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
+
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed

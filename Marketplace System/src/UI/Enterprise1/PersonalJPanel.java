@@ -13,6 +13,7 @@ import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
 import basement_class.Network;
 import basement_class.Organization;
 import javax.swing.JOptionPane;
+import basement_class.DAO.UserAccountFileDAO;
 
 /**
  *
@@ -22,6 +23,7 @@ public class PersonalJPanel extends javax.swing.JPanel {
     
     private final EcoSystem system;
     private final BuyerAccount buyer;
+    private final UserAccountFileDAO userAccountDAO;
 
     private String originalName;
     private String originalEmail;
@@ -36,6 +38,7 @@ public class PersonalJPanel extends javax.swing.JPanel {
         initComponents();
         this.system = system;
         this.buyer = buyer;
+        this.userAccountDAO = new UserAccountFileDAO();
 
         populateFields();
         setEditing(false);  
@@ -65,7 +68,6 @@ public class PersonalJPanel extends javax.swing.JPanel {
         lblLocation = new javax.swing.JLabel();
         lblPayment = new javax.swing.JLabel();
         btnEdit = new javax.swing.JButton();
-        btnChangePassword = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         txtName = new javax.swing.JTextField();
@@ -82,7 +84,6 @@ public class PersonalJPanel extends javax.swing.JPanel {
         txtBudget = new javax.swing.JTextField();
         txtLocation = new javax.swing.JTextField();
         txtPayment = new javax.swing.JTextField();
-        txtPassword = new javax.swing.JTextField();
         btnClose = new javax.swing.JButton();
         lblAccountActivity = new javax.swing.JLabel();
         cmbAccountActivity = new javax.swing.JComboBox<>();
@@ -124,8 +125,6 @@ public class PersonalJPanel extends javax.swing.JPanel {
                 btnEditActionPerformed(evt);
             }
         });
-
-        btnChangePassword.setText("Change Password");
 
         btnSave.setText("Save");
         btnSave.addActionListener(new java.awt.event.ActionListener() {
@@ -222,9 +221,7 @@ public class PersonalJPanel extends javax.swing.JPanel {
                                 .addComponent(cmbAccountActivity, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnClose)
                             .addComponent(lblRequestDescription)
-                            .addComponent(jScrollPane1)))
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnChangePassword))
+                            .addComponent(jScrollPane1))))
                 .addContainerGap(370, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -296,16 +293,12 @@ public class PersonalJPanel extends javax.swing.JPanel {
                             .addComponent(btnEdit)
                             .addComponent(btnCancel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnChangePassword))
+                        .addComponent(btnSave))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnClose)))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -575,6 +568,12 @@ public class PersonalJPanel extends javax.swing.JPanel {
         originalPayment = payment;
         originalBudget = budget;
 
+        if (userAccountDAO != null) {
+            userAccountDAO.saveAll(
+                system.getUserAccountDirectory().getUserAccounts()
+            );
+        }
+        
         // Refresh display and disable editing
         populateFields();
         setEditing(false);
@@ -588,7 +587,6 @@ public class PersonalJPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
-    private javax.swing.JButton btnChangePassword;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSave;
@@ -617,7 +615,6 @@ public class PersonalJPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtLocation;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtOrders;
-    private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtPayment;
     private javax.swing.JTextField txtPhone;
     private javax.swing.JTextField txtPoints;
@@ -655,8 +652,6 @@ public class PersonalJPanel extends javax.swing.JPanel {
         txtLocation.setText(profile.getPreferredLocation());
         txtPayment.setText(profile.getPreferredPaymentMethod());
 
-        txtPassword.setText("********");
-
         originalName = txtName.getText();
         originalEmail = txtEmail.getText();
         originalPhone = txtPhone.getText();
@@ -689,12 +684,10 @@ public class PersonalJPanel extends javax.swing.JPanel {
         txtCompletedOrders.setEditable(false);
         txtPoints.setEditable(false);
         txtSpending.setEditable(false);
-        txtPassword.setEditable(false);
 
         btnEdit.setEnabled(!editing);
         btnSave.setEnabled(editing);
         btnCancel.setEnabled(editing);
-        btnChangePassword.setEnabled(true);
         btnClose.setEnabled(true);
     }
     

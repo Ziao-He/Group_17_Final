@@ -16,7 +16,11 @@ import java.util.List;
 
 /**
  *
+<<<<<<< Updated upstream
  * @author Administrator
+=======
+ * @author Linyiyang
+>>>>>>> Stashed changes
  */
 public class OderFileDAO implements OderDAO{
      private static final String FILE_PATH = "data/orders.csv";
@@ -25,7 +29,10 @@ public class OderFileDAO implements OderDAO{
         initFile();
     }
 
+<<<<<<< Updated upstream
     // ✅ 初始化文件（带表头）
+=======
+>>>>>>> Stashed changes
     private void initFile() {
         try {
             File file = new File(FILE_PATH);
@@ -42,12 +49,19 @@ public class OderFileDAO implements OderDAO{
         }
     }
 
+<<<<<<< Updated upstream
     // ✅ 保存全部 Orders
+=======
+>>>>>>> Stashed changes
     @Override
     public void saveAll(List<Order> orders) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH))) {
 
+<<<<<<< Updated upstream
             // 表头
+=======
+            
+>>>>>>> Stashed changes
             bw.write("orderId,listingId,buyerId,sellerId,totalPrice,quantity,status,deliveryMethod,meetingLocation,isReviewed,buyerRating");
             bw.newLine();
 
@@ -73,14 +87,21 @@ public class OderFileDAO implements OderDAO{
         }
     }
 
+<<<<<<< Updated upstream
     // ✅ 读取全部 Orders
+=======
+>>>>>>> Stashed changes
     @Override
     public List<Order> loadAll() {
         List<Order> list = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_PATH))) {
 
+<<<<<<< Updated upstream
             String line = br.readLine(); // 跳过表头
+=======
+            String line = br.readLine();
+>>>>>>> Stashed changes
 
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(",", -1);

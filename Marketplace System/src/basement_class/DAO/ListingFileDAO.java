@@ -18,7 +18,11 @@ import java.util.List;
 
 /**
  *
+<<<<<<< Updated upstream
  * @author Administrator
+=======
+ * @author Linyiyang
+>>>>>>> Stashed changes
  */
 public class ListingFileDAO implements ListingDAO{
     private static final String FILE_PATH = "data/listings.csv";

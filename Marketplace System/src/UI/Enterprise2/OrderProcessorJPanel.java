@@ -222,12 +222,11 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
         mainFrame.dispose();
 
-        // ✅ 3️⃣ 用【同一个 system】重新打开 Login
         LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
         loginPage.setVisible(true);
+<<<<<<< Updated upstream
                 OdedrService orderService = new OdedrService(
                 new OderFileDAO(),
                 system.getOrderDirectory()
@@ -238,6 +237,18 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
             new ListingFileDAO(),
             system.getListingDirectory()
         ).saveListings();
+=======
+            new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+    new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
+
+>>>>>>> Stashed changes
     }//GEN-LAST:event_btnLogoutActionPerformed
 
 

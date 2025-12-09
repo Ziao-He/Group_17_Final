@@ -9,6 +9,7 @@ import basement_class.Enterprise;
 import basement_class.Enterprise_1.Organization.OrderSelfTrackerOrganization;
 import basement_class.Enterprise_1.WorkRequest.OrderProcessingResultRequest;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
+import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.WorkRequest.OrderReviewRequest;
 import basement_class.Network;
 import basement_class.Organization;
@@ -467,6 +468,28 @@ public class ReviewOrdersJPanel extends javax.swing.JPanel {
         // =========================================================
         // ✅ 完成提示 + 刷新
         // =========================================================
+        Listing relatedListing =
+        system.getListingDirectory().findById(order.getListingId());
+
+        if (relatedListing != null) {
+
+            // 只有在 Reserved 状态才允许回滚
+            if ("Reserved".equalsIgnoreCase(relatedListing.getStatus())) {
+                relatedListing.setStatus("Approved");
+
+                // ✅ 如果 ListingDirectory 有 update 方法
+                system.getListingDirectory().updateListing(relatedListing);
+
+                System.out.println("Listing "
+                        + relatedListing.getId()
+                        + " reverted from Reserved to Approved.");
+            }
+
+        } else {
+            System.err.println("⚠ Listing not found for Order: "
+                    + order.getOrderId());
+        }
+        
         JOptionPane.showMessageDialog(this,
                 "Order rejected successfully.",
                 "Success",

@@ -5,6 +5,10 @@
 package UI.Enterprise4;
 
 import UI.main.LoginPage;
+import basement_class.DAO.ListingFileDAO;
+import basement_class.DAO.ListingService;
+import basement_class.DAO.OdedrService;
+import basement_class.DAO.OderFileDAO;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_4.CommunicationServiceOrganization;
@@ -191,6 +195,15 @@ public class HelpCenterWorkAreaPanel extends javax.swing.JPanel {
 
         LoginPage loginPage = new LoginPage(system);
         loginPage.setVisible(true);
+            new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+    new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
 
     }//GEN-LAST:event_btnLogoutActionPerformed
 

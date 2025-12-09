@@ -10,7 +10,11 @@ import java.util.List;
 
 /**
  *
+<<<<<<< Updated upstream
  * @author Administrator
+=======
+ * @author Linyiyang
+>>>>>>> Stashed changes
  */
 public class OdedrService {
     private final OderDAO dao;
@@ -21,7 +25,10 @@ public class OdedrService {
         this.directory = directory;
     }
 
+<<<<<<< Updated upstream
     // ✅ 启动时加载订单
+=======
+>>>>>>> Stashed changes
     public void loadOrders() {
         List<Order> orders = dao.loadAll();
         for (Order o : orders) {
@@ -29,7 +36,10 @@ public class OdedrService {
         }
     }
 
+<<<<<<< Updated upstream
     // ✅ 进入 Login 页面时保存
+=======
+>>>>>>> Stashed changes
     public void saveOrders() {
         dao.saveAll(directory.getAllOrders());
 }

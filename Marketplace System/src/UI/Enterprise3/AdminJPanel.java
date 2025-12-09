@@ -252,6 +252,7 @@ public class AdminJPanel extends javax.swing.JPanel {
     // ✅ 3️⃣ 用【同一个 system】重新打开 Login
     LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
     loginPage.setVisible(true);
+<<<<<<< Updated upstream
             OdedrService orderService = new OdedrService(
                 new OderFileDAO(),
                 system.getOrderDirectory()
@@ -262,6 +263,18 @@ public class AdminJPanel extends javax.swing.JPanel {
             new ListingFileDAO(),
             system.getListingDirectory()
         ).saveListings();
+=======
+        new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+    new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
+
+>>>>>>> Stashed changes
     
     }//GEN-LAST:event_btnLogoutActionPerformed
 
@@ -336,6 +349,7 @@ private void configureButtonByOrganization() {
         btnAccountManagement.setVisible(true);
         btnRegistrationReview.setVisible(true);
         btnHistory.setVisible(true);
+
         return;
     }
 
@@ -344,6 +358,7 @@ private void configureButtonByOrganization() {
         btnContentModeration.setVisible(true);
         btnPolicyEnforcement.setVisible(true);
         btnHistory.setVisible(true);
+ 
         return;
     }
 }

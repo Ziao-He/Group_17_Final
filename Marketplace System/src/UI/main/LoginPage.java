@@ -12,6 +12,7 @@ import basement_class.DAO.OderFileDAO;
 import basement_class.DAO.UserAccountDAO;
 import basement_class.DAO.UserAccountFileDAO;
 import basement_class.DAO.UserAccountService;
+import basement_class.Enterprise_1.Account.BuyerAccount;
 import basement_class.Enterprise_2.Listing;
 import basement_class.Enterprise_2.ListingDirectory;
 import javax.swing.*;
@@ -48,9 +49,15 @@ public class LoginPage extends javax.swing.JFrame {
         UserAccountService userService = new UserAccountService(dao, system);
     
 // ✅ 启动一次性加载
+<<<<<<< Updated upstream
      userService.loadAllUsers();
      userService.distributeUsersToOrganizations();
 //     initDemoListings();
+=======
+     //userService.loadAllUsers();
+     //userService.distributeUsersToOrganizations();
+     bindRealSellerForListings(system);
+>>>>>>> Stashed changes
         initComponents();
     }
     
@@ -76,7 +83,6 @@ public class LoginPage extends javax.swing.JFrame {
         lblPass = new javax.swing.JLabel();
         txtPass = new javax.swing.JTextField();
         btnLogin = new javax.swing.JButton();
-        btnSign = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -109,13 +115,6 @@ public class LoginPage extends javax.swing.JFrame {
             }
         });
 
-        btnSign.setText("Sign up");
-        btnSign.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSignActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout LoginPageLayout = new javax.swing.GroupLayout(LoginPage);
         LoginPage.setLayout(LoginPageLayout);
         LoginPageLayout.setHorizontalGroup(
@@ -130,19 +129,17 @@ public class LoginPage extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(lblTitle)))
                         .addGap(22, 22, 22))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginPageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(LoginPageLayout.createSequentialGroup()
-                            .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSign, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(LoginPageLayout.createSequentialGroup()
-                            .addGroup(LoginPageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblUser)
-                                .addComponent(lblPass, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(LoginPageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginPageLayout.createSequentialGroup()
+                        .addGroup(LoginPageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblUser)
+                            .addComponent(lblPass, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(LoginPageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(LoginPageLayout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(280, Short.MAX_VALUE))
         );
         LoginPageLayout.setVerticalGroup(
@@ -160,11 +157,9 @@ public class LoginPage extends javax.swing.JFrame {
                 .addGroup(LoginPageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPass)
                     .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(49, 49, 49)
-                .addGroup(LoginPageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnLogin)
-                    .addComponent(btnSign))
-                .addContainerGap(343, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addComponent(btnLogin)
+                .addContainerGap(347, Short.MAX_VALUE))
         );
 
         getContentPane().add(LoginPage, "card2");
@@ -173,158 +168,7 @@ public class LoginPage extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-//
-//    String username = txtUser.getText().trim();
-//    String password = txtPass.getText().trim();
-//
-//    // ===== 1️⃣ 基础校验 =====
-//    if (username.isEmpty() || password.isEmpty()) {
-//        JOptionPane.showMessageDialog(this, "Please enter username and password");
-//        return;
-//    }
-//
-//    UserAccount loginUser = null;
-//    Organization userOrg = null;
-//    Enterprise userEnterprise = null;
-//    
-//    
-//
-//    // =====================================================
-//    // ✅ 2️⃣ 超级管理员登录（SystemAdmin → 不走 Organization）
-//    // =====================================================
-//    loginUser = system.getUserAccountDirectory().findByUsername(username);
-//
-//    if (loginUser != null 
-//        && loginUser.authenticate(password)
-//        && loginUser.getRole().getClass().getSimpleName().equals("SystemAdminRole")) {
-//
-//        loginUser.recordLogin();
-//
-//        JPanel workArea = new SuperAdmin(system, loginUser);
-//
-//        this.setContentPane(workArea);
-//        this.revalidate();
-//        this.repaint();
-//
-//        JOptionPane.showMessageDialog(workArea,
-//            "Welcome System Admin: " + loginUser.getUsername(),
-//            "Login Successful",
-//            JOptionPane.INFORMATION_MESSAGE);
-//        return;
-//    }
-//
-//    // =====================================================
-//    // ✅ 3️⃣ 普通用户 & Enterprise 3 管理员（按 Organization 查找）
-//    // =====================================================
-//    for (Network network : system.getNetworks()) {
-//        for (Enterprise enterprise : network.getEnterprises()) {
-//            for (Organization org : enterprise.getOrganizations()) {
-//
-//                UserAccount ua =
-//                    org.getUserAccountDirectory().findByUsername(username);
-//
-//                if (ua != null && ua.authenticate(password)) {
-//                    loginUser = ua;
-//                    userOrg = org;
-//                    userEnterprise = enterprise;
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//    // ===== 4️⃣ 登录失败 =====
-//    if (loginUser == null) {
-//        JOptionPane.showMessageDialog(this,
-//            "Invalid username or password",
-//            "Login Failed",
-//            JOptionPane.ERROR_MESSAGE);
-//        return;
-//    }
-//
-//    // ===== 5️⃣ 状态校验 =====
-//    if (!loginUser.isActive()) {
-//        JOptionPane.showMessageDialog(this,
-//            "Your account is currently: " + loginUser.getStatus(),
-//            "Account Disabled",
-//            JOptionPane.WARNING_MESSAGE);
-//        return;
-//    }
-//
-//    // ===== 6️⃣ 记录登录时间 =====
-//    loginUser.recordLogin();
-//
-//    JPanel workArea = null;
-//
-//    // =====================================================
-//    // ✅ Enterprise 1 — Buyer
-//    // =====================================================
-//    if (loginUser instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
-//
-//        workArea = new UI.Enterprise1.BuyerJPanel(
-//            (basement_class.Enterprise_1.Account.BuyerAccount) loginUser,
-//            userOrg,
-//            userEnterprise,
-//            system
-//        );
-//    }
-//
-//    // =====================================================
-//    // ✅ Enterprise 2 — Seller
-//    // =====================================================
-//    else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount) {
-//
-//        workArea = new UI.Enterprise2.SellerJPanel(
-//            (basement_class.Enterprise_2.Account.SellerAccount) loginUser,
-//            userOrg,
-//            userEnterprise,
-//            system
-//        );
-//    }
-//
-//    // =====================================================
-//    // ✅ ✅ ✅ Enterprise 3 — 所有管理员统一进 AdminJPanel
-//    // ✅ ✅ ✅ 后续由 Organization 控制按钮权限
-//    // =====================================================
-//    else {
-//        if (loginUser.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole) {
-//
-//        for (Network n : system.getNetworks()) {
-//            if (!n.getEnterprises().isEmpty()) {
-//                userEnterprise = n.getEnterprises().get(0);   // ✅ 你唯一的 Enterprise 3
-//                break;
-//            }
-//        }
-//    }
-//        
-//        workArea = new UI.Enterprise3.AdminJPanel(
-//            system,
-//            loginUser,
-//            userEnterprise,
-//            userOrg
-//        );
-//    }
-//
-//    // ===== 7️⃣ 防止空跳转 =====
-//    if (workArea == null) {
-//        JOptionPane.showMessageDialog(this,
-//            "No workspace found for your account type",
-//            "Configuration Error",
-//            JOptionPane.ERROR_MESSAGE);
-//        return;
-//    }
-//
-//    // ===== 8️⃣ 切换界面 =====
-//    this.setContentPane(workArea);
-//    this.revalidate();
-//    this.repaint();
-//
-//    JOptionPane.showMessageDialog(workArea,
-//        "Welcome " + loginUser.getUsername() +
-//        "\nOrganization: " + (userOrg == null ? "System Admin" : userOrg.getName()),
-//        "Login Successful",
-//        JOptionPane.INFORMATION_MESSAGE);
-//        // =========================================
+
         // ===============================
     // ✅ 1️⃣ 读取用户名和密码
     // ===============================
@@ -357,6 +201,24 @@ public class LoginPage extends javax.swing.JFrame {
     // ============================================================
     // ✅ 5️⃣ 普通用户 / Enterprise 管理员登录（按 Organization 查找）
     // ============================================================
+    if (loginUser instanceof basement_class.Enterprise_4.SystemAccount){
+            JPanel workArea = null;
+            workArea = new UI.Enterprise4.SysAdminJPanel(system); 
+            this.setContentPane(workArea);
+            this.revalidate();
+            this.repaint();
+            this.pack();                      
+            this.setLocationRelativeTo(null);
+    
+    JOptionPane.showMessageDialog(workArea,
+            "Welcome " + loginUser.getUsername()
+            + "\nOrganization: " + (userOrg == null ? "System Admin" : userOrg.getName()),
+            "Login Successful",
+            JOptionPane.INFORMATION_MESSAGE);
+    return;
+               
+    }
+    
     for (Network network : system.getNetworks()) {
         for (Enterprise enterprise : network.getEnterprises()) {
             for (Organization org : enterprise.getOrganizations()) {
@@ -364,6 +226,7 @@ public class LoginPage extends javax.swing.JFrame {
                 UserAccount ua =
                         org.getUserAccountDirectory().findByUsername(username);
 
+                
                 if (ua != null && ua.authenticate(password)) {
                     loginUser = ua;
                     userOrg = org;
@@ -409,7 +272,14 @@ public class LoginPage extends javax.swing.JFrame {
     if (loginUser instanceof basement_class.Enterprise_1.Account.BuyerAccount) {
         if (!loginUser.getUsername().equals(username)
                 || !loginUser.getPasswordHash().equals(password)) {
+            if (!loginUser.getStatus().equals("ACTIVE")){
+                    JOptionPane.showMessageDialog(this,
+                        "Your are banned.",
+                        "Login Error",
+                        JOptionPane.ERROR_MESSAGE);
 
+                return; // stop entering Buyer panel
+            }
             JOptionPane.showMessageDialog(this,
                     "Username and password do not match the same account.",
                     "Login Error",
@@ -429,18 +299,32 @@ public class LoginPage extends javax.swing.JFrame {
     // ✅ ✅ ✅ Enterprise 2 — Seller（✅ 预留）
     // ============================================================
     else if (loginUser instanceof basement_class.Enterprise_2.Account.SellerAccount sellerAccount) {
+    
+        // 首先验证密码
+        if (!sellerAccount.getPasswordHash().equals(password)) {
+            JOptionPane.showMessageDialog(this,
+                    "Password is incorrect.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 然后检查账号状态
+        if (!sellerAccount.isActive()) {
+            JOptionPane.showMessageDialog(this,
+                    "Your account has been banned or is not active.",
+                    "Account Banned",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         Role role = sellerAccount.getRole();
 
         if (role instanceof basement_class.Enterprise_2.Role.SellerRole) {
-
             workArea = new UI.Enterprise2.SellerJPanel(sellerAccount, userOrg, userEnterprise, system);
-
         } else if (role instanceof basement_class.Enterprise_2.Role.ListingManagerRole) {
-
             workArea = new UI.Enterprise2.ListingManagerJPanel(
                     sellerAccount, userOrg, userEnterprise, system);
-
         } else {
             JOptionPane.showMessageDialog(this,
                     "Unknown role for Seller account.",
@@ -450,6 +334,24 @@ public class LoginPage extends javax.swing.JFrame {
         }
     }
     else if (loginUser instanceof basement_class.Enterprise_2.Account.OrderProcessorAccount orderProcessorAccount) {
+
+        // 验证密码
+        if (!orderProcessorAccount.getPasswordHash().equals(password)) {
+            JOptionPane.showMessageDialog(this,
+                    "Password is incorrect.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 检查账号状态
+        if (!orderProcessorAccount.isActive()) {
+            JOptionPane.showMessageDialog(this,
+                    "Your account has been banned or is not active.",
+                    "Account Banned",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         workArea = new UI.Enterprise2.OrderProcessorJPanel(
                 orderProcessorAccount, userOrg, userEnterprise, system);
@@ -559,11 +461,6 @@ public class LoginPage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUserActionPerformed
 
-    private void btnSignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btnSignActionPerformed
-
     /**
      * @param args the command line arguments
      */
@@ -603,7 +500,6 @@ public class LoginPage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel LoginPage;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JButton btnSign;
     private javax.swing.JLabel lblPass;
     private javax.swing.JLabel lblSubtitle;
     private javax.swing.JLabel lblTitle;
@@ -727,4 +623,19 @@ public class LoginPage extends javax.swing.JFrame {
    }
 
     
+   public static void bindRealSellerForListings(EcoSystem system) {
+        for (Listing listing : system.getListingDirectory().getAllListings()) {
+
+            String sellerId = listing.getSellerId();
+
+            if (sellerId == null) continue;
+
+            UserAccount realSeller =
+                    system.getUserAccountDirectory().findByUserId(sellerId);
+
+            if (realSeller != null) {
+                listing.setSeller(realSeller);  
+            }
+        }
+    }
 }

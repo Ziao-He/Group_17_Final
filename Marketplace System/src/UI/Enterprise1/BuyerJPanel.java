@@ -9,6 +9,10 @@ import basement_class.DAO.ListingFileDAO;
 import basement_class.DAO.ListingService;
 import basement_class.DAO.OdedrService;
 import basement_class.DAO.OderFileDAO;
+<<<<<<< Updated upstream
+=======
+import basement_class.DAO.UserAccountFileDAO;
+>>>>>>> Stashed changes
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_1.Account.BuyerAccount;
@@ -211,6 +215,7 @@ public class BuyerJPanel extends javax.swing.JPanel {
 
         LoginPage loginPage = new LoginPage(system);
         loginPage.setVisible(true);
+<<<<<<< Updated upstream
                 OdedrService orderService = new OdedrService(
                 new OderFileDAO(),
                 system.getOrderDirectory()
@@ -221,6 +226,26 @@ public class BuyerJPanel extends javax.swing.JPanel {
             new ListingFileDAO(),
             system.getListingDirectory()
         ).saveListings();
+=======
+        new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+        new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
+        
+        UserAccountFileDAO dao = new UserAccountFileDAO();
+
+        dao.saveAll(
+            EcoSystem.getInstance()
+                     .getUserAccountDirectory()
+                     .getUserAccounts()
+        );
+
+>>>>>>> Stashed changes
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnSwitchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSwitchActionPerformed

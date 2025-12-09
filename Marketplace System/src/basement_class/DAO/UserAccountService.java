@@ -14,7 +14,7 @@ import java.util.UUID;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class UserAccountService {
        private final UserAccountDAO dao;
@@ -25,20 +25,17 @@ public class UserAccountService {
         this.system = system;
     }
 
-    // ✅ 系统启动时调用一次
     public void loadAllUsers() {
         for (UserAccount ua : dao.loadAll()) {
             system.getUserAccountDirectory().addUserAccount(ua);
         }
     }
 
-    // ✅ 注册
     public void register(UserAccount account) {
         system.getUserAccountDirectory().addUserAccount(account);
         dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
     }
 
-    // ✅ 登录
     public UserAccount login(String username, String password) {
         UserAccount ua =
             system.getUserAccountDirectory().findByUsername(username);
@@ -51,19 +48,16 @@ public class UserAccountService {
         return null;
     }
 
-    // ✅ 封号 / 解封
     public void updateStatus(UserAccount ua, String status) {
         ua.setStatus(status);
         dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
     }
 
-    // ✅ 警告
     public void addWarning(UserAccount ua) {
         ua.incrementWarning();
         dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
     }
 
-    // ✅ 删除账号
     public void delete(UserAccount ua) {
         system.getUserAccountDirectory().removeUserAccount(ua);
         dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
@@ -73,7 +67,7 @@ public void distributeUsersToOrganizations() {
 
     System.out.println("\n===== [START REDISTRIBUTE] =====");
 
-    // ✅ 打印 system 中的所有用户 + 角色
+ 
     for (UserAccount ua : system.getUserAccountDirectory().getUserAccounts()) {
         System.out.println(
             "[SYSTEM USER] " + ua.getUsername()
@@ -81,13 +75,12 @@ public void distributeUsersToOrganizations() {
         );
     }
 
-    // ✅ 原有逻辑（你现在用的那一版）
     for (Network n : system.getNetworks()) {
         for (Enterprise e : n.getEnterprises()) {
             for (Organization o : e.getOrganizations()) {
                 o.getUserAccountDirectory().getUserAccounts().clear();
 
-                // 🔍 打印每个 org 拥有哪些 role
+               
                 System.out.println(
                     "[ORG ROLE] " + e.getName() + " -> " + o.getName()
                     + " roles = " + o.getRoles()
@@ -129,14 +122,13 @@ public UserAccount registerUser(
         String phone,
         String userType   // "BUYER" or "SELLER"
 ) {
-    // ✅ 1️⃣ 重名校验
+  
     if (system.getUserAccountDirectory().findByUsername(username) != null) {
         throw new IllegalArgumentException("Username already exists");
     }
 
     UserAccount ua;
 
-    // ✅ 2️⃣ 只允许注册 Enterprise 1 和 2
     if ("BUYER".equalsIgnoreCase(userType)) {
         ua = new basement_class.Enterprise_1.Account.BuyerAccount();
         ua.setRole(new basement_class.Enterprise_1.Role.BuyerRole());
@@ -151,21 +143,19 @@ public UserAccount registerUser(
         throw new IllegalArgumentException("Only Buyer and Seller can register.");
     }
 
-    // ✅ 3️⃣ 基本字段
     ua.setUserId(UUID.randomUUID().toString());
     ua.setUsername(username);
-    ua.setPasswordHash(password);   // 你现在是明文，先按现有风格
+    ua.setPasswordHash(password);   
     ua.setEmail(email);
     ua.setPhoneNumber(phone);
     ua.setStatus("ACTIVE");
 
-    // ✅ 4️⃣ 加入 system 全局目录
     system.getUserAccountDirectory().addUserAccount(ua);
 
-    // ✅ 5️⃣ 立刻回绑到 Organization（否则登录会丢 org）
+
     distributeUsersToOrganizations();
 
-    // ✅ 6️⃣ 立刻回写 CSV
+
     dao.saveAll(system.getUserAccountDirectory().getUserAccounts());
 
     return ua;

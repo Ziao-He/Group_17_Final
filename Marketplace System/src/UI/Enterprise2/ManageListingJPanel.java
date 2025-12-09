@@ -19,6 +19,7 @@ import basement_class.Network;
 import basement_class.Organization;
 import basement_class.UserAccount;
 import common_class.Order;
+import java.awt.BorderLayout;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -35,6 +36,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 /**
@@ -47,14 +49,16 @@ public class ManageListingJPanel extends javax.swing.JPanel {
     private SellerAccount seller;
     private SellerOrganization sellerOrg;
     private final JFileChooser fileChooser = new JFileChooser();
+    private JPanel workProcessJPanel;
     ImageIcon logoImage;
     /**
      * Creates new form SellerJPanel
      */
-    public ManageListingJPanel(EcoSystem system,SellerAccount seller,SellerOrganization org) {
+    public ManageListingJPanel(JPanel workProcessJPanel,EcoSystem system,SellerAccount seller,SellerOrganization org) {
         initComponents();
         this.system=system;
         this.seller=seller;
+        this.workProcessJPanel = workProcessJPanel;
         this.sellerOrg = org;
         FileFilter jpegFilter = new FileNameExtensionFilter("JPEG file", "jpg", "jpeg");
         FileFilter pngFilter = new FileNameExtensionFilter("PNG file", "png");
@@ -302,7 +306,6 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRow = tblListing.getSelectedRow();
 
-        // 2. Check if there are any selected rows
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
                 "Please select a listing from the table first.",
@@ -312,27 +315,21 @@ public class ManageListingJPanel extends javax.swing.JPanel {
         }
 
         try {
-            // 3. Obtain from the selected row Listing ID
-            String listingId = (String) tblListing.getValueAt(selectedRow, 1); // The second column is the ID
+            // 1.Obtain the Listing ID 
+            String listingId = (String) tblListing.getValueAt(selectedRow, 1);
 
-            // 4. Search for the Listing object based on the ID
-            Listing selectedListing = null;
-            for (Listing listing : seller.getListings()) {
-                if (listing.getId().equals(listingId)) {
-                    selectedListing = listing;
-                    break;
-                }
-            }
+            // 2. Search for the corresponding listing from the system
+            Listing selectedListing = system.getListingDirectory().findById(listingId);
 
             if (selectedListing == null) {
                 JOptionPane.showMessageDialog(this,
-                    "Selected listing not found in seller's list.",
+                    "Selected listing not found in system.",
                     "Listing Not Found",
                     JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // 5. Fill the Listing information into the text box
+            // 3. Fill in the basic information of the Listing
             txtID.setText(selectedListing.getId());
             txtTitle.setText(selectedListing.getTitle());
             txtDescription.setText(selectedListing.getDescription());
@@ -340,59 +337,39 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             txtStatus.setText(selectedListing.getStatus());
             txtQuantity.setText(String.valueOf(selectedListing.getQuantity()));
 
-            // Format the submission time
+            // 5. Display the submission time
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String submitTime = dateFormat.format(
-                Date.from(selectedListing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())
+                Date.from(selectedListing.getSubmitTime()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant())
             );
             txtSubmitTime.setText(submitTime);
 
             // 6. Display picture
             String imagePath = selectedListing.getImagePath();
-            System.out.println("Loading image from path: " + imagePath);
-
-            // Clear the previous display
             imgLogo.setIcon(null);
 
             if (imagePath != null && !imagePath.trim().isEmpty()) {
-                try {
-                    File imageFile = new File(imagePath);
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    ImageIcon listingImage = new ImageIcon(imageFile.getAbsolutePath());
+                    if (listingImage.getIconWidth() > 0 && listingImage.getIconHeight() > 0) {
 
-                    // Debugging information
-                    System.out.println("Image file absolute path: " + imageFile.getAbsolutePath());
-                    System.out.println("Image file exists: " + imageFile.exists());
+                        int width = imgLogo.getWidth() > 0 ? imgLogo.getWidth() : 150;
+                        int height = imgLogo.getHeight() > 0 ? imgLogo.getHeight() : 150;
 
-                    if (imageFile.exists()) {
-                        // Load the picture
-                        ImageIcon listingImage = new ImageIcon(imageFile.getAbsolutePath());
+                        Image scaledImage = listingImage.getImage()
+                            .getScaledInstance(width, height, Image.SCALE_SMOOTH);
 
-                        // Check whether the picture is loaded effectively
-                        if (listingImage.getIconWidth() > 0 && listingImage.getIconHeight() > 0) {
-                            // Resize to fit the display area
-                            int width = imgLogo.getWidth() > 0 ? imgLogo.getWidth() : 150;
-                            int height = imgLogo.getHeight() > 0 ? imgLogo.getHeight() : 150;
-
-                            Image scaledImage = listingImage.getImage().getScaledInstance(
-                                width, height, Image.SCALE_SMOOTH);
-
-                            imgLogo.setIcon(new ImageIcon(scaledImage));
-                            System.out.println("Image loaded and displayed successfully");
-                        } else {
-                            System.out.println("Image loaded but has zero dimensions");
-                        }
-                    } else {
-                        System.out.println("Image file does not exist: " + imageFile.getAbsolutePath());
+                        imgLogo.setIcon(new ImageIcon(scaledImage));
                     }
-
-                } catch (Exception e) {
-                    System.err.println("Error loading image: " + e.getMessage());
                 }
-            } else {
-                System.out.println("No image path specified for this listing");
             }
 
-            // 7.Output debug information in the console
-            System.out.println("Viewing listing: " + selectedListing.getId() + " - " + selectedListing.getTitle());
+            // 7. Debug output
+            System.out.println("Viewing listing: " + selectedListing.getId()
+                + " | seller = " + selectedListing.getSellerId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -419,18 +396,12 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             // 1. Get listing ID from table
             String listingId = (String) tblListing.getValueAt(selectedRow, 1);
 
-            // 2. Find listing object from seller
-            Listing selectedListing = null;
-            for (Listing listing : seller.getListings()) {
-                if (listing.getId().equals(listingId)) {
-                    selectedListing = listing;
-                    break;
-                }
-            }
+            
+            Listing selectedListing = system.getListingDirectory().findById(listingId);
 
             if (selectedListing == null) {
                 JOptionPane.showMessageDialog(this,
-                    "Listing not found.",
+                    "Listing not found in system.",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
                 return;
@@ -448,10 +419,10 @@ public class ManageListingJPanel extends javax.swing.JPanel {
             selectedListing.setPrice(newPrice);
             selectedListing.setQuantity(newQuantity);
 
-            // 5. Update submit time to "now" (optional but realistic)
+            // 5. Update submit time
             selectedListing.setSubmitTime(LocalDateTime.now());
 
-            // 6. Update table row to reflect changes
+            // 6. Update table
             DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
             model.setValueAt(newTitle, selectedRow, 0);
             model.setValueAt(String.format("$%.2f", newPrice), selectedRow, 2);
@@ -463,9 +434,8 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                             .toInstant()));
 
             model.setValueAt(updatedTime, selectedRow, 4);
-            model.setValueAt(newQuantity, selectedRow, 5);  // Quantity column
+            model.setValueAt(newQuantity, selectedRow, 5);
 
-            // 7. Notify user
             JOptionPane.showMessageDialog(this,
                 "Listing updated successfully!",
                 "Success",
@@ -483,7 +453,8 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 "System Error",
                 JOptionPane.ERROR_MESSAGE);
         }
-        clearForm(); 
+
+        clearForm();
         setViewMode();
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -586,11 +557,11 @@ public class ManageListingJPanel extends javax.swing.JPanel {
                 commOrg
         );
 
-        // 9. switch Chat Panel
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        frame.setContentPane(chatPanel);
-        frame.revalidate();
-        frame.repaint();
+        workProcessJPanel.removeAll();
+        workProcessJPanel.setLayout(new BorderLayout());
+        workProcessJPanel.add(chatPanel, BorderLayout.CENTER);
+        workProcessJPanel.revalidate();
+        workProcessJPanel.repaint();
     }//GEN-LAST:event_btnTalkWithUserActionPerformed
 
 
@@ -623,36 +594,41 @@ public class ManageListingJPanel extends javax.swing.JPanel {
 
 
     private void loadSellerListings() {
-        // 1. Get all the listings of the current seller
-        List<Listing> sellerListings = seller.getListings();
+        // Get all listings of current seller from ListingDirectory
+        List<Listing> sellerListings = system.getListingDirectory()
+            .findBySellerId(seller.getUserId());
 
         // 2. Obtain the table model
         DefaultTableModel model = (DefaultTableModel) tblListing.getModel();
 
-        // 3. Clear the existing data in the table
+        // 3. Clear existing data
         model.setRowCount(0);
 
-        // 4. Add data to the table
+        // 4. Add data to table
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         for (Listing listing : sellerListings) {
             Object[] rowData = new Object[6];
 
-            rowData[0] = listing.getTitle();                // Title
-            rowData[1] = listing.getId();                   // ID
-            rowData[2] = String.format("$%.2f", listing.getPrice()); // Price
-            rowData[3] = listing.getStatus();               // Status
-            rowData[4] = dateFormat.format(Date.from(listing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())); // Submit Date
-            rowData[5] = listing.getQuantity();   
+            rowData[0] = listing.getTitle();
+            rowData[1] = listing.getId();
+            rowData[2] = String.format("$%.2f", listing.getPrice());
+            rowData[3] = listing.getStatus();
+            rowData[4] = dateFormat.format(
+                Date.from(listing.getSubmitTime().atZone(ZoneId.systemDefault()).toInstant())
+            );
+            rowData[5] = listing.getQuantity();
+
             model.addRow(rowData);
         }
 
-        // 5. Update the table display
+        // 5. Update display
         tblListing.revalidate();
         tblListing.repaint();
 
-        // 6. Display record count
-        System.out.println("Loaded " + sellerListings.size() + " listings for seller: " + seller.getUsername());
+        // 6. Display count
+        System.out.println("✓ Loaded " + sellerListings.size() + 
+            " listings for seller: " + seller.getUsername());
     }
 
     private void clearForm() {

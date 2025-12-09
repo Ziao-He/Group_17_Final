@@ -133,6 +133,7 @@ public class IssueResolutionOrgPanel extends javax.swing.JPanel {
 
         LoginPage loginPage = new LoginPage(system);
         loginPage.setVisible(true);
+<<<<<<< Updated upstream
                 OdedrService orderService = new OdedrService(
                 new OderFileDAO(),
                 system.getOrderDirectory()
@@ -143,6 +144,17 @@ public class IssueResolutionOrgPanel extends javax.swing.JPanel {
             new ListingFileDAO(),
             system.getListingDirectory()
         ).saveListings();
+=======
+            new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+    new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
+>>>>>>> Stashed changes
     }//GEN-LAST:event_btnLogoutActionPerformed
 
 

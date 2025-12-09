@@ -9,7 +9,11 @@ import java.util.List;
 
 /**
  *
+<<<<<<< Updated upstream
  * @author Administrator
+=======
+ * @author Linyiyang
+>>>>>>> Stashed changes
  */
 public interface OderDAO {
      
