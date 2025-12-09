@@ -4,6 +4,7 @@
  */
 package service.E3;
 
+import basement_class.DAO.WorkRequestFileDAO;
 import basement_class.EcoSystem;
 import basement_class.Enterprise_3.WorkRequest.AccountStatusReviewRequest;
 import basement_class.Enterprise_3.WorkRequest.PolicyViolationRequest;
@@ -23,14 +24,16 @@ public class UserManagementService{
 
         UserAccount user = req.getTargetUser();
 
-        // 1. 修改用户状态
         user.setStatus("SUSPENDED");
 
-        // 2. 更新工单状态
         req.setStatus("SUSPENDED");
 
-        // ✅ 3. 统一审计入口（关键）
         req.resolve(admin, "SUSPEND_USER", reason);
+        new WorkRequestFileDAO().append(req);
+            EcoSystem.getInstance()
+    .getWorkRequestDirectory()
+    .addWorkRequest(req);                       
+        WorkRequestRouter.routeToEnterprise3(req);
     }
 
     /**
@@ -42,14 +45,18 @@ public class UserManagementService{
 
         UserAccount user = req.getTargetUser();
 
-        // 1. 用户恢复 ACTIVE
+
         user.setStatus("ACTIVE");
 
-        // 2. 更新工单状态
         req.setStatus("REACTIVATED");
 
-        // ✅ 3. 统一审计入口（关键）
+
         req.resolve(admin, "REACTIVATE_USER", reason);
+        new WorkRequestFileDAO().append(req);
+            EcoSystem.getInstance()
+    .getWorkRequestDirectory()
+    .addWorkRequest(req);                       
+    WorkRequestRouter.routeToEnterprise3(req);
     }
 
 
@@ -63,6 +70,11 @@ public void banUser(AccountStatusReviewRequest req, UserAccount admin,String rea
     user.setStatus("BANNED");
     req.setStatus("BANNED");
     req.resolve(admin, "REJECT_USER", reason);
+    new WorkRequestFileDAO().append(req);
+        EcoSystem.getInstance()
+    .getWorkRequestDirectory()
+    .addWorkRequest(req);                       
+    WorkRequestRouter.routeToEnterprise3(req);
 }
     
 public void rejectUser(AccountStatusReviewRequest req, UserAccount admin, String reason) {
@@ -72,8 +84,13 @@ public void rejectUser(AccountStatusReviewRequest req, UserAccount admin, String
     user.setStatus("REJECTED");
     req.setStatus("REJECTED");
 
-    // ✅ 关键：统一审计入口
+
     req.resolve(admin, "REJECT_USER", reason);
+    new WorkRequestFileDAO().append(req);
+        EcoSystem.getInstance()
+    .getWorkRequestDirectory()
+    .addWorkRequest(req);                       
+    WorkRequestRouter.routeToEnterprise3(req);
 }
 
 
@@ -93,9 +110,14 @@ public void issueWarning(AccountStatusReviewRequest req, UserAccount admin) {
 
     req.setStatus("WARNING_ISSUED");
 
-    // ✅ 统一可审计
+
     req.resolve(admin, "ISSUE_WARNING",
             "Total warnings = " + user.getWarningCount());
+    new WorkRequestFileDAO().append(req);
+        EcoSystem.getInstance()
+    .getWorkRequestDirectory()
+    .addWorkRequest(req);                       
+    WorkRequestRouter.routeToEnterprise3(req);
 }
 
 public void issueWarningByRequest(PolicyViolationRequest req,
@@ -103,7 +125,7 @@ public void issueWarningByRequest(PolicyViolationRequest req,
 
     UserAccount user = req.getTargetUser();
 
-    // 1. 警告次数 +1
+
     user.incrementWarning();
 
     if (!"BANNED".equals(user.getStatus())) {
@@ -114,7 +136,7 @@ public void issueWarningByRequest(PolicyViolationRequest req,
         user.setStatus("BANNED");
     }
 
-    // ✅ 不在这里 resolve，由 PolicyEnforcementService 统一 resolve
+    // PolicyEnforcementService resolve
 }
 }
 

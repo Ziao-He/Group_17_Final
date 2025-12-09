@@ -17,9 +17,9 @@ public class ListingReviewRequest extends WorkRequest{
     private static int counter=1;
     private Listing listing;
     private String operationType;   // "seller_request_up", "seller_request_down", "policy_force_down"
-    private String reason;          // 卖家理由 或 平台违规理由
-    private List<String> evidence;  // 仅强制下架时使用
-    private String rejectionReason; // 审核员拒绝理由
+    private String reason;          
+    private List<String> evidence;  
+    private String rejectionReason; 
 
     public ListingReviewRequest(Listing listing, String operationType, String reason) {
         super();

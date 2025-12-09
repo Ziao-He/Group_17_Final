@@ -15,6 +15,8 @@ import basement_class.Enterprise_4.Message;
 import basement_class.Enterprise_4.MessageDirectory;
 import basement_class.Enterprise_4.MessageFlagRequest;
 import basement_class.Enterprise_4.MessageHandlerRole;
+import basement_class.Enterprise_4.SystemAccount;
+import basement_class.Enterprise_4.SystemAdmin;
 import basement_class.Network;
 import basement_class.UserAccount;
 
@@ -80,6 +82,14 @@ public class Enterprise4Initializer {
         // Place it in the Issue Resolution organization
         irOrg.getUserAccountDirectory().addUserAccount(complaintHandler);
         system.getUserAccountDirectory().addUserAccount(complaintHandler);
+        
+        SystemAccount sysadmin = new SystemAccount();
+        sysadmin.setUserId("SYS-ADMIN-001");
+        sysadmin.setUsername("sys");
+        sysadmin.setPasswordHash("1234");
+        sysadmin.setStatus("ACTIVE");
+        sysadmin.setRole(new SystemAdmin());
+        system.getUserAccountDirectory().addUserAccount(sysadmin);
     }
     
 //    private static void createDemoMessagesBetweenBuyerAndSeller(EcoSystem system) {

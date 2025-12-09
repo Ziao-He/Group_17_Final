@@ -23,8 +23,8 @@ import java.util.ArrayList;
 public class ListingManagementService {
 
     private EcoSystem system;
-    private ListingHelperFunction listingDao;          // NEW: 数据持久化层
-    private ListingDirectory listingDirectory;  // NEW: 内存管理
+    private ListingHelperFunction listingDao;        
+    private ListingDirectory listingDirectory;  
 
     public ListingManagementService(EcoSystem system, ListingHelperFunction listingDao, ListingDirectory directory) {
         this.system = system;

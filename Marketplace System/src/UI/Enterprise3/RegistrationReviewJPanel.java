@@ -191,16 +191,13 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
     RegistrationApprovalRequest req =
             (RegistrationApprovalRequest) tblUser.getValueAt(row, 4);
 
-    // ✅ 只能处理 PENDING
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request has already been processed.");
         return;
     }
 
-    // ✅ 当前管理员
     UserAccount admin = this.userAccount;
 
-    // ✅ 二次确认
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm approve this registration request?",
@@ -212,13 +209,12 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 调用【审计版】Service
     RegistrationService service = new RegistrationService();
     service.approve(req, admin);
 
     JOptionPane.showMessageDialog(this, "User approved successfully!");
 
-    populateTable();  // 审批完成后从表格消失
+    populateTable();  
     }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
@@ -231,16 +227,13 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
     RegistrationApprovalRequest req =
             (RegistrationApprovalRequest) tblUser.getValueAt(row, 4);
 
-    // ✅ 只能处理 PENDING
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request has already been processed.");
         return;
     }
 
-    // ✅ 当前管理员
     UserAccount admin = this.userAccount;
 
-    // ✅ 输入拒绝理由
     String reason = JOptionPane.showInputDialog(
             this,
             "Please enter the reason for rejection:",
@@ -253,7 +246,6 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 二次确认
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm rejection with reason:\n\n" + reason,
@@ -266,16 +258,14 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 记录拒绝理由（业务字段）
     req.setReason(reason);
 
-    // ✅ 调用【审计版】Service
     RegistrationService service = new RegistrationService();
     service.reject(req, admin, reason);
 
     JOptionPane.showMessageDialog(this, "Registration request rejected.");
 
-    populateTable();   // 或你自己的 loadTable()
+    populateTable();   
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void fieldID2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fieldID2ActionPerformed
@@ -310,7 +300,6 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
 
     refreshTable(result);
 
-    // ✅ 搜索后清空输入框
     fieldID2.setText("");
 
     }//GEN-LAST:event_btnSearchByRequestID2ActionPerformed
@@ -347,7 +336,6 @@ public class RegistrationReviewJPanel extends javax.swing.JPanel {
 
     refreshTable(result);
 
-    // ✅ 搜索后清空输入框
     fieldUserName2.setText("");
     }//GEN-LAST:event_btnSearchByUserName2ActionPerformed
 
@@ -379,7 +367,7 @@ private void populateTable() {
         }
     }
 
-    refreshTable(list);   // ✅ 统一交给 refreshTable
+    refreshTable(list);   
 }
 
     private void refreshTable(java.util.List<RegistrationApprovalRequest> list) {
@@ -388,7 +376,6 @@ private void populateTable() {
 
     for (RegistrationApprovalRequest rar : list) {
 
-        // ✅ 只显示 Pending（与你现在完全一致）
         if (!"PENDING".equalsIgnoreCase(rar.getStatus())) continue;
 
         Object[] row = new Object[]{

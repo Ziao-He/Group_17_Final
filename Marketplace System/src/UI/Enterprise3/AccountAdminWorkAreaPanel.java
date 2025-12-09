@@ -192,19 +192,16 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     AccountStatusReviewRequest req =
             (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
 
-    // ✅ 防止重复处理
+   
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request is already processed.");
         return;
     }
 
-    // ✅ 获取当前管理员
     UserAccount admin = this.admin;
 
-    // ✅ 获取动作
     String action = req.getAction().toUpperCase();
 
-    // ✅ 输入审批理由
     String reason = JOptionPane.showInputDialog(
             this,
             "Please enter the reason for this action:",
@@ -217,7 +214,6 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 二次确认
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm action: " + action + "\n\nReason:\n" + reason,
@@ -229,7 +225,6 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 调用审计版 Service
     UserManagementService service = new UserManagementService();
 
     switch (action) {
@@ -250,7 +245,6 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         }
     }
 
-    // ✅ 成功提示 + 刷新
     JOptionPane.showMessageDialog(this, "Request processed successfully.");
 
     loadTable();
@@ -268,13 +262,11 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
     AccountStatusReviewRequest req =
             (AccountStatusReviewRequest) tblUser.getValueAt(row, 4);
 
-    // ✅ 防止重复处理
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request is already processed.");
         return;
     }
 
-    // ✅ 输入拒绝理由
     String reason = JOptionPane.showInputDialog(
             this,
             "Please enter the reason for rejection:",
@@ -287,7 +279,6 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 二次确认
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm rejection with reason:\n\n" + reason,
@@ -299,14 +290,13 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 获取当前管理员
     UserAccount admin = this.admin;
 
-    // ✅ 调用审计版 Service
+
     UserManagementService service = new UserManagementService();
     service.rejectUser(req, admin, reason);
 
-    // ✅ UI 提示 + 刷新
+
     JOptionPane.showMessageDialog(this, "Request rejected successfully.");
 
     loadTable();
@@ -328,12 +318,12 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         msg.append("User: ").append(req.getTargetUser().getUsername()).append("\n");
         msg.append("Action: ").append(req.getAction()).append("\n\n");
 
-        msg.append("=== Request Description (申请理由) ===\n");
+        msg.append("=== Request Description  ===\n");
         msg.append(req.getRequestDescription() == null ? 
                "No request description." : req.getRequestDescription());
         msg.append("\n\n");
 
-        msg.append("=== Reviewer Decision Reason (审核拒绝理由) ===\n");
+        msg.append("=== Reviewer Decision Reason  ===\n");
         msg.append(req.getReviewerDecisionReason() == null ? 
                "Not reviewed yet or approved." : req.getReviewerDecisionReason());
 
@@ -362,7 +352,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
         if (wr instanceof AccountStatusReviewRequest) {
             AccountStatusReviewRequest req = (AccountStatusReviewRequest) wr;
 
-            // ✅ 只查 PENDING（与你原逻辑一致）
+        
             if (!req.getStatus().equalsIgnoreCase("PENDING")) continue;
 
             if (req.getId().equalsIgnoreCase(input)) {
@@ -376,7 +366,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
                 };
                 model.addRow(row);
                 found = true;
-                break; // ID 唯一，找到就停止
+                break; 
                 
             }
         }
@@ -415,7 +405,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
 
             String username = req.getTargetUser().getUsername().toLowerCase();
 
-            // ✅ 模糊匹配
+        
             if (username.contains(keyword)) {
 
                 Object[] row = new Object[]{
@@ -471,7 +461,7 @@ public class AccountAdminWorkAreaPanel extends javax.swing.JPanel {
                        req.getTargetUser().getUsername(),
                        req.getAction(),
                        req.getStatus(),
-                       req   // 隐藏列，用来存对象
+                       req   
              };
              model.addRow(row);
             }
