@@ -1,0 +1,10 @@
+=== COMPLAINT REPORT ===
+ID: PVRQ2
+Date: Mon Dec 08 17:10:08 EST 2025
+Reporter: listingmanager1
+Target: seller1
+Listing ID: LIST-SELLER-001-0002
+Listing Title: 啊顺德区
+Category: listing_issue
+Reason: 1
+Status: Pending

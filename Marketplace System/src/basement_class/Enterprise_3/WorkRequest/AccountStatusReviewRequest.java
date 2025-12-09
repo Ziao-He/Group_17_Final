@@ -15,8 +15,8 @@ public class AccountStatusReviewRequest extends WorkRequest {
     private static int counter=1;
     private UserAccount targetUser;            
     private String action;                     // suspend, reactivate, ban
-    private String requestDescription;         // 申请人填写：为什么要申请此操作
-    private String reviewerDecisionReason;     // 审核者拒绝的理由
+    private String requestDescription;         
+    private String reviewerDecisionReason;     
 
     public AccountStatusReviewRequest(UserAccount user, String action, String requestDescription) {
         super();
@@ -35,7 +35,6 @@ public class AccountStatusReviewRequest extends WorkRequest {
         return action; 
     }
 
-    // ========== 申请人填写的理由 ==========
     public String getRequestDescription() {
         return requestDescription;
     }
@@ -44,7 +43,6 @@ public class AccountStatusReviewRequest extends WorkRequest {
         this.requestDescription = desc;
     }
 
-    // ========== 审核者拒绝填写的理由 ==========
     public String getReviewerDecisionReason() {
         return reviewerDecisionReason;
     }

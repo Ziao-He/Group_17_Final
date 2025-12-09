@@ -120,7 +120,7 @@ public static void initialize(EcoSystem system, Network network) {
 //                "keyword_violation", "Illegal keyword found");
 //
 //        contentOrg.getWorkRequestDirectory().addWorkRequest(pReq);
-//
-//        System.out.println("[Enterprise3] Platform Management initialized successfully.\n");
-    }
+
+        System.out.println("[Enterprise3] Platform Management initialized successfully.\n");
+   }
 }

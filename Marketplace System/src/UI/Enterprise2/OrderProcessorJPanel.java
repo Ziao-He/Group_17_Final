@@ -5,6 +5,10 @@
 package UI.Enterprise2;
 
 import UI.main.LoginPage;
+import basement_class.DAO.ListingFileDAO;
+import basement_class.DAO.ListingService;
+import basement_class.DAO.OdedrService;
+import basement_class.DAO.OderFileDAO;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_2.Account.OrderProcessorAccount;
@@ -218,12 +222,20 @@ public class OrderProcessorJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        // ✅ 2️⃣ 销毁旧窗口（只销毁 UI）
         mainFrame.dispose();
 
-        // ✅ 3️⃣ 用【同一个 system】重新打开 Login
         LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
         loginPage.setVisible(true);
+            new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+    new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
+
     }//GEN-LAST:event_btnLogoutActionPerformed
 
 

@@ -9,9 +9,9 @@ import java.util.List;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public interface UserAccountDAO {
-     List<UserAccount> loadAll();          // 启动加载
-    void saveAll(List<UserAccount> users); // 修改后回写
+     List<UserAccount> loadAll();          
+    void saveAll(List<UserAccount> users); 
 }

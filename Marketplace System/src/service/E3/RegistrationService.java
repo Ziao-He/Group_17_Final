@@ -4,6 +4,8 @@
  */
 package service.E3;
 
+import basement_class.DAO.WorkRequestFileDAO;
+import basement_class.EcoSystem;
 import basement_class.Enterprise_3.WorkRequest.RegistrationApprovalRequest;
 import basement_class.UserAccount;
 
@@ -17,11 +19,23 @@ public void approve(RegistrationApprovalRequest req, UserAccount admin) {
     req.getNewUser().setStatus("ACTIVE");
     req.setStatus("APPROVED");
     req.resolve(admin, "APPROVE", "Registration approved");
+
+    new WorkRequestFileDAO().append(req);
+    EcoSystem.getInstance()
+    .getWorkRequestDirectory()
+    .addWorkRequest(req);                       
+    WorkRequestRouter.routeToEnterprise3(req); 
 }
 
 public void reject(RegistrationApprovalRequest req, UserAccount admin, String reason) {
     req.getNewUser().setStatus("REJECTED");
     req.setStatus("REJECTED");
     req.resolve(admin, "REJECT", reason);
+
+    new WorkRequestFileDAO().append(req);
+    EcoSystem.getInstance()
+    .getWorkRequestDirectory()
+    .addWorkRequest(req);                       
+    WorkRequestRouter.routeToEnterprise3(req);
 }
 }

@@ -5,6 +5,10 @@
 package UI.Enterprise3;
 
 import UI.main.LoginPage;
+import basement_class.DAO.ListingFileDAO;
+import basement_class.DAO.ListingService;
+import basement_class.DAO.OdedrService;
+import basement_class.DAO.OderFileDAO;
 import basement_class.EcoSystem;
 import basement_class.Enterprise;
 import basement_class.Enterprise_3.Organization.ContentControlOrganization;
@@ -248,6 +252,16 @@ public class AdminJPanel extends javax.swing.JPanel {
     // ✅ 3️⃣ 用【同一个 system】重新打开 Login
     LoginPage loginPage = new LoginPage(system);  // ✅ 核心就在这一句！
     loginPage.setVisible(true);
+        new OdedrService(
+        new OderFileDAO(),
+        system.getOrderDirectory()
+    ).saveOrders();
+
+    new ListingService(
+        new ListingFileDAO(),
+        system.getListingDirectory()
+    ).saveListings();
+
     
     }//GEN-LAST:event_btnLogoutActionPerformed
 
@@ -322,6 +336,7 @@ private void configureButtonByOrganization() {
         btnAccountManagement.setVisible(true);
         btnRegistrationReview.setVisible(true);
         btnHistory.setVisible(true);
+
         return;
     }
 
@@ -330,6 +345,7 @@ private void configureButtonByOrganization() {
         btnContentModeration.setVisible(true);
         btnPolicyEnforcement.setVisible(true);
         btnHistory.setVisible(true);
+ 
         return;
     }
 }

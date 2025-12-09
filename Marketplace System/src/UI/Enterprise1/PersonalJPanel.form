@@ -73,8 +73,6 @@
                           <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="txtPassword" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                  <Component id="btnChangePassword" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="370" max="32767" attributes="0"/>
           </Group>
@@ -165,10 +163,6 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnSave" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtPassword" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnChangePassword" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
@@ -176,7 +170,7 @@
                       <Component id="btnClose" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="143" max="32767" attributes="0"/>
+              <EmptySpace pref="201" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -260,11 +254,6 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnChangePassword">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Change Password"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="btnSave">
       <Properties>
         <Property name="text" type="java.lang.String" value="Save"/>
@@ -311,8 +300,6 @@
       </Events>
     </Component>
     <Component class="javax.swing.JTextField" name="txtPayment">
-    </Component>
-    <Component class="javax.swing.JTextField" name="txtPassword">
     </Component>
     <Component class="javax.swing.JButton" name="btnClose">
       <Properties>

@@ -23,7 +23,6 @@ public class PlatformAdminRole extends Role {
                                  Enterprise enterprise,
                                  EcoSystem business) {
 
-        // ⚠️ 总管理员不属于某个 org，但要能访问全部 org
         return new AdminJPanel(business, account, enterprise, null);
     }
 

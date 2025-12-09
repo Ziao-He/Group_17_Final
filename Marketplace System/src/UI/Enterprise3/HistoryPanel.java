@@ -305,23 +305,23 @@ if (!found) {
 boolean isSystemAdmin =
         admin.getRole() instanceof basement_class.Enterprise_3.Role.SystemAdminRole;
 
-    // ✅✅✅ 统一从【全系统】扫描
+   
     for (Network n : system.getNetworks()) {
         for (Enterprise e : n.getEnterprises()) {
             for (Organization org : e.getOrganizations()) {
                 for (WorkRequest req : org.getWorkRequestDirectory().getRequestList()) {
 
-                    // ✅ PlatformAdmin：看所有已完成
+                  
                   if (isSystemAdmin) {
     if (req.isResolved()) {
-        addRow(req, model);   // ✅ 超级管理员：显示所有已处理
+        addRow(req, model);   
     }
 } else {
     if (req.isResolved()
             && req.getReviewer() != null
             && req.getReviewer().equals(admin)) {
 
-        addRow(req, model);  // ✅ 普通管理员：只看自己
+        addRow(req, model);  
     }
 }
                 }
@@ -338,13 +338,13 @@ boolean isSystemAdmin =
 
     row[1] = (req.getReviewer() == null)
             ? "N/A"
-            : req.getReviewer().getUsername();  // ✅ 审批人
+            : req.getReviewer().getUsername();  
 
-    row[2] = req.getReviewAction();            // ✅ 审批动作
+    row[2] = req.getReviewAction();            
 
-    row[3] = getRequestType(req);              // ✅ 请求类型
+    row[3] = getRequestType(req);              
 
-    row[4] = req;                              // ✅ 隐藏列：完整对象（供 Description 用）
+    row[4] = req;                             
 
     model.addRow(row);
 }
