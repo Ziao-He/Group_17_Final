@@ -120,6 +120,11 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         });
 
         btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         btnReport.setText("Report");
         btnReport.addActionListener(new java.awt.event.ActionListener() {
@@ -358,6 +363,10 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnReportActionPerformed
 
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCancelActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
@@ -469,14 +478,28 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         List<OrderProcessingResultRequest> all = loadRequestsForCurrentBuyer();
 
         for (OrderProcessingResultRequest req : all) {
-            String status = req.getStatus();
+    String status = req.getStatus();
+    String operationType = req.getOperationType();  // ← 添加
 
-            // Filter by status if needed
-            if (!"All".equalsIgnoreCase(filterStatus)) {
-                if (status == null || !filterStatus.equalsIgnoreCase(status)) {
-                    continue;
-                }
+    // Filter by status if needed
+    if (!"All".equalsIgnoreCase(filterStatus)) {
+        
+        // ✅ "Canceled"显示：Canceled + Rejected
+        if ("Canceled".equalsIgnoreCase(filterStatus)) {
+            boolean isCanceled = "Canceled".equalsIgnoreCase(status);
+            boolean isRejected = OrderProcessingResultRequest.OP_REJECT.equals(operationType);
+            
+            if (!isCanceled && !isRejected) {
+                continue;
             }
+        } 
+        // 其他筛选器：正常匹配
+        else {
+            if (status == null || !filterStatus.equalsIgnoreCase(status)) {
+                continue;
+            }
+        }
+    }
 
             Order order = req.getOrder();
             String title = "(unknown)";
@@ -562,126 +585,277 @@ public class TrackingOrderStatus extends javax.swing.JPanel {
         txtCancel.setText(String.valueOf(canceled));
     }
 
-    /** Handle Complete button click */
+    /** 
+     * Handle Complete button click
+     * Completes order and marks listing as Sold only if it's still Reserved
+     */
     private void handleComplete() {
         int row = tblRequest.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(this,
-                    "Please select a row first.",
-                    "No selection",
-                    JOptionPane.WARNING_MESSAGE);
+                "Please select a row first.",
+                "No selection",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         OrderProcessingResultRequest req = displayedRequests.get(row);
         if (req == null) return;
 
-        // Status checks
+        // Check if already completed
         if ("Completed".equalsIgnoreCase(req.getStatus())) {
             JOptionPane.showMessageDialog(this,
-                    "This order has already been completed.");
+                "This order has already been completed.",
+                "Already Completed",
+                JOptionPane.INFORMATION_MESSAGE);
             return;
         }
+
+        // Check if already canceled
         if ("Canceled".equalsIgnoreCase(req.getStatus())) {
             JOptionPane.showMessageDialog(this,
-                    "This order has been canceled and cannot be completed.");
+                "This order has been canceled and cannot be completed.",
+                "Order Canceled",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         // Only accepted requests can be completed
         if (!OrderProcessingResultRequest.OP_ACCEPT.equals(req.getOperationType())) {
             JOptionPane.showMessageDialog(this,
-                    "Only accepted requests can be marked as completed.");
+                "Only accepted requests can be marked as completed.\n\n" +
+                "This order was not accepted by the seller.",
+                "Not Accepted",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        Order order = req.getOrder();
+        if (order == null) {
+            JOptionPane.showMessageDialog(this,
+                "Order information not available.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ Get listing (but allow completion even if status changed)
+        Listing listing = null;
+        if (system != null && 
+            system.getListingDirectory() != null && 
+            order.getListingId() != null) {
+
+            listing = system.getListingDirectory().findById(order.getListingId());
+        }
+
+        // Build confirmation message
+        StringBuilder confirmMsg = new StringBuilder();
+        confirmMsg.append("Mark this order as Completed?\n\n");
+
+        if (listing != null) {
+            confirmMsg.append("Product: ").append(listing.getTitle()).append("\n");
+            confirmMsg.append("Current listing status: ").append(listing.getStatus()).append("\n");
+        }
+
+        confirmMsg.append("Amount: $").append(String.format("%.2f", order.getTotalPrice())).append("\n");
+        confirmMsg.append("Reward points: ").append((int)(order.getTotalPrice() * 0.05)).append("\n\n");
+
+        // Inform user what will happen to listing
+        if (listing != null && "Reserved".equals(listing.getStatus())) {
+            confirmMsg.append("The listing will be marked as Sold.");
+        } else if (listing != null) {
+            confirmMsg.append("Note: Listing status is '").append(listing.getStatus())
+                      .append("' and will remain unchanged.");
+        } else {
+            confirmMsg.append("Note: Listing not found, only order will be completed.");
+        }
+
         int confirm = JOptionPane.showConfirmDialog(this,
-                "Mark this order as Completed?",
-                "Confirm",
-                JOptionPane.YES_NO_OPTION);
+            confirmMsg.toString(),
+            "Confirm Completion",
+            JOptionPane.YES_NO_OPTION);
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
         // Update request status
         req.setStatus("Completed");
 
-        // Update order and buyer statistics
-        Order order = req.getOrder();
-        if (order != null) {
-            order.setStatus(Order.STATUS_COMPLETED);
-            if (buyerAccount != null) {
-                buyerAccount.incrementCompletedPurchases();
-                buyerAccount.setTotalSpending(buyerAccount.getTotalSpending() + order.getTotalPrice());
-                buyerAccount.addPoints((int)(order.getTotalPrice() * 0.05));
-            }
+        // Update order status
+        order.setStatus(Order.STATUS_COMPLETED);
+
+        // Update buyer statistics (always)
+        if (buyerAccount != null) {
+            buyerAccount.incrementCompletedPurchases();
+            buyerAccount.setTotalSpending(buyerAccount.getTotalSpending() + order.getTotalPrice());
+            buyerAccount.addPoints((int)(order.getTotalPrice() * 0.05));
         }
+
+        // ✅ Only mark listing as Sold if it's currently Reserved
+        if (listing != null && "Reserved".equals(listing.getStatus())) {
+            listing.setStatus("Sold");
+            System.out.println("✓ Listing marked as Sold: " + listing.getId());
+        } else if (listing != null) {
+            System.out.println("ℹ Listing status unchanged: " + listing.getStatus() + " (not Reserved)");
+        } else {
+            System.out.println("⚠ Listing not found: " + order.getListingId());
+        }
+
+        // Build success message
+        StringBuilder resultMsg = new StringBuilder();
+        resultMsg.append("Order completed successfully!\n\n");
+        resultMsg.append("Reward points earned: ").append((int)(order.getTotalPrice() * 0.05)).append("\n");
+
+        if (listing != null) {
+            resultMsg.append("\nListing final status: ").append(listing.getStatus());
+        }
+
+        JOptionPane.showMessageDialog(this,
+            resultMsg.toString(),
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE);
 
         refreshData();
     }
 
-    /** Handle Cancel button click */
+    /** 
+     * Handle Cancel button click
+     * Cancels order and restores listing only if it's still Reserved
+     */
     private void handleCancel() {
         int row = tblRequest.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(this,
-                    "Please select a row first.",
-                    "No selection",
-                    JOptionPane.WARNING_MESSAGE);
+                "Please select a row first.",
+                "No selection",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         OrderProcessingResultRequest req = displayedRequests.get(row);
         if (req == null) return;
 
+        // Check if already completed
         if ("Completed".equalsIgnoreCase(req.getStatus())) {
             JOptionPane.showMessageDialog(this,
-                    "Completed orders cannot be canceled.");
+                "Completed orders cannot be canceled.",
+                "Already Completed",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
+
+        // Check if already canceled
         if ("Canceled".equalsIgnoreCase(req.getStatus())) {
             JOptionPane.showMessageDialog(this,
-                    "This order is already canceled.");
+                "This order is already canceled.",
+                "Already Canceled",
+                JOptionPane.INFORMATION_MESSAGE);
             return;
+        }
+
+        // Check if seller rejected
+        if (OrderProcessingResultRequest.OP_REJECT.equals(req.getOperationType())) {
+            JOptionPane.showMessageDialog(this,
+                "This order has been rejected by the seller.\n\n" +
+                "Rejected orders cannot be canceled because:\n" +
+                "• The seller already declined your request\n" +
+                "• The listing is already available for others\n" +
+                "• Your budget was not deducted",
+                "Cannot Cancel Rejected Order",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Order order = req.getOrder();
+        if (order == null) {
+            JOptionPane.showMessageDialog(this,
+                "Order information not available.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // ✅ Get listing (but don't require it to be Reserved)
+        Listing listing = null;
+        if (system != null && 
+            system.getListingDirectory() != null && 
+            order.getListingId() != null) {
+
+            listing = system.getListingDirectory().findById(order.getListingId());
+        }
+
+        // Build confirmation message
+        StringBuilder confirmMsg = new StringBuilder();
+        confirmMsg.append("Cancel this order?\n\n");
+
+        if (listing != null) {
+            confirmMsg.append("Product: ").append(listing.getTitle()).append("\n");
+            confirmMsg.append("Current listing status: ").append(listing.getStatus()).append("\n");
+        }
+
+        confirmMsg.append("Amount: $").append(String.format("%.2f", order.getTotalPrice())).append("\n\n");
+
+        // Inform user what will happen
+        if (listing != null && "Reserved".equals(listing.getStatus())) {
+            confirmMsg.append("The item will be available for others to purchase.");
+        } else if (listing != null) {
+            confirmMsg.append("Note: Listing status is '").append(listing.getStatus())
+                      .append("' and will not be changed.");
+        } else {
+            confirmMsg.append("Note: Listing not found, only order will be canceled.");
         }
 
         int confirm = JOptionPane.showConfirmDialog(this,
-                "Cancel this order?\nNo points or spending will be counted.",
-                "Confirm cancel",
-                JOptionPane.YES_NO_OPTION);
+            confirmMsg.toString(),
+            "Confirm Cancel",
+            JOptionPane.YES_NO_OPTION);
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
+        // Update request status
         req.setStatus("Canceled");
 
-        Order order = req.getOrder();
-        if (order != null) {
+        // Update order status
         order.setStatus(Order.STATUS_CANCELLED);
 
-        // Restore listing so that it can be purchased again
-        if (system != null &&
-            system.getListingDirectory() != null &&
-            order.getListingId() != null) {
-
-            Listing listing = system.getListingDirectory()
-                                    .findById(order.getListingId());
-            if (listing != null) {
-                // Make the listing available again for purchase
-                listing.setStatus("Approved");
-            }
+        // ✅ Only restore listing to Approved if it's currently Reserved
+        if (listing != null && "Reserved".equals(listing.getStatus())) {
+            listing.setStatus("Approved");
+            System.out.println("✓ Listing restored to Approved: " + listing.getId());
+        } else if (listing != null) {
+            System.out.println("ℹ Listing status unchanged: " + listing.getStatus() + " (not Reserved)");
+        } else {
+            System.out.println("⚠ Listing not found: " + order.getListingId());
         }
 
+        // Update buyer account (always restore budget and decrease purchases)
         if (buyerAccount != null) {
-            // Canceled order: decrease totalPurchases
-            // (because this order was counted when it was created)
+            // Decrease totalPurchases
             buyerAccount.setTotalPurchases(buyerAccount.getTotalPurchases() - 1);
+
+            // Restore budget (always, regardless of listing status)
             double currentBudget = buyerAccount.getProfile().getMaxBudget();
             if (currentBudget > 0) {
-                buyerAccount.getProfile().setMaxBudget(currentBudget + order.getTotalPrice());
+                double restoredBudget = currentBudget + order.getTotalPrice();
+                buyerAccount.getProfile().setMaxBudget(restoredBudget);
+                System.out.println("✓ Budget restored: $" + currentBudget + " → $" + restoredBudget);
             }
         }
 
-    refreshData();
+        // Build success message
+        StringBuilder resultMsg = new StringBuilder();
+        resultMsg.append("Order canceled successfully!\n\n");
+
+        if (listing != null && "Approved".equals(listing.getStatus())) {
+            resultMsg.append("The listing is now available for others to purchase.");
+        } else if (listing != null) {
+            resultMsg.append("Listing status: ").append(listing.getStatus());
+        }
+
+        JOptionPane.showMessageDialog(this,
+            resultMsg.toString(),
+            "Success",
+            JOptionPane.INFORMATION_MESSAGE);
+
+        refreshData();
     }
-    
-}
 }

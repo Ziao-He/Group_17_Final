@@ -70,7 +70,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
         btnSearchByUserName2 = new javax.swing.JButton();
         fieldUserName2 = new javax.swing.JTextField();
         SearchByID2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -146,8 +145,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
         SearchByID2.setText("Search by ID:");
 
-        jButton1.setText("jButton1");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -175,9 +172,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
                         .addGap(301, 301, 301)
                         .addComponent(btnReject, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDescpriton, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))))
+                        .addComponent(btnDescpriton, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(54, 54, 54))
         );
         layout.setVerticalGroup(
@@ -200,9 +195,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
                     .addComponent(btnAccept)
                     .addComponent(btnReject)
                     .addComponent(btnDescpriton))
-                .addGap(39, 39, 39)
-                .addComponent(jButton1)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -210,7 +203,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
             PolicyViolationRequest req = getSelectedRequest();
              if (req == null) return;
 
-            // ✅ 当前登录管理员
             UserAccount admin = this.admin;
 
              int confirm = JOptionPane.showConfirmDialog(
@@ -222,7 +214,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
-        // ✅ 审计版 Service（必须传 admin）
         service.approveViolation(system, req, admin);
 
         JOptionPane.showMessageDialog(this, "Request approved and processed.");
@@ -234,7 +225,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
        PolicyViolationRequest req = getSelectedRequest();
     if (req == null) return;
 
-    // ✅ 当前登录管理员
     UserAccount admin = this.admin;
 
     String reason = JOptionPane.showInputDialog(
@@ -249,7 +239,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 二次确认
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm rejection with reason:\n\n" + reason,
@@ -259,7 +248,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
     if (confirm != JOptionPane.YES_OPTION) return;
 
-    // ✅ 审计版 Service（必须传 admin + reason）
     service.rejectViolation(req, admin, reason);
 
     JOptionPane.showMessageDialog(this, "Request rejected.");
@@ -270,12 +258,11 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
         PolicyViolationRequest req = getSelectedRequest();
     if (req == null) return;
 
-    // 创建一个弹窗
     JDialog dialog = new JDialog((java.awt.Frame) null, "Violation Details", true);
     dialog.setSize(600, 800);
     dialog.setLayout(new BorderLayout());
 
-    // ================== 上半部分：文字信息 =====================
+
     JTextArea text = new JTextArea();
     text.setEditable(false);
     text.setLineWrap(true);
@@ -297,7 +284,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     textScroll.setPreferredSize(new Dimension(580, 200));
     dialog.add(textScroll, BorderLayout.NORTH);
 
-    // ================== 下半部分：图片证据 =====================
     JPanel imagePanel = new JPanel();
     imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.Y_AXIS));
 
@@ -311,7 +297,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
             try {
                 ImageIcon icon = new ImageIcon(path);
 
-                // 自动缩放图片（最大宽度 500）
                 Image scaled = icon.getImage().getScaledInstance(
                         500,
                         -1,
@@ -332,7 +317,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     JScrollPane imgScroll = new JScrollPane(imagePanel);
     dialog.add(imgScroll, BorderLayout.CENTER);
 
-    // 显示弹窗
+ 
     dialog.setLocationRelativeTo(this);
     dialog.setVisible(true);
     }//GEN-LAST:event_btnDescpritonActionPerformed
@@ -358,7 +343,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
             if ("Pending".equalsIgnoreCase(req.getStatus()) &&
                 req.getId().equalsIgnoreCase(input)) {
                 result.add(req);
-                break; // ✅ ID 唯一
+                break; 
             }
         }
     }
@@ -369,7 +354,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
     refreshTable(result);
 
-    // ✅ 搜索后自动清空
     fieldUserName2.setText("");
 
     }//GEN-LAST:event_btnSearchByRequestID2ActionPerformed
@@ -406,7 +390,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
     refreshTable(result);
 
-    // ✅ 搜索后自动清空
     fieldUserName2.setText("");
     }//GEN-LAST:event_btnSearchByUserName2ActionPerformed
 
@@ -424,7 +407,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnSearchByUserName2;
     private javax.swing.JTextField fieldID2;
     private javax.swing.JTextField fieldUserName2;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -440,7 +422,7 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
             }
         }
 
-        refreshTable(list);   // ✅ 统一入口
+        refreshTable(list); 
     }
     
 
@@ -450,7 +432,6 @@ public class PolicyEnforcementJPanel extends javax.swing.JPanel {
 
     for (PolicyViolationRequest req : list) {
 
-        // ✅ 只显示 Pending
         if (!"Pending".equalsIgnoreCase(req.getStatus())) continue;
 
         model.addRow(new Object[]{

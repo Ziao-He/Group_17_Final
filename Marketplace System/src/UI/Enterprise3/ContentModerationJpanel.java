@@ -220,16 +220,15 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
     ListingReviewRequest req =
             (ListingReviewRequest) tblRequests.getValueAt(row, 4);
 
-    // ✅ 只能处理 PENDING
+
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request is already processed.");
         return;
     }
 
-    // ✅ 当前管理员
+
     UserAccount admin = this.moderator;
 
-    // ✅ 二次确认（无理由版）
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm approve this listing?",
@@ -241,7 +240,6 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 调用审计版 Service（reason 传固定说明）
     service.approveListing(req, admin);
 
     JOptionPane.showMessageDialog(this, "Listing approved successfully.");
@@ -261,16 +259,13 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
     ListingReviewRequest req =
             (ListingReviewRequest) tblRequests.getValueAt(row, 4);
 
-    // ✅ 只能处理 PENDING
     if (!req.getStatus().equalsIgnoreCase("PENDING")) {
         JOptionPane.showMessageDialog(this, "This request is already processed.");
         return;
     }
 
-    // ✅ 当前管理员
     UserAccount admin = this.moderator;
 
-    // ✅ 输入拒绝理由
     String reason = JOptionPane.showInputDialog(
             this,
             "Enter rejection reason:",
@@ -283,7 +278,6 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 二次确认
     int confirm = JOptionPane.showConfirmDialog(
             this,
             "Confirm rejection?\n\nReason:\n" + reason,
@@ -295,7 +289,7 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         return;
     }
 
-    // ✅ 审计版 Service
+
     service.rejectListing(req, admin, reason);
 
     JOptionPane.showMessageDialog(this, "Listing rejected successfully.");
@@ -359,7 +353,7 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
             if ("Pending".equalsIgnoreCase(req.getStatus()) &&
                 req.getId().equalsIgnoreCase(input)) {
                 result.add(req);
-                break; // ✅ ID 唯一
+                break;
             }
         }
     }
@@ -368,7 +362,7 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "No matching Request ID found.");
     }
 
-    refreshTable(result);   // ✅ 统一入口
+    refreshTable(result);   
     fieldID.setText("");
     }//GEN-LAST:event_btnSearchByRequestID1ActionPerformed
 
@@ -403,7 +397,7 @@ public class ContentModerationJpanel extends javax.swing.JPanel {
         JOptionPane.showMessageDialog(this, "No matching seller found.");
     }
 
-    refreshTable(result);   // ✅ 统一入口
+    refreshTable(result); 
     fieldUserName1.setText("");
     }//GEN-LAST:event_btnSearchByUserName1ActionPerformed
 
@@ -442,7 +436,7 @@ private void loadTable() {
         }
     }
 
-    refreshTable(list);  // ✅ 统一交给 refreshTable 画表
+    refreshTable(list);  
 }
 
     private void refreshTable(java.util.List<ListingReviewRequest> list) {
@@ -451,7 +445,7 @@ private void loadTable() {
 
     for (ListingReviewRequest req : list) {
 
-        // ✅ 只显示 Pending（与你原逻辑完全一致）
+
         if (!"Pending".equalsIgnoreCase(req.getStatus())) continue;
 
         Object[] row = new Object[5];

@@ -254,20 +254,23 @@ public class ReportViolationWorkArea extends javax.swing.JPanel {
             return;
         }
 
+        // 4️⃣ 加入组织的 WorkRequestDirectory
         policyOrg.getWorkRequestDirectory().addWorkRequest(req);
 
 
+        // 7️⃣ 通知发送成功
         JOptionPane.showMessageDialog(this,
                 "Report submitted successfully!",
                 "Success",
                 JOptionPane.INFORMATION_MESSAGE);
 
+        // 8️⃣ 返回上一层
         goBack();
     }
 
     private void goBack() {
         if (parentPanel != null) {
-            parentPanel.showBrowsePanel();  
+            parentPanel.showBrowsePanel();  // 或者回到上一个 Detail
         }
     }
     
@@ -276,7 +279,7 @@ public class ReportViolationWorkArea extends javax.swing.JPanel {
         for (Network net : system.getNetworks()) {
             for (Enterprise ent : net.getEnterprises()) {
 
-        
+                // ⭐ 替换 "Enterprise 3" 为你平台管理 Enterprise 的真实名称
                 if (ent.getName().equals("Platform Management")) {
 
                     for (Organization org : ent.getOrganizations()) {

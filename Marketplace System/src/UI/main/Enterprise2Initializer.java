@@ -45,11 +45,11 @@ public class Enterprise2Initializer {
         System.out.println("  Created Enterprise: " + enterprise.getName());
         System.out.println("  Organizations: " + enterprise.getOrganizations().size());
 
-        // 3. 创建测试账户
-        createTestAccounts(system, sellerOrg, listingOrg);
-        
-        // 4. 创建测试Listing数据 ← 新增！
-        createTestListings(system, sellerOrg);
+//        // 3. 创建测试账户
+//        createTestAccounts(system, sellerOrg, listingOrg);
+//        
+//        // 4. 创建测试Listing数据 ← 新增！
+//        createTestListings(system, sellerOrg);
     }
 
     /**

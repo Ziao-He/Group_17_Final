@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
  * @author Linyiyang
  */
 public class Listing extends BaseEntity {
-    private UserAccount seller;     // 卖家对象（最标准做法）
-    private String title;           // 商品标题
-    private String description;     // 商品描述
-    private String imagePath;       // 商品图片路径
-    private double price;           // 商品价格（可选，但课程里常用）
+    private UserAccount seller;    
+    private String title;           
+    private String description;     
+    private String imagePath;       
+    private double price;           
     private String status;          // Pending / Approved / Rejected
-    private LocalDateTime submitTime; // 提交时间戳
+    private LocalDateTime submitTime; 
     private int quantity = 1;
     public Listing(String id, UserAccount seller, String title, String description, String imagePath, double price) {
         this.id = id;
@@ -33,7 +33,6 @@ public class Listing extends BaseEntity {
         this.submitTime = LocalDateTime.now();
     }
 
-    // ===== Getter / Setter =====
 
     public UserAccount getSeller() {
         return seller;

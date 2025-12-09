@@ -11,14 +11,14 @@ import basement_class.UserAccount;
 
 /**
  *
- * @author Administrator
+ * @author Linyiyang
  */
 public class SystemAdminAccount extends UserAccount { 
 
     public SystemAdminAccount() {
         super();
         this.setStatus("ACTIVE");
-        this.setRole(new SystemAdminRole());   // ✅ 这里是合法的
+        this.setRole(new SystemAdminRole());  
     }
 
     @Override

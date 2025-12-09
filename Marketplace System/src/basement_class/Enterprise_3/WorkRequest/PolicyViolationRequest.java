@@ -16,16 +16,51 @@ import java.util.List;
  */
 public class PolicyViolationRequest extends WorkRequest {
     private static int counter=1;
-    private UserAccount reporter;        // 举报人
-    private UserAccount targetUser;      // 被举报的用户
-    private Listing listing;             // 如果是物品相关，可以为空
+    private UserAccount reporter;        
+    private UserAccount targetUser;     
+    private Listing listing;             
     private String violationCategory;    // account_issue / listing_issue / minor_dispute
-    private String violationInfo;        // 具体描述
-    private List<String> evidencePaths;  // 证据（截图路径等）
-    private String rejectionReason;      // 审核拒绝理由
+    private String violationInfo;        
+    private List<String> evidencePaths;  
+    private String rejectionReason;     
+    private String decisionLevel;   // SINGLE_ONLY / ALL_LISTINGS / ALL_AND_BAN
+    private String decisionReason;
+
+    public String getDecisionReason() {
+        return decisionReason;
+    }
+
+    public void setDecisionReason(String decisionReason) {
+        this.decisionReason = decisionReason;
+    }
+
+    public String getFinalDecision() {
+        return finalDecision;
+    }
+
+    public void setFinalDecision(String finalDecision) {
+        this.finalDecision = finalDecision;
+    }
+    private String finalDecision;
+
+    public static int getCounter() {
+        return counter;
+    }
+
+    public static void setCounter(int counter) {
+        PolicyViolationRequest.counter = counter;
+    }
+
+    public String getDecisionLevel() {
+        return decisionLevel;
+    }
+
+    public void setDecisionLevel(String decisionLevel) {
+        this.decisionLevel = decisionLevel;
+    }
 
     /**
-     * 账号问题 / 轻微纠纷等，不涉及 Listing
+     * 
      */
     public PolicyViolationRequest(
             UserAccount reporter,
@@ -44,7 +79,7 @@ public class PolicyViolationRequest extends WorkRequest {
     }
 
     /**
-     * 物品问题：涉及某个 Listing
+     *
      */
     public PolicyViolationRequest(
             UserAccount reporter,
@@ -95,16 +130,16 @@ public class PolicyViolationRequest extends WorkRequest {
 
     public String getDisplayCategory() {
         return switch (violationCategory) {
-            case "account_issue" -> "账号问题（封号）";
-            case "listing_issue" -> "物品问题（Listing 下架 + 封号）";
-            case "minor_dispute" -> "轻微纠纷（账号警告）";
+            case "account_issue" -> "Banned account";
+            case "listing_issue" -> "Item issues";
+            case "minor_dispute" -> "Account Warning";
             default -> violationCategory;
         };
     }
 
     @Override
     public String toString() {
-        // 用于 JTable 第一列显示
+    
         return "PolicyViolation #" + this.getId();
     }
 }
